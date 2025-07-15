@@ -1,0 +1,67 @@
+name: Casha
+options:
+  bundleIdPrefix: com.casha
+  deploymentTarget:
+    iOS: 15.0
+
+packages:
+  Algorithms:
+    url: https://github.com/apple/swift-algorithms
+    from: 1.0.0
+
+  Alamofire:
+    url: https://github.com/Alamofire/Alamofire.git
+    minorVersion: 5.2.2
+
+targets:
+  CashaApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+      - path: App/Assets.xcassets
+        type: assetcatalog
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleIdentifier: com.casha.app
+        CFBundleIconName: AppIcon
+        UILaunchStoryboardName: ""
+    dependencies:
+      - target: Core
+      - target: Domain
+      - target: Data
+      - package: Algorithms
+    frameworks:
+      - CoreData
+
+  Core:
+    type: framework
+    platform: iOS
+    sources: [Core]
+    info:
+      path: Core/Info.plist
+      properties:
+        CFBundleIdentifier: com.casha.core
+    dependencies:
+      - package: Alamofire
+
+  Domain:
+    type: framework
+    platform: iOS
+    sources: [Domain]
+    info:
+      path: Domain/Info.plist
+      properties:
+        CFBundleIdentifier: com.casha.domain
+
+  Data:
+    type: framework
+    platform: iOS
+    sources: [Data]
+    info:
+      path: Data/Info.plist
+      properties:
+        CFBundleIdentifier: com.casha.data
+    dependencies:
+      - target: Domain

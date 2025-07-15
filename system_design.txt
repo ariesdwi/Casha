@@ -1,0 +1,122 @@
+ CashaApp/
+│
+├── App/                        # Main App Module
+│   ├── Application/            # App-level components
+│   │   ├── App.swift
+│   │   ├── AppCoordinator.swift
+│   │   ├── AppDIContainer.swift  # Renamed from DependencyContainer
+│   │   └── AppConfig.swift      # Configuration constants
+│   │
+│   └── Features/
+│       ├── Transaction/
+│       │   ├── AddTransaction/      # Manual Input
+│       │   │   ├── Presentation/
+│       │   │   │   ├── AddTransactionView.swift
+│       │   │   │   ├── AddTransactionViewModel.swift
+│       │   │   │   └── Components/
+│       │   │   │       ├── CalculatorView.swift
+│       │   │   │       └── TransactionFormView.swift
+│       │   │   └── Domain/         # Feature-specific domain logic
+│       │   │       └── AddTransactionUseCase.swift
+│       │   │
+│       │   └── History/           # Transaction History
+│       │       ├── Presentation/
+│       │       │   ├── TransactionListView.swift
+│       │       │   └── TransactionListViewModel.swift
+│       │       └── Domain/
+│       │           └── GetTransactionsUseCase.swift
+│       │
+│       ├── Dashboard/             # Home
+│       │   ├── Presentation/
+│       │   │   ├── DashboardView.swift
+│       │   │   └── DashboardViewModel.swift
+│       │   └── Domain/
+│       │       └── GetBalanceSummaryUseCase.swift
+│       │
+│       └── OCR/
+│           ├── Presentation/
+│           │   ├── ImageUploadView.swift
+│           │   ├── OCRResultReviewView.swift
+│           │   └── OCRViewModel.swift
+│           ├── Domain/
+│           │   └── ParseOCRResultUseCase.swift
+│           └── Data/
+│               └── OCRProcessor.swift  # Business logic
+│
+├── Core/                       # Cross-cutting concerns
+│   ├── Networking/
+│   │   ├── APIClient.swift
+│   │   ├── Endpoints/
+│   │   │   └── OCREndpoint.swift
+│   │   └── Middlewares/
+│   │       └── AuthMiddleware.swift
+│   │
+│   ├── UI/
+│   │   ├── Components/         # Reusable UI components
+│   │   ├── Theme/
+│   │   │   ├── Colors.swift
+│   │   │   ├── Fonts.swift
+│   │   │   └── Styles.swift
+│   │   └── Utilities/
+│   │       └── ViewModifiers/
+│   │
+│   ├── Utilities/
+│   │   ├── Extensions/
+│   │   ├── Loggers/
+│   │   ├── Formatters/
+│   │   │   └── DateFormatter+Extensions.swift
+│   │   └── Builders/
+│   │       └── MultipartFormDataBuilder.swift
+│   │
+│   └── Storage/
+│       ├── CoreDataStack.swift
+│       └── KeychainManager.swift
+│
+├── Domain/                     # Pure business logic
+│   ├── Models/
+│   │   ├── Transaction/
+│   │   │   ├── Transaction.swift
+│   │   │   └── TransactionType.swift
+│   │   ├── Wallet.swift
+│   │   ├── Category.swift
+│   │   └── OCR/
+│   │       └── OCRResult.swift
+│   │
+│   └── Repositories/           # Repository interfaces
+│       ├── TransactionRepositoryProtocol.swift
+│       ├── WalletRepositoryProtocol.swift
+│       └── OCRRepositoryProtocol.swift
+│
+├── Data/                       # Data access layer
+│   ├── Repositories/
+│   │   ├── TransactionRepository.swift
+│   │   ├── WalletRepository.swift
+│   │   └── OCRRepository.swift
+│   │
+│   └── Datasources/
+│       ├── Local/
+│       │   ├── CoreData/
+│       │   │   ├── CoreDataTransactionDataSource.swift
+│       │   │   └── CoreDataCategoryDataSource.swift
+│       │   └── UserDefaults/
+│       │       └── UDPreferencesDataSource.swift
+│       │
+│       └── Remote/
+│           ├── API/
+│           │   └── OCRAPIDataSource.swift
+│           └── Firebase/
+│               └── AnalyticsDataSource.swift
+│
+└── Tests/
+    ├── UnitTests/
+    │   ├── Domain/
+    │   ├── Data/
+    │   └── Core/
+    │
+    ├── IntegrationTests/
+    │   ├── Features/
+    │   └── EndToEnd/
+    │
+    └── UITests/
+        ├── Transaction/
+        └── Dashboard/
