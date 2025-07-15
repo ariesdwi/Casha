@@ -25,8 +25,10 @@ targets:
       path: App/Info.plist
       properties:
         CFBundleIdentifier: com.casha.app
+        NSCameraUsageDescription: "Kami memerlukan akses kamera untuk mengambil foto struk transaksi Anda."
+        NSPhotoLibraryUsageDescription: "Kami memerlukan akses galeri untuk memilih foto struk transaksi."
         CFBundleIconName: AppIcon
-        UILaunchStoryboardName: ""
+        UILaunchStoryboardName: LaunchScreen
     dependencies:
       - target: Core
       - target: Domain

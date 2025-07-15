@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Core
 
 struct DashboardView: View {
     @State private var selectedTab: Tab = .week
@@ -14,6 +15,7 @@ struct DashboardView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
     @State private var showSourceDialog = false
+    private let permissionAccess = PermissionAccess()
 
     enum Tab { case week, month }
 
@@ -49,34 +51,42 @@ struct DashboardView: View {
                 }
 
                 // MARK: Bar Chart + Filter
-                VStack(alignment: .leading) {
-                    HStack {
+                VStack(alignment: .center, spacing: 16) {
+                    HStack(spacing: 8) {
                         Button(action: { selectedTab = .week }) {
                             Text("Week")
                                 .fontWeight(.semibold)
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 16)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
                                 .background(selectedTab == .week ? Color.cashaPrimary : Color.clear)
                                 .foregroundColor(selectedTab == .week ? .white : .cashaPrimary)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.cashaPrimary, lineWidth: 1)
+                                )
                                 .cornerRadius(8)
                         }
 
                         Button(action: { selectedTab = .month }) {
                             Text("Month")
                                 .fontWeight(.semibold)
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 16)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
                                 .background(selectedTab == .month ? Color.cashaPrimary : Color.clear)
                                 .foregroundColor(selectedTab == .month ? .white : .cashaPrimary)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.cashaPrimary, lineWidth: 1)
+                                )
                                 .cornerRadius(8)
                         }
-
-                        Spacer()
                     }
-
+                    .frame(maxWidth: .infinity) 
+                    
                     Text("Rp 961,300.00")
                         .font(.title2.bold())
-                    
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
                     HStack(alignment: .bottom, spacing: 24) {
                         VStack {
                             RoundedRectangle(cornerRadius: 4)
@@ -84,7 +94,6 @@ struct DashboardView: View {
                                 .frame(width: 24, height: 100)
                             Text("Last week")
                                 .font(.caption)
-                                
                         }
 
                         VStack {
@@ -93,7 +102,6 @@ struct DashboardView: View {
                                 .frame(width: 24, height: 60)
                             Text("This week")
                                 .font(.caption)
-                               
                         }
                     }
                     .padding(.top, 12)
@@ -101,6 +109,7 @@ struct DashboardView: View {
                 .padding()
                 .background(Color.cashaCard)
                 .cornerRadius(12)
+
 
                 // MARK: Recent Transactions
                 Text("Recent Transaction")
@@ -155,13 +164,14 @@ struct DashboardView: View {
                 imageSource = .camera
                 showImagePicker = true
             }
+            
             Button("Photo Library") {
                 imageSource = .photoLibrary
                 showImagePicker = true
             }
             Button("Cancel", role: .cancel) {}
         }
-        .sheet(isPresented: $showImagePicker) {
+        .fullScreenCover(isPresented: $showImagePicker) {
             ImagePicker(sourceType: imageSource) { image in
                 selectedImage = image
                 print("✅ Selected image: \(image)")
@@ -170,6 +180,6 @@ struct DashboardView: View {
     }
 }
 
-//#Preview {
-//    DashboardView()
-//}
+#Preview {
+    DashboardView()
+}

@@ -6,16 +6,12 @@
 //
 
 import SwiftUI
-import Core          
-import Domain
-import Data
-
 
 @main
 struct CashaApp: App {
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            SplashView()
         }
     }
 }

@@ -3,6 +3,7 @@
 //  Casha
 //
 //  Created by PT Siaga Abdi Utama on 14/07/25.
+
 import SwiftUI
 
 struct MainTabView: View {
@@ -22,9 +23,7 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
-            } else {
-                // Fallback on earlier versions
-            }
+            } else { }
 
             // MARK: - Transactions
             if #available(iOS 16.0, *) {
@@ -34,9 +33,7 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Transactions", systemImage: "list.bullet.rectangle")
                 }
-            } else {
-                // Fallback on earlier versions
-            }
+            } else { }
 
             // MARK: - Profile
             if #available(iOS 16.0, *) {
@@ -46,11 +43,9 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")
                 }
-            } else {
-                // Fallback on earlier versions
-            }
+            } else {}
         }
-        .accentColor(.cashaPrimary) // active tab icon/text color
+        .accentColor(.cashaPrimary)
         .background(Color.cashaBackground)
     }
 }

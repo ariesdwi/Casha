@@ -9,7 +9,7 @@
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.casha.app</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -20,7 +20,11 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Kami memerlukan akses kamera untuk mengambil foto struk transaksi Anda.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Kami memerlukan akses galeri untuk memilih foto struk transaksi.</string>
 	<key>UILaunchStoryboardName</key>
-	<string></string>
+	<string>LaunchScreen</string>
 </dict>
 </plist>

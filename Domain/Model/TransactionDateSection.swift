@@ -25,6 +25,16 @@ public struct TransactionDateSection: Identifiable {
         TransactionDateSection(date: "10", day: "Today", totalAmount: 30000, items: [
             .init(id: UUID(), name: "Bakso", category: "Food & Beverage", amount: 15000, date: Date()),
             .init(id: UUID(), name: "Mie Ayam", category: "Food & Beverage", amount: 15000, date: Date()),
+        ]),
+        
+        TransactionDateSection(date: "11", day: "Today", totalAmount: 30000, items: [
+            .init(id: UUID(), name: "Bakso", category: "Food & Beverage", amount: 15000, date: Date()),
+            .init(id: UUID(), name: "Mie Ayam", category: "Food & Beverage", amount: 15000, date: Date()),
+        ]),
+        
+        TransactionDateSection(date: "12", day: "Today", totalAmount: 30000, items: [
+            .init(id: UUID(), name: "Bakso", category: "Food & Beverage", amount: 15000, date: Date()),
+            .init(id: UUID(), name: "Mie Ayam", category: "Food & Beverage", amount: 15000, date: Date()),
         ])
     ]
 }
