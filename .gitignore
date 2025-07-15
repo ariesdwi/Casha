@@ -1,0 +1,47 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+build/
+DerivedData/
+*.xcworkspace
+xcuserdata/
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcuserstate
+*.moved-aside
+
+# Swift Package Manager
+.build/
+Packages/
+.swiftpm/xcode/package.xcworkspace/
+.swiftpm/xcode/xcshareddata/
+
+# XcodeGen
+*.xcodeproj
+*.xcworkspace
+
+# SPM Binary Cache
+Artifacts/
+
+# CoreData
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Logs
+*.log
+
+# Temporary Files
+*.tmp
+*.swp
+
+# IDE
+.idea/
+*.iml
+
+# Others
+*.orig
+*.lock
