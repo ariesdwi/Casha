@@ -24,7 +24,7 @@ struct SplashView: View {
                     .opacity(opacity)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
+            .background(Color.cashaBackground)
             .onAppear {
                 withAnimation(.easeIn(duration: 1.0)) {
                     self.scale = 1.2

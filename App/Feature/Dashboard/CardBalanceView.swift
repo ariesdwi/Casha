@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CardBalanceView: View {
-    var balance: String = "Rp -2,961,300.00"
+    let balance: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -26,3 +26,4 @@ struct CardBalanceView: View {
         .cornerRadius(12)
     }
 }
+

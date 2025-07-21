@@ -41,6 +41,8 @@ targets:
     type: framework
     platform: iOS
     sources: [Core]
+    resources:
+      - Core/sources/Persistance/CashaModel.xcdatamodeld
     info:
       path: Core/Info.plist
       properties:
@@ -67,3 +69,4 @@ targets:
         CFBundleIdentifier: com.casha.data
     dependencies:
       - target: Domain
+      - target: Core

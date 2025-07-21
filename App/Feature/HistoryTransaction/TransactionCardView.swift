@@ -42,7 +42,7 @@ struct TransactionCardView: View {
 
                     Spacer()
 
-                    Text(CurrencyFormatter.format(item.amount))
+                    Text(CurrencyFormatter.format(Double(item.amount)))
                         .foregroundColor(.red)
                 }
             }
