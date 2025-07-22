@@ -6,7 +6,7 @@
 //
 import SwiftUI
 import Domain
-
+import Core
 
 struct RecentTransactionList: View {
     let transactions: [TransactionCasha]
@@ -22,7 +22,7 @@ struct RecentTransactionList: View {
                             .font(.caption)
                     }
                     Spacer()
-                    Text("\(transaction.amount)")
+                    Text(CurrencyFormatter.format(transaction.amount))
                         .fontWeight(.bold)
                 }
                 .padding()

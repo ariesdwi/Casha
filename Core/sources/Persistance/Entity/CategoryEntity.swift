@@ -21,7 +21,7 @@ extension CategoryEntity {
     @NSManaged public var isActive: Bool
     @NSManaged public var createdAt: Date
     @NSManaged public var updatedAt: Date
-    @NSManaged public var transactions: NSSet?  // Relationship to TransactionEntity
+    @NSManaged public var transactions: TransactionEntity?  // Relationship to TransactionEntity
 }
 
 

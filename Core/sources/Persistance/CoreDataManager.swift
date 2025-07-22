@@ -9,64 +9,76 @@
 import Foundation
 import CoreData
 
-public class CoreDataManager {
+public final class CoreDataManager {
     public static let shared = CoreDataManager()
-
     public let context: NSManagedObjectContext
-
-    private init() {
+    
+    public init() {
         self.context = CoreDataStack.shared.context
     }
-
-    // MARK: - CATEGORY OPERATIONS
-
-    public func saveCategory(id: String, name: String, isActive: Bool, createdAt: Date, updatedAt: Date) {
+    
+    // MARK: - Category Operations
+    
+    public func saveCategory(
+        id: String,
+        name: String,
+        isActive: Bool,
+        createdAt: Date = Date(),
+        updatedAt: Date = Date()
+    ) throws {
         let category = CategoryEntity(context: context)
         category.id = id
         category.name = name
         category.isActive = isActive
         category.createdAt = createdAt
         category.updatedAt = updatedAt
-        saveContext()
+        try saveContext()
     }
-
+    
     public func fetchCategories() -> [CategoryEntity] {
         let request: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        
         do {
             return try context.fetch(request)
         } catch {
-            print("❌ Error fetching categories: \(error)")
+            assertionFailure("Failed to fetch categories: \(error)")
             return []
         }
     }
-
-    public func deleteAllCategories() {
+    
+    public func deleteAllCategories() throws {
         let request: NSFetchRequest<NSFetchRequestResult> = CategoryEntity.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
-
-        do {
-            try context.execute(deleteRequest)
-            saveContext()
-        } catch {
-            print("❌ Error deleting all categories: \(error)")
-        }
+        try context.execute(deleteRequest)
+        try saveContext()
     }
-
+    
     public func categoryExists(withId id: String) -> Bool {
         let request: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id)
         request.fetchLimit = 1
-
+        
         do {
             return try context.count(for: request) > 0
         } catch {
+            assertionFailure("Category existence check failed: \(error)")
             return false
         }
     }
-
-    // MARK: - TRANSACTION OPERATIONS
-
-    public func saveTransaction(id: String, name: String, amount: Double, datetime: Date, isConfirm: Bool, createdAt: Date, updatedAt: Date, categoryId: String) {
+    
+    // MARK: - Transaction Operations
+    
+    public func saveTransaction(
+        id: String,
+        name: String,
+        amount: Double,
+        datetime: Date,
+        isConfirm: Bool,
+        createdAt: Date = Date(),
+        updatedAt: Date = Date(),
+        categoryId: String
+    ) throws {
         let transaction = TransactionEntity(context: context)
         transaction.id = id
         transaction.name = name
@@ -75,76 +87,60 @@ public class CoreDataManager {
         transaction.isConfirm = isConfirm
         transaction.createdAt = createdAt
         transaction.updatedAt = updatedAt
-
-        if let category = fetchCategoryById(categoryId) {
+        
+        if let category = try fetchCategoryById(categoryId) {
             transaction.category = category
         }
-
-        saveContext()
+        
+        try saveContext()
     }
-
-    public func fetchTransactions() -> [TransactionEntity] {
+    
+    public func fetchTransactions(
+        sortedBy sortKey: String = "datetime",
+        ascending: Bool = false
+    ) -> [TransactionEntity] {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
-
+        request.sortDescriptors = [NSSortDescriptor(key: sortKey, ascending: ascending)]
+        
         do {
             return try context.fetch(request)
         } catch {
-            print("❌ Error fetching transactions: \(error)")
+            assertionFailure("Failed to fetch transactions: \(error)")
             return []
         }
     }
-
-    public func deleteTransaction(withId id: String) {
-        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", id)
-        request.fetchLimit = 1
-
-        if let transaction = try? context.fetch(request).first {
-            context.delete(transaction)
-            saveContext()
-        }
+    
+    public func deleteTransaction(withId id: String) throws {
+        guard let transaction = try fetchTransactionById(id) else { return }
+        context.delete(transaction)
+        try saveContext()
     }
-
-    public func deleteAllTransactions() {
+    
+    public func deleteAllTransactions() throws {
         let request: NSFetchRequest<NSFetchRequestResult> = TransactionEntity.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
-
-        do {
-            try context.execute(deleteRequest)
-            saveContext()
-        } catch {
-            print("❌ Error deleting all transactions: \(error)")
-        }
+        try context.execute(deleteRequest)
+        try saveContext()
     }
-
-    public func transactionExists(withId id: String) -> Bool {
-        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", id)
-        request.fetchLimit = 1
-
-        do {
-            return try context.count(for: request) > 0
-        } catch {
-            return false
-        }
-    }
-
-    // MARK: - PRIVATE HELPERS
-
-    private func fetchCategoryById(_ id: String) -> CategoryEntity? {
+    
+    // MARK: - Private Helpers
+    
+    private func fetchCategoryById(_ id: String) throws -> CategoryEntity? {
         let request: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id)
         request.fetchLimit = 1
-
-        return try? context.fetch(request).first
+        return try context.fetch(request).first
     }
-
-    private func saveContext() {
-        do {
-            try context.save()
-        } catch {
-            print("❌ Failed to save Core Data context: \(error)")
-        }
+    
+    private func fetchTransactionById(_ id: String) throws -> TransactionEntity? {
+        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id)
+        request.fetchLimit = 1
+        return try context.fetch(request).first
+    }
+    
+    private func saveContext() throws {
+        guard context.hasChanges else { return }
+        try context.save()
     }
 }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -228,11 +228,11 @@
 		14255AECB70FA2E97F4F7800 /* Persistance */ = {
 			isa = PBXGroup;
 			children = (
+				54A185E32E2F534200A684FD /* Entity */,
 				95E233270D99B7CB4D3E719D /* CashaModel.xcdatamodeld */,
-				3CFB2CEBF5D0E9E275A2D981 /* CategoryEntity.swift */,
 				CDBA490E725E317DAEBD1CB0 /* CoreDataManager.swift */,
 				51BD8BA610EB29B44E4F6539 /* CoreDataStack.swift */,
-				43EC63BD949661F915C85DCC /* TransactionEntity.swift */,
+				D8F7DAEFBCBD581CFC1ED993 /* Mappers */,
 			);
 			path = Persistance;
 			sourceTree = "<group>";
@@ -268,6 +268,15 @@
 				1D763A49BF1781B1720CD8F6 /* GetTotalSpendingUseCase.swift */,
 			);
 			path = UseCase;
+			sourceTree = "<group>";
+		};
+		54A185E32E2F534200A684FD /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				3CFB2CEBF5D0E9E275A2D981 /* CategoryEntity.swift */,
+				43EC63BD949661F915C85DCC /* TransactionEntity.swift */,
+			);
+			path = Entity;
 			sourceTree = "<group>";
 		};
 		61BCE8922609673F4AC8D8FD /* Domain */ = {
@@ -318,7 +327,6 @@
 		9F51EF39E2BCDFC12079C5FB /* sources */ = {
 			isa = PBXGroup;
 			children = (
-				D8F7DAEFBCBD581CFC1ED993 /* Mappers */,
 				393CB48AE280BD9BE9A6213C /* Networking */,
 				14255AECB70FA2E97F4F7800 /* Persistance */,
 			);
@@ -529,8 +537,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = E7D9C3E4677D1F87EAB8CC59 /* Build configuration list for PBXProject "Casha" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -546,7 +552,6 @@
 				E31037C44FAB4E490480993D /* XCRemoteSwiftPackageReference "Alamofire" */,
 				1611391E78DAA2C40F571413 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
-			preferredProjectObjectVersion = 54;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

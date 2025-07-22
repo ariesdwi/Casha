@@ -9,33 +9,38 @@ import Foundation
 import CoreData
 import Domain
 
-public class CoreDataStack {
+public final class CoreDataStack {
     public static let shared = CoreDataStack()
-
-    public let container: NSPersistentContainer
-
-    private init() {
-        container = NSPersistentContainer(name: "CashaModel") // match your .xcdatamodeld filename
-        container.loadPersistentStores { (_, error) in
-            if let error = error {
-                fatalError("❌ Failed to load Core Data store: \(error)")
-            }
-        }
-    }
-
+    
+    public let persistentContainer: NSPersistentContainer
     public var context: NSManagedObjectContext {
-        container.viewContext
+        return persistentContainer.viewContext
     }
-
-    public func saveContext() {
-        let context = container.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                print("❌ Failed to save context: \(error)")
+    
+    private init() {
+        // 1. Initialize container with explicit model loading
+        let bundle = Bundle(for: CoreDataStack.self)
+        guard let modelURL = bundle.url(forResource: "CashaModel", withExtension: "momd"),
+              let model = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Failed to locate or load Core Data model")
+        }
+        
+        persistentContainer = NSPersistentContainer(name: "CashaModel", managedObjectModel: model)
+        
+        // 2. Load persistent stores
+        persistentContainer.loadPersistentStores { _, error in
+            if let error = error {
+                fatalError("Failed to load Core Data stack: \(error)")
             }
         }
+        
+        // 3. Configure context
+        context.automaticallyMergesChangesFromParent = true
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
-
+    
+    public func saveContext() throws {
+        guard context.hasChanges else { return }
+        try context.save()
+    }
 }
