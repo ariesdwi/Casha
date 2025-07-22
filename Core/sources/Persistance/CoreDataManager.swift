@@ -123,7 +123,6 @@ public final class CoreDataManager {
         try saveContext()
     }
     
-    // MARK: - Private Helpers
     
     private func fetchCategoryById(_ id: String) throws -> CategoryEntity? {
         let request: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest()

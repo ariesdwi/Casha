@@ -27,14 +27,12 @@ public final class CoreDataStack {
         
         persistentContainer = NSPersistentContainer(name: "CashaModel", managedObjectModel: model)
         
-        // 2. Load persistent stores
         persistentContainer.loadPersistentStores { _, error in
             if let error = error {
                 fatalError("Failed to load Core Data stack: \(error)")
             }
         }
         
-        // 3. Configure context
         context.automaticallyMergesChangesFromParent = true
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }

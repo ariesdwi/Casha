@@ -36,3 +36,4 @@ public struct TransactionCasha: Identifiable, Equatable {
         self.updatedAt = updatedAt
     }
 }
+

@@ -24,7 +24,7 @@ targets:
     info:
       path: App/Info.plist
       properties:
-        CFBundleIdentifier: com.casha.app
+        CFBundleIdentifier: com.casha.CashaApp
         NSCameraUsageDescription: "Kami memerlukan akses kamera untuk mengambil foto struk transaksi Anda."
         NSPhotoLibraryUsageDescription: "Kami memerlukan akses galeri untuk memilih foto struk transaksi."
         CFBundleIconName: AppIcon
@@ -46,7 +46,7 @@ targets:
     info:
       path: Core/Info.plist
       properties:
-        CFBundleIdentifier: com.casha.core
+        CFBundleIdentifier: com.casha.Core
     dependencies:
       - package: Alamofire
 
@@ -57,7 +57,7 @@ targets:
     info:
       path: Domain/Info.plist
       properties:
-        CFBundleIdentifier: com.casha.domain
+        CFBundleIdentifier: com.casha.Domain
 
   Data:
     type: framework
@@ -66,7 +66,7 @@ targets:
     info:
       path: Data/Info.plist
       properties:
-        CFBundleIdentifier: com.casha.data
+        CFBundleIdentifier: com.casha.Data
     dependencies:
       - target: Domain
       - target: Core

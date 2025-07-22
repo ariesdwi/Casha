@@ -10,10 +10,19 @@ import Domain
 
 struct TransactionListView: View {
     @State private var selectedMonth: String = "This month"
+    @State private var searchText: String = ""
     @StateObject private var state = TransactionListState()
 
     var body: some View {
         VStack(spacing: 0) {
+            // Search bar
+            SearchBar(text: $searchText)
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .onChange(of: searchText) { newValue in
+                    state.searchTransactions(with: newValue)
+                }
+            
             // Month filter horizontal scroll
             TransactionFilterBar(selected: $selectedMonth)
                 .onChange(of: selectedMonth) { newValue in
@@ -22,8 +31,12 @@ struct TransactionListView: View {
 
             ScrollView {
                 VStack(spacing: 16) {
-                    ForEach(state.filteredTransactions) { section in
-                        TransactionCardView(section: section)
+                    if state.filteredTransactions.isEmpty {
+                        EmptyStateView()
+                    } else {
+                        ForEach(state.filteredTransactions) { section in
+                            TransactionCardView(section: section)
+                        }
                     }
                 }
                 .padding()
@@ -31,18 +44,6 @@ struct TransactionListView: View {
         }
         .background(Color.cashaBackground.ignoresSafeArea())
         .navigationTitle("Transaction")
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: { print("Camera tapped") }) {
-                    Image(systemName: "camera")
-                        .foregroundColor(.cashaPrimary)
-                }
-                Button(action: { print("Add tapped") }) {
-                    Image(systemName: "plus")
-                        .foregroundColor(.cashaPrimary)
-                }
-            }
-        }
         .onAppear {
             state.loadTransactions()
         }

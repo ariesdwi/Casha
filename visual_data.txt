@@ -1,0 +1,56 @@
+┌────────────────────────────────────────────┐
+│                SwiftUI UI                 │
+│                                            │
+│  ┌──────────────────────────┐              │
+│  │ DashboardView            │              │
+│  │ - uses DashboardState    │              │
+│  └────────────▲─────────────┘              │
+│               │                            │
+│        ┌──────┴──────┐                      │
+│        │ UseCase     │                      │
+│        │ (Domain)    │                      │
+│        └──────▲──────┘                      │
+│               │                            │
+│        ┌──────┴────────────┐                │
+│        │ TransactionRepositoryProtocol     │
+│        └──────▲────────────┘                │
+└───────────────│────────────────────────────┘
+                │
+         Implements in:
+┌───────────────┴─────────────────────────────────────────────┐
+│                    Data Module (Repository)                │
+│                                                             │
+│  TransactionRepositoryImpl                                  │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ - addTransaction() → saves to CoreData                 │ │
+│  │ - fetchRecentTransactions() ← fetch CoreData           │ │
+│  │ - fetchSpendingReport() ← process from CoreData        │ │
+│  │ - syncFromRemote() → calls API → saves to CoreData     │ │
+│  │                                                        │ │
+│  │ Uses:                                                  │ │
+│  │   • CoreDataManager                                    │ │
+│  │   • APIClient (Alamofire or custom)                    │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                │
+        ┌───────┴────────┐
+        │ Core Module    │
+        │ (Shared Infra) │
+        └───────┬────────┘
+                │
+┌───────────────▼─────────────────────────────┐
+│            CoreDataManager.swift           │
+│  ┌───────────────────────────────────────┐ │
+│  │ - saveTransaction()                  │ │
+│  │ - fetchTransactions()                │ │
+│  │ - saveCategory()                     │ │
+│  │ - fetchCategories()                 │ │
+│  │ - wraps NSFetchRequest / NSBatchDelete │
+│  └───────────────────────────────────────┘ │
+└─────────────────────────────────────────────┘
+                │
+        ┌───────▼────────┐
+        │ CoreDataStack  │
+        └────────────────┘
+        └─ NSPersistentContainer (singleton)
+

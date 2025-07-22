@@ -21,19 +21,6 @@ struct DashboardView: View {
     
     enum Tab { case week, month }
     
-    // MARK: - Computed Properties for Dynamic Data
-    var reportTotal: String {
-        selectedTab == .week ? "Rp 961,300.00" : "Rp 2,420,000.00"
-    }
-    
-    var lastBarHeight: CGFloat {
-        selectedTab == .week ? 100 : 80
-    }
-    
-    var thisBarHeight: CGFloat {
-        selectedTab == .week ? 60 : 130
-    }
-    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -92,7 +79,6 @@ struct DashboardView: View {
             }
         }
         .onAppear {
-            dashboardState.injectDummyTransactionsIfNeeded()
             dashboardState.loadData()
         }
         .confirmationDialog("Choose Image Source", isPresented: $showSourceDialog) {
