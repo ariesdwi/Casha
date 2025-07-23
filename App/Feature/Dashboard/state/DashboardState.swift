@@ -15,17 +15,19 @@ final class DashboardState: ObservableObject {
     @Published var totalSpending: Double = 0.0
     @Published var report: SpendingReport = .init(thisPeriod: 0, lastPeriod: 0)
 
-    private let getRecentTransactions = GetRecentTransactionsUseCase(
-        repository: TransactionRepositoryImpl()
-    )
-    
-    private let getTotalSpending = GetTotalSpendingUseCase(
-        repository: TransactionRepositoryImpl()
-    )
-    
-    private let getSpendingReport = GetSpendingReportUseCase(
-        repository: TransactionRepositoryImpl()
-    )
+    private let getRecentTransactions: GetRecentTransactionsUseCase
+    private let getTotalSpending: GetTotalSpendingUseCase
+    private let getSpendingReport: GetSpendingReportUseCase
+
+    init(
+        getRecentTransactions: GetRecentTransactionsUseCase,
+        getTotalSpending: GetTotalSpendingUseCase,
+        getSpendingReport: GetSpendingReportUseCase
+    ) {
+        self.getRecentTransactions = getRecentTransactions
+        self.getTotalSpending = getTotalSpending
+        self.getSpendingReport = getSpendingReport
+    }
 
     @MainActor
     func loadData() {
@@ -33,13 +35,13 @@ final class DashboardState: ObservableObject {
             async let recentTransactionsTask = getRecentTransactions.execute(limit: 5)
             async let totalSpendingTask = getTotalSpending.execute()
             async let spendingReportTask = getSpendingReport.execute(period: .week)
-            
+
             let (transactions, spending, reportResults) = await (
                 recentTransactionsTask,
                 totalSpendingTask,
                 spendingReportTask
             )
-            
+
             self.recentTransactions = transactions
             self.totalSpending = spending
             if let result = reportResults.first {
@@ -47,15 +49,6 @@ final class DashboardState: ObservableObject {
             }
         }
     }
-    
-    func addDummyData() async {
-        let dummyTransactions = TransactionDummyGenerator.generate(count: 10)
-
-        for model in dummyTransactions {
-            try await TransactionRepositoryImpl().addTransaction(model)
-        }
-
-    }
-
 }
+
 

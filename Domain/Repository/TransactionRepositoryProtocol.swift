@@ -8,9 +8,9 @@
 import Foundation
 
 public protocol TransactionRepositoryProtocol {
+    func addTransaction(_ transaction: TransactionCasha) async throws
     func fetchRecentTransactions(limit: Int) -> [TransactionCasha]
     func fetchTotalSpending() -> Double
     func fetchSpendingReport(period: ReportPeriod) -> [SpendingReport]
-    func addTransaction(_ transaction: TransactionCasha) async throws
     func fetchAllTransactions() async -> [TransactionCasha]
 }

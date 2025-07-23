@@ -11,10 +11,12 @@ struct SplashView: View {
     @State private var isActive = false
     @State private var scale: CGFloat = 0.8
     @State private var opacity = 0.5
+    @EnvironmentObject var dashboardState: DashboardState
 
     var body: some View {
         if isActive {
             MainTabView()
+                .environmentObject(dashboardState)
         } else {
             VStack {
                 Image("app") // Pastikan ada di Assets.xcassets

@@ -11,8 +11,8 @@ import Domain
 struct TransactionListView: View {
     @State private var selectedMonth: String = "This month"
     @State private var searchText: String = ""
-    @StateObject private var state = TransactionListState()
-
+    @EnvironmentObject var state: TransactionListState
+    
     var body: some View {
         VStack(spacing: 0) {
             // Search bar

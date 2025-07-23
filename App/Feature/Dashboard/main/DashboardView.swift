@@ -16,7 +16,7 @@ struct DashboardView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
     @State private var showSourceDialog = false
-    @StateObject private var dashboardState = DashboardState()
+    @EnvironmentObject var dashboardState: DashboardState
 
     
     enum Tab { case week, month }

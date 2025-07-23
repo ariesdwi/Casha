@@ -17,8 +17,12 @@ final class TransactionListState: ObservableObject {
     @Published var filteredTransactions: [TransactionDateSection] = []
     @Published var isSearching = false
     
-    private let repository = TransactionRepositoryImpl()
+    private let repository: TransactionRepositoryProtocol
     private var selectedPeriod: String = "This month"
+    
+    init(repository: TransactionRepositoryProtocol) {
+        self.repository = repository
+    }
     
     @MainActor
     func loadTransactions() {
@@ -28,7 +32,7 @@ final class TransactionListState: ObservableObject {
             self.filterTransactions(by: "This month")
         }
     }
-
+    
     
     func filterTransactions(by period: String) {
         guard !isSearching else { return }
@@ -110,7 +114,7 @@ final class TransactionListState: ObservableObject {
         // Search through ALL transactions
         let filtered = allTransactions.filter {
             $0.name.lowercased().contains(lowercasedQuery) ||
-//            $0.amount.lowercased().contains(lowercasedQuery) ||
+            //            $0.amount.lowercased().contains(lowercasedQuery) ||
             $0.category.lowercased().contains(lowercasedQuery)
         }
         
