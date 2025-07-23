@@ -45,7 +45,7 @@ struct TransactionListView: View {
         .background(Color.cashaBackground.ignoresSafeArea())
         .navigationTitle("Transaction")
         .onAppear {
-            state.loadTransactions()
+            state.load()
         }
     }
 }

@@ -29,8 +29,15 @@ struct CashaApp: App {
                 getSpendingReport: GetSpendingReportUseCase(repository: repository)
             )
             
-            let transactionListState = TransactionListState(repository: repository)
-            // Pass to SplashView first — then forward to MainTabView
+            let getTransactionsByPeriod = GetTransactionsByPeriodUseCase(repository: repository)
+            let searchTransactions = SearchTransactionsUseCase(repository: repository)
+
+            // Transaction list state
+            let transactionListState = TransactionListState(
+                getTransactionsByPeriod: getTransactionsByPeriod,
+                searchTransactions: searchTransactions
+            )
+            
             SplashView()
                 .environmentObject(dashboardState)
                 .environmentObject(transactionListState)

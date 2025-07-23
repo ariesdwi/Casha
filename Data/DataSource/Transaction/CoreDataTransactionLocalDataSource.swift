@@ -14,12 +14,12 @@ public final class CoreDataTransactionLocalDataSource: TransactionLocalDataSourc
     
     private let context: NSManagedObjectContext
     private let manager: CoreDataManager
-
+    
     public init(manager: CoreDataManager = .shared) {
         self.manager = manager
         self.context = manager.context
     }
-
+    
     public func save(_ transaction: TransactionCasha) throws {
         let entity = TransactionEntity(context: context)
         entity.id = transaction.id
@@ -29,7 +29,7 @@ public final class CoreDataTransactionLocalDataSource: TransactionLocalDataSourc
         entity.isConfirm = transaction.isConfirm
         entity.createdAt = transaction.createdAt
         entity.updatedAt = transaction.updatedAt
-
+        
         // Set category relationship if exists
         if let category = try fetchCategoryByName(transaction.category) {
             entity.category = category
@@ -42,36 +42,36 @@ public final class CoreDataTransactionLocalDataSource: TransactionLocalDataSourc
             newCategory.updatedAt = Date()
             entity.category = newCategory
         }
-
+        
         try manager.saveContext()
     }
-
+    
     public func fetchAll() throws -> [TransactionCasha] {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
-
+        
         let result = try context.fetch(request)
         return result.map { $0.toDomain() }
     }
-
+    
     public func delete(byId id: String) throws {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id)
         request.fetchLimit = 1
-
+        
         if let entity = try context.fetch(request).first {
             context.delete(entity)
             try manager.saveContext()
         }
     }
-
+    
     public func deleteAll() throws {
         let request: NSFetchRequest<NSFetchRequestResult> = TransactionEntity.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
         try context.execute(deleteRequest)
         try manager.saveContext()
     }
-
+    
     // MARK: - Private
     private func fetchCategoryByName(_ name: String) throws -> CategoryEntity? {
         let request: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest()
@@ -84,20 +84,20 @@ public final class CoreDataTransactionLocalDataSource: TransactionLocalDataSourc
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.fetchLimit = limit
         request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
-
+        
         let result = try context.fetch(request)
         return result.map { $0.toDomain() }
     }
-
+    
     
     public func fetchSpendingReport(period: ReportPeriod) throws -> SpendingReport {
         let calendar = Calendar.current
         let now = Date()
-
+        
         let thisStartDate: Date
         let lastStartDate: Date
         let thisEndDate = now
-
+        
         switch period {
         case .week:
             thisStartDate = calendar.date(byAdding: .day, value: -7, to: now)!
@@ -106,21 +106,21 @@ public final class CoreDataTransactionLocalDataSource: TransactionLocalDataSourc
             thisStartDate = calendar.date(byAdding: .month, value: -1, to: now)!
             lastStartDate = calendar.date(byAdding: .month, value: -2, to: now)!
         }
-
+        
         let thisPredicate = NSPredicate(format: "datetime >= %@ AND datetime <= %@", thisStartDate as NSDate, thisEndDate as NSDate)
         let lastPredicate = NSPredicate(format: "datetime >= %@ AND datetime <= %@", lastStartDate as NSDate, thisStartDate as NSDate)
-
+        
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
-
+        
         request.predicate = thisPredicate
         let thisTransactions = try context.fetch(request)
-
+        
         request.predicate = lastPredicate
         let lastTransactions = try context.fetch(request)
-
+        
         let thisTotal = thisTransactions.reduce(0) { $0 + $1.amount }
         let lastTotal = lastTransactions.reduce(0) { $0 + $1.amount }
-
+        
         return SpendingReport(thisPeriod: thisTotal, lastPeriod: lastTotal)
     }
     
@@ -132,13 +132,13 @@ public final class CoreDataTransactionLocalDataSource: TransactionLocalDataSourc
             // Random month offset within the last 12 months
             let monthOffset = Int.random(in: 0..<12)
             let dayOffset = Int.random(in: 0..<28) // Keep within safe range for all months
-
+            
             var components = calendar.dateComponents([.year, .month], from: Date())
             components.month = (components.month ?? 1) - monthOffset
             components.day = dayOffset + 1 // To avoid 0
-
+            
             let randomDate = calendar.date(from: components) ?? Date()
-
+            
             let transaction = TransactionCasha(
                 id: UUID().uuidString,
                 name: "Dummy Item \(i + 1)",
@@ -148,16 +148,59 @@ public final class CoreDataTransactionLocalDataSource: TransactionLocalDataSourc
                 createdAt: randomDate,
                 updatedAt: randomDate
             )
-
+            
             do {
                 try save(transaction)
             } catch {
                 print("❌ Failed to insert dummy transaction \(i): \(error)")
             }
         }
-
+        
         print("✅ Dummy transactions added across random months in the last year.")
     }
-
-
+    
+    
+    public func fetch(startDate: Date, endDate: Date?) throws -> [TransactionCasha] {
+        let request = TransactionEntity.fetchRequest()
+        var predicates: [NSPredicate] = [
+            NSPredicate(format: "datetime >= %@", startDate as NSDate)
+        ]
+        
+        if let end = endDate {
+            predicates.append(NSPredicate(format: "datetime <= %@", end as NSDate))
+        }
+        
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
+        let results = try context.fetch(request)
+        return results.map { $0.toDomain() }
+    }
+    
+    public func search(query: String) throws -> [TransactionCasha] {
+        let request = TransactionEntity.fetchRequest()
+        request.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+            NSPredicate(format: "name CONTAINS[cd] %@", query),
+            NSPredicate(format: "category.name CONTAINS[cd] %@", query)
+        ])
+        request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
+        
+        let results = try context.fetch(request)
+        
+        return results.map { entity in
+            TransactionCasha(
+                id: entity.id,
+                name: entity.name,
+                category: entity.category?.name ?? "(Uncategorized)",
+                amount: entity.amount,
+                datetime: entity.datetime,
+                isConfirm: entity.isConfirm,
+                createdAt: entity.createdAt,
+                updatedAt: entity.updatedAt
+            )
+        }
+    }
+    
+    
+    
+    
 }

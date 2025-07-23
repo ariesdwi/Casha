@@ -13,6 +13,8 @@ public protocol TransactionLocalDataSource {
     func save(_ transaction: TransactionCasha) throws
     func fetchAll() throws -> [TransactionCasha]
     func fetch(limit: Int) throws -> [TransactionCasha]
+    func fetch(startDate: Date, endDate: Date?) throws -> [TransactionCasha]
+    func search(query: String) throws -> [TransactionCasha]
     func fetchSpendingReport(period: ReportPeriod) throws -> SpendingReport
     func delete(byId id: String) throws
     func deleteAll() throws

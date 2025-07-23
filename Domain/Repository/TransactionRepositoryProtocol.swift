@@ -13,4 +13,6 @@ public protocol TransactionRepositoryProtocol {
     func fetchTotalSpending() -> Double
     func fetchSpendingReport(period: ReportPeriod) -> [SpendingReport]
     func fetchAllTransactions() async -> [TransactionCasha]
+    func searchTransactions(query: String) async -> [TransactionCasha]
+    func fetchTransactions(startDate: Date, endDate: Date?) async -> [TransactionCasha]
 }

@@ -31,6 +31,8 @@
 		5454CAA2457E2C296EC0586E /* CategoryEntity+Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470BF1926F838A42575EC3B6 /* CategoryEntity+Mapper.swift */; };
 		54DCEDFC2E309041009500F9 /* CoreDataCategoryLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54DCEDFB2E30903A009500F9 /* CoreDataCategoryLocalDataSource.swift */; };
 		54DCEDFE2E30904D009500F9 /* CategoryLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54DCEDFD2E30904B009500F9 /* CategoryLocalDataSource.swift */; };
+		54DCEE002E30B9B8009500F9 /* GetTransactionsByPeriodUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54DCEDFF2E30B9AF009500F9 /* GetTransactionsByPeriodUseCase.swift */; };
+		54DCEE022E30B9DC009500F9 /* SearchTransactionsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54DCEE012E30B9D1009500F9 /* SearchTransactionsUseCase.swift */; };
 		62DE36A24ECD0F9F2D88687C /* TransactionEntity+Mapper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA684ADA57BE48C163D3B156 /* TransactionEntity+Mapper.swift.swift */; };
 		630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650F06C995A36AF03739D2DE /* SplashScreen.swift */; };
 		679AFEB44F5E2E93EA2DE4AE /* CashaModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 95E233270D99B7CB4D3E719D /* CashaModel.xcdatamodeld */; };
@@ -152,6 +154,8 @@
 		525AEB395E62BE722D31FC3B /* GeneratorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorData.swift; sourceTree = "<group>"; };
 		54DCEDFB2E30903A009500F9 /* CoreDataCategoryLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCategoryLocalDataSource.swift; sourceTree = "<group>"; };
 		54DCEDFD2E30904B009500F9 /* CategoryLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryLocalDataSource.swift; sourceTree = "<group>"; };
+		54DCEDFF2E30B9AF009500F9 /* GetTransactionsByPeriodUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTransactionsByPeriodUseCase.swift; sourceTree = "<group>"; };
+		54DCEE012E30B9D1009500F9 /* SearchTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTransactionsUseCase.swift; sourceTree = "<group>"; };
 		571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRecentTransactionsUseCase.swift; sourceTree = "<group>"; };
 		5AF26166CAFDA82809A86E41 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
 		5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassageFormInput.swift; sourceTree = "<group>"; };
@@ -289,6 +293,8 @@
 		3FB853C8B34744E8E25818AC /* UseCase */ = {
 			isa = PBXGroup;
 			children = (
+				54DCEE012E30B9D1009500F9 /* SearchTransactionsUseCase.swift */,
+				54DCEDFF2E30B9AF009500F9 /* GetTransactionsByPeriodUseCase.swift */,
 				878E1DCFD8BD17371400B811 /* GetAllTransactionsUseCase.swift */,
 				571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */,
 				CD591FF7DB61B921BFF21CE2 /* GetSpendingReportUseCase.swift */,
@@ -735,9 +741,11 @@
 				8924FAE6B81E47E82FD170D1 /* GetSpendingReportUseCase.swift in Sources */,
 				7150F9DE9869B8E1DB4646B1 /* GetTotalSpendingUseCase.swift in Sources */,
 				792E6B5073586C567E8E0941 /* ReportPeriod.swift in Sources */,
+				54DCEE022E30B9DC009500F9 /* SearchTransactionsUseCase.swift in Sources */,
 				EADE7707339F66B67B8F7F95 /* SpendingReport.swift in Sources */,
 				3F57337828F84F228D281EF6 /* TransactionCasha.swift in Sources */,
 				30874FBA47A28284C7D95865 /* TransactionDateSection.swift in Sources */,
+				54DCEE002E30B9B8009500F9 /* GetTransactionsByPeriodUseCase.swift in Sources */,
 				0102372D339AE51D7FCDD9DC /* TransactionRepositoryProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

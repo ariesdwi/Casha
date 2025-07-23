@@ -58,5 +58,23 @@ public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
             return []
         }
     }
+    
+    public func fetchTransactions(startDate: Date, endDate: Date?) async -> [TransactionCasha] {
+          do {
+              return try localDataSource.fetch(startDate: startDate, endDate: endDate)
+          } catch {
+              print("Error fetching transactions by period: \(error)")
+              return []
+          }
+      }
+
+      public func searchTransactions(query: String) async -> [TransactionCasha] {
+          do {
+              return try localDataSource.search(query: query)
+          } catch {
+              print("Error searching transactions: \(error)")
+              return []
+          }
+      }
 }
 
