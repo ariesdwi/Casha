@@ -6,24 +6,31 @@
 //
 
 
-import Core
 import Foundation
 import Domain
 
 public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
-    private let localDataSource: TransactionLocalDataSource
+    private let query: TransactionQueryDataSource
+    private let analytics: TransactionAnalyticsDataSource
+    private let persistence: TransactionPersistenceDataSource
 
-    public init(localDataSource: TransactionLocalDataSource) {
-        self.localDataSource = localDataSource
+    public init(
+        query: TransactionQueryDataSource,
+        analytics: TransactionAnalyticsDataSource,
+        persistence: TransactionPersistenceDataSource
+    ) {
+        self.query = query
+        self.analytics = analytics
+        self.persistence = persistence
     }
 
     public func addTransaction(_ transaction: TransactionCasha) async throws {
-        try localDataSource.save(transaction)
+        try persistence.save(transaction)
     }
 
     public func fetchRecentTransactions(limit: Int) -> [TransactionCasha] {
         do {
-            return try localDataSource.fetch(limit: limit)
+            return try query.fetch(limit: limit)
         } catch {
             print("❌ Failed to fetch recent transactions: \(error)")
             return []
@@ -32,7 +39,7 @@ public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
 
     public func fetchTotalSpending() -> Double {
         do {
-            let all = try localDataSource.fetchAll()
+            let all = try query.fetchAll()
             return all.reduce(0) { $0 + $1.amount }
         } catch {
             print("❌ Failed to calculate total spending: \(error)")
@@ -42,7 +49,7 @@ public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
 
     public func fetchSpendingReport(period: ReportPeriod) -> [SpendingReport] {
         do {
-            let report = try localDataSource.fetchSpendingReport(period: period)
+            let report = try analytics.fetchSpendingReport(period: period)
             return [report]
         } catch {
             print("❌ Failed to fetch spending report: \(error)")
@@ -52,7 +59,7 @@ public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
 
     public func fetchAllTransactions() async -> [TransactionCasha] {
         do {
-            return try localDataSource.fetchAll()
+            return try query.fetchAll()
         } catch {
             print("❌ Failed to fetch all transactions: \(error)")
             return []
@@ -61,16 +68,16 @@ public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
     
     public func fetchTransactions(startDate: Date, endDate: Date?) async -> [TransactionCasha] {
           do {
-              return try localDataSource.fetch(startDate: startDate, endDate: endDate)
+              return try query.fetch(startDate: startDate, endDate: endDate)
           } catch {
               print("Error fetching transactions by period: \(error)")
               return []
           }
       }
 
-      public func searchTransactions(query: String) async -> [TransactionCasha] {
+      public func searchTransactions(text: String) async -> [TransactionCasha] {
           do {
-              return try localDataSource.search(query: query)
+              return try query.search(query: text)
           } catch {
               print("Error searching transactions: \(error)")
               return []

@@ -14,28 +14,33 @@ import Core
 struct CashaApp: App {
     init() {
         // ⚠️ FOR DEBUGGING ONLY
-//        let dummyDataSource = CoreDataTransactionLocalDataSource()
-//        dummyDataSource.addDummyTransactions(count: 20)
+        //        let dummyDataSource = CoreDataTransactionLocalDataSource()
+        //        dummyDataSource.addDummyTransactions(count: 20)
     }
     
     var body: some Scene {
         WindowGroup {
-            let localDataSource = CoreDataTransactionLocalDataSource()
-            let repository = TransactionRepositoryImpl(localDataSource: localDataSource)
+            let persistenceDataSource = CoreDataTransactionPersistence()
+            let queryDataSource = CoreDataTransactionQuery()
+            let analyticsDataSource = CoreDataTransactionAnalytics()
             
+            // 🔌 Inject all data sources into repository
+            let repository = TransactionRepositoryImpl(
+                query: queryDataSource,
+                analytics: analyticsDataSource,
+                persistence: persistenceDataSource
+            )
+           
             let dashboardState = DashboardState(
                 getRecentTransactions: GetRecentTransactionsUseCase(repository: repository),
                 getTotalSpending: GetTotalSpendingUseCase(repository: repository),
                 getSpendingReport: GetSpendingReportUseCase(repository: repository)
             )
-            
-            let getTransactionsByPeriod = GetTransactionsByPeriodUseCase(repository: repository)
-            let searchTransactions = SearchTransactionsUseCase(repository: repository)
-
+                        
             // Transaction list state
             let transactionListState = TransactionListState(
-                getTransactionsByPeriod: getTransactionsByPeriod,
-                searchTransactions: searchTransactions
+                getTransactionsByPeriod: GetTransactionsByPeriodUseCase(repository: repository),
+                searchTransactions: SearchTransactionsUseCase(repository: repository)
             )
             
             SplashView()

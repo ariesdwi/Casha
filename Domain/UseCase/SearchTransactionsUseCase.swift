@@ -15,6 +15,6 @@ public final class SearchTransactionsUseCase {
     }
 
     public func execute(query: String) async -> [TransactionCasha] {
-        await repository.searchTransactions(query: query)
+        await repository.searchTransactions(text: query)
     }
 }
