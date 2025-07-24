@@ -44,7 +44,7 @@ final class DashboardState: ObservableObject {
     }
 
     @MainActor
-    func loadData() {
+    func loadData() async {
         Task {
             async let recentTransactionsTask = getRecentTransactions.execute(limit: 5)
             async let totalSpendingTask = getTotalSpending.execute()
@@ -66,35 +66,58 @@ final class DashboardState: ObservableObject {
     }
     
     @MainActor
-     func sendTransaction() {
-         guard !messageInput.isEmpty || selectedImageURL != nil else {
-             errorMessage = "Please input a message or select an image"
-             return
-         }
+    func sendTransaction() async {
+        guard !messageInput.isEmpty || selectedImageURL != nil else {
+            errorMessage = "Please input a message or select an image"
+            return
+        }
 
-         Task {
-             isSending = true
-             errorMessage = nil
+        isSending = true
+        errorMessage = nil
 
-             let request = AddTransactionRequest(
-                 message: messageInput.isEmpty ? nil : messageInput,
-                 imageURL: selectedImageURL
-             )
+        let request = AddTransactionRequest(
+            message: messageInput.isEmpty ? nil : messageInput,
+            imageURL: selectedImageURL
+        )
 
-             do {
-                 try await transactionSyncManager.syncAddTransaction(request)
-                 messageInput = ""
-                 selectedImageURL = nil
-                 loadData() // Reload dashboard data after successful sync
-             } catch {
-                
-                 errorMessage = error.localizedDescription
-                 print(errorMessage)
-             }
+        do {
+            try await transactionSyncManager.syncAddTransaction(request)
+            messageInput = ""
+            selectedImageURL = nil
+            await loadData()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
 
-             isSending = false
-         }
-     }
+        isSending = false
+    }
+
+    @MainActor
+    func sendTransactionFromImage() async {
+        guard let imageURL = selectedImageURL else {
+            errorMessage = "Please select an image first"
+            return
+        }
+
+        isSending = true
+        errorMessage = nil
+
+        let request = AddTransactionRequest(
+            message: nil,
+            imageURL: imageURL
+        )
+
+        do {
+            try await transactionSyncManager.syncAddTransaction(request)
+            selectedImageURL = nil
+            await loadData()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+
+        isSending = false
+    }
+
 }
 
 

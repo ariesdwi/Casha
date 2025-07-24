@@ -84,7 +84,7 @@ public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource 
 
         var files: [UploadFile] = []
         if let image = request.imageURL {
-            files.append(UploadFile(fieldName: "image", fileURL: image))
+            files.append(UploadFile(fieldName: "file", fileURL: image))
         }
 
         let response: TransactionResponse = try await client.uploadForm(

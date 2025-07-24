@@ -10,21 +10,35 @@ import Domain
 
 public struct TransactionDTO: Decodable {
     public let id: String
-    public let used: String
-    public let total: Double
+    public let categoryId: String
+    public let name: String
+    public let amount: Double
     public let datetime: String
     public let category: String
+    public let createdAt: String
+    public let updatedAt: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+         case categoryId = "category_id"
+         case name
+         case amount
+         case datetime
+         case category
+         case createdAt = "created_at"
+         case updatedAt = "updated_at"
+     }
 
     public func toDomain() -> TransactionCasha {
         TransactionCasha(
             id: id,
-            name: used,
+            name: name,
             category: category,
-            amount: total,
+            amount: amount,
             datetime: ISO8601DateFormatter().date(from: datetime) ?? Date(),
             isConfirm: true,
-            createdAt: Date(),   // Or parse if provided
-            updatedAt: Date()    // Or parse if provided
+            createdAt: ISO8601DateFormatter().date(from: createdAt) ?? Date(),   // Or parse if provided
+            updatedAt: ISO8601DateFormatter().date(from: updatedAt) ?? Date()    // Or parse if provided
         )
     }
 }

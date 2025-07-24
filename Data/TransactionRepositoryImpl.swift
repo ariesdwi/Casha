@@ -25,6 +25,7 @@ public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
     }
 
     public func addTransaction(_ transaction: TransactionCasha) async throws {
+        print(transaction)
         try persistence.save(transaction)
     }
 

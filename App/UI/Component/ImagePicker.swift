@@ -26,6 +26,8 @@ struct ImagePicker: UIViewControllerRepresentable {
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
+    
+    
 
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         let parent: ImagePicker
@@ -44,6 +46,26 @@ struct ImagePicker: UIViewControllerRepresentable {
 
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             parent.presentationMode.wrappedValue.dismiss()
+        }
+    }
+}
+
+extension UIImage {
+    func saveToTemporaryDirectory() -> URL? {
+        let fileName = UUID().uuidString + ".jpg"
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileURL = tempDir.appendingPathComponent(fileName)
+
+        guard let data = self.jpegData(compressionQuality: 0.8) else {
+            return nil
+        }
+
+        do {
+            try data.write(to: fileURL)
+            return fileURL
+        } catch {
+            print("❌ Failed to write image to temp directory:", error)
+            return nil
         }
     }
 }
