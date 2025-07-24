@@ -13,7 +13,12 @@ import Core
 final class DashboardState: ObservableObject {
     @Published var recentTransactions: [TransactionCasha] = []
     @Published var totalSpending: Double = 0.0
-    @Published var report: SpendingReport = .init(thisPeriod: 0, lastPeriod: 0)
+    @Published var report: SpendingReport = SpendingReport(
+        thisWeekTotal: 0,
+        thisMonthTotal: 0,
+        dailyBars: [],
+        weeklyBars: []
+    )
 
     private let getRecentTransactions: GetRecentTransactionsUseCase
     private let getTotalSpending: GetTotalSpendingUseCase
@@ -34,7 +39,7 @@ final class DashboardState: ObservableObject {
         Task {
             async let recentTransactionsTask = getRecentTransactions.execute(limit: 5)
             async let totalSpendingTask = getTotalSpending.execute()
-            async let spendingReportTask = getSpendingReport.execute(period: .week)
+            async let spendingReportTask = getSpendingReport.execute()
 
             let (transactions, spending, reportResults) = await (
                 recentTransactionsTask,
@@ -44,6 +49,10 @@ final class DashboardState: ObservableObject {
 
             self.recentTransactions = transactions
             self.totalSpending = spending
+            
+            for reportResult in reportResults {
+                print(reportResult)
+            }
             if let result = reportResults.first {
                 self.report = result
             }

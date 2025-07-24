@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Core
 
 struct TransactionFilterBar: View {
     @Binding var selected: String
@@ -31,37 +32,8 @@ struct TransactionFilterBar: View {
             .padding(.top, 12)
         }
         .onAppear {
-            monthOptions = generateMonthOptions(currentDate: Date())
+            monthOptions = DateHelper.generateMonthOptions()
             selected = "This month" // Default selection
         }
-    }
-    
-    private func generateMonthOptions(currentDate: Date) -> [String] {
-        let calendar = Calendar.current
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM yyyy" // e.g. "Jul 2025"
-        
-        var options: [String] = []
-        let currentYear = calendar.component(.year, from: currentDate)
-        let currentMonth = calendar.component(.month, from: currentDate)
-        
-        // 1. Add special options
-        options.append(contentsOf: ["Future", "This month", "Last month"])
-        
-        // 2. Add months from current year
-        for month in (1...currentMonth).reversed() {
-            if let date = calendar.date(from: DateComponents(year: currentYear, month: month)) {
-                options.append(dateFormatter.string(from: date))
-            }
-        }
-        
-        // 3. Add months from last year
-        for month in (1...12).reversed() {
-            if let date = calendar.date(from: DateComponents(year: currentYear - 1, month: month)) {
-                options.append(dateFormatter.string(from: date))
-            }
-        }
-        
-        return options
     }
 }

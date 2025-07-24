@@ -47,9 +47,9 @@ public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
         }
     }
 
-    public func fetchSpendingReport(period: ReportPeriod) -> [SpendingReport] {
+    public func fetchSpendingReport() -> [SpendingReport] {
         do {
-            let report = try analytics.fetchSpendingReport(period: period)
+            let report = try analytics.fetchSpendingReport()
             return [report]
         } catch {
             print("❌ Failed to fetch spending report: \(error)")

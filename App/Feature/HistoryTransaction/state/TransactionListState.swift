@@ -43,7 +43,7 @@ final class TransactionListState: ObservableObject {
         selectedPeriod = period
 
         Task {
-            let (start, end) = resolveDateRange(for: period)
+            let (start, end) = DateHelper.resolveDateRange(for: period)
             let transactions = await getTransactionsByPeriod.execute(startDate: start, endDate: end)
             self.filteredTransactions = groupAndSort(transactions: transactions)
         }
@@ -60,36 +60,9 @@ final class TransactionListState: ObservableObject {
         }
 
         Task {
+            try? await Task.sleep(nanoseconds: 300_000_000) // 300ms debounce
             let transactions = await searchTransactions.execute(query: query)
             self.filteredTransactions = groupAndSort(transactions: transactions)
-        }
-    }
-
-    private func resolveDateRange(for period: String) -> (Date, Date?) {
-        let now = Date()
-        let calendar = Calendar.current
-
-        switch period {
-        case "This month":
-            return (now.startOfMonth(), now.endOfMonth())
-        case "Last month":
-            guard let lastMonth = calendar.date(byAdding: .month, value: -1, to: now) else {
-                return (now, nil)
-            }
-            return (lastMonth.startOfMonth(), lastMonth.endOfMonth())
-        case "Future":
-            guard let nextMonth = calendar.date(byAdding: .month, value: 1, to: now) else {
-                return (now, nil)
-            }
-            return (nextMonth.startOfMonth(), nil)
-        default:
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM yyyy"
-            if let date = formatter.date(from: period) {
-                return (date.startOfMonth(), date.endOfMonth())
-            } else {
-                return (now.startOfMonth(), now.endOfMonth())
-            }
         }
     }
 
@@ -116,14 +89,5 @@ final class TransactionListState: ObservableObject {
     }
 }
 
-// MARK: - Date helpers
-extension Date {
-    func startOfMonth() -> Date {
-        Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self)) ?? self
-    }
 
-    func endOfMonth() -> Date {
-        Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth()) ?? self
-    }
-}
 

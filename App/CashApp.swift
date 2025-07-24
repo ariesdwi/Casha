@@ -14,8 +14,8 @@ import Core
 struct CashaApp: App {
     init() {
         // ⚠️ FOR DEBUGGING ONLY
-        //        let dummyDataSource = CoreDataTransactionLocalDataSource()
-        //        dummyDataSource.addDummyTransactions(count: 20)
+//        let dummyDataSource = CoreDataTransactionPersistence()
+//        dummyDataSource.addDummyTransactions(count: 100)
     }
     
     var body: some Scene {
@@ -30,13 +30,13 @@ struct CashaApp: App {
                 analytics: analyticsDataSource,
                 persistence: persistenceDataSource
             )
-           
+            
             let dashboardState = DashboardState(
                 getRecentTransactions: GetRecentTransactionsUseCase(repository: repository),
                 getTotalSpending: GetTotalSpendingUseCase(repository: repository),
                 getSpendingReport: GetSpendingReportUseCase(repository: repository)
             )
-                        
+            
             // Transaction list state
             let transactionListState = TransactionListState(
                 getTransactionsByPeriod: GetTransactionsByPeriodUseCase(repository: repository),

@@ -41,13 +41,22 @@ struct DashboardView: View {
                 }
                 
                 // MARK: Modular Chart View
+//                ReportChartView(
+//                    selectedTab: $selectedTab,
+//                    weekTotal: CurrencyFormatter.format(dashboardState.report.thisPeriod),
+//                    monthTotal: CurrencyFormatter.format(dashboardState.report.lastPeriod),
+//                    weekBarHeight: 100,
+//                    monthBarHeight: 60
+//                )
+                
                 ReportChartView(
                     selectedTab: $selectedTab,
-                    weekTotal: CurrencyFormatter.format(dashboardState.report.thisPeriod),
-                    monthTotal: CurrencyFormatter.format(dashboardState.report.lastPeriod),
-                    weekBarHeight: 100,
-                    monthBarHeight: 60
+                    weekTotal: CurrencyFormatter.format(dashboardState.report.thisWeekTotal),
+                    monthTotal: CurrencyFormatter.format(dashboardState.report.thisMonthTotal),
+                    weekData: dashboardState.report.dailyBars,
+                    monthData: dashboardState.report.weeklyBars
                 )
+
                 
                 // MARK: Recent Transactions
                 Text("Recent Transaction")

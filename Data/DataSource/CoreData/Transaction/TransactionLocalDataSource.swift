@@ -23,5 +23,5 @@ public protocol TransactionQueryDataSource {
 }
 
 public protocol TransactionAnalyticsDataSource {
-    func fetchSpendingReport(period: ReportPeriod) throws -> SpendingReport
+    func fetchSpendingReport() throws -> SpendingReport
 }

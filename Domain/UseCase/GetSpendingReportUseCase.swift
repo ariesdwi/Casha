@@ -15,7 +15,7 @@ public struct GetSpendingReportUseCase {
         self.repository = repository
     }
 
-    public func execute(period: ReportPeriod) -> [SpendingReport] {
-        return repository.fetchSpendingReport(period: period)
+    public func execute() -> [SpendingReport] {
+        return repository.fetchSpendingReport()
     }
 }

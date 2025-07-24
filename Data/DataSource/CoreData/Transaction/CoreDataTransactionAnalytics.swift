@@ -1,0 +1,141 @@
+//
+//  CoreDataTransactionAnalytics.swift
+//  Casha
+//
+//  Created by PT Siaga Abdi Utama on 23/07/25.
+//
+
+import Foundation
+import CoreData
+import Domain
+import Core
+
+
+public final class CoreDataTransactionAnalytics: TransactionAnalyticsDataSource {
+    
+    private let context: NSManagedObjectContext
+    private let manager: CoreDataManager
+    
+    public init(manager: CoreDataManager = .shared) {
+        self.manager = manager
+        self.context = manager.context
+    }
+    
+   
+//    public func fetchSpendingReport() throws -> SpendingReport {
+//        let calendar = Calendar.current
+//        let now = Date()
+//        let startOfToday = calendar.startOfDay(for: now)
+//
+//        // 1. Start of this week
+//        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))!
+//        
+//        // 2. Start of this month
+//        let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
+//
+//        // 3. Fetch all transactions since the beginning of this month
+//        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+//        request.predicate = NSPredicate(format: "datetime >= %@", startOfMonth as NSDate)
+//        let transactions = try context.fetch(request)
+//
+//        // 4. Daily bars (Mon–Sun)
+//        let dailyGrouped = Dictionary(grouping: transactions.filter { $0.datetime >= startOfWeek }) {
+//            calendar.component(.weekday, from: $0.datetime)
+//        }
+//
+//        let dailyBars: [SpendingBar] = (1...7).map { weekday -> SpendingBar in
+//            let index = (weekday - 1 + calendar.firstWeekday - 1) % 7
+//            let dayLabel = calendar.shortWeekdaySymbols[index]
+//            let total = dailyGrouped[weekday]?.reduce(0, { $0 + $1.amount }) ?? 0
+//            return SpendingBar(label: dayLabel, amount: total)
+//        }
+//
+//        // 5. Weekly bars (Week 1 to Week 4)
+//        let weeklyGrouped = Dictionary(grouping: transactions) { tx in
+//            let week = calendar.dateComponents([.weekOfMonth], from: tx.datetime).weekOfMonth ?? 1
+//            return min(week, 4)
+//        }
+//
+//        let weeklyBars: [SpendingBar] = (1...4).map { week in
+//            let label = "Week \(week)"
+//            let total = weeklyGrouped[week]?.reduce(0, { $0 + $1.amount }) ?? 0
+//            return SpendingBar(label: label, amount: total)
+//        }
+//
+//        // 6. Totals
+//        let thisWeekTotal = dailyBars.reduce(0) { $0 + $1.amount }
+//        let thisMonthTotal = transactions.reduce(0) { $0 + $1.amount }
+//
+//        return SpendingReport(
+//            thisWeekTotal: thisWeekTotal,
+//            thisMonthTotal: thisMonthTotal,
+//            dailyBars: dailyBars,
+//            weeklyBars: weeklyBars
+//        )
+//    }
+
+
+    public func fetchSpendingReport() throws -> SpendingReport {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        // Get date components for current date
+        let currentDateComponents = calendar.dateComponents([.year, .month, .yearForWeekOfYear, .weekOfYear], from: now)
+        
+        // 1. Start of this week
+        guard let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)) else {
+            throw SpendingReportError.calendarCalculationFailed
+        }
+        
+        // 2. Start of this month
+        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) else {
+            throw SpendingReportError.calendarCalculationFailed
+        }
+        
+        // 3. Fetch all transactions since the beginning of this month
+        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "datetime >= %@", startOfMonth as NSDate)
+        let transactions = try context.fetch(request)
+        
+        // 4. Daily bars (Mon–Sun)
+        let thisWeekTransactions = transactions.filter { $0.datetime >= startOfWeek }
+        let dailyGrouped = Dictionary(grouping: thisWeekTransactions) { transaction in
+            calendar.component(.weekday, from: transaction.datetime)
+        }
+        
+        let dailyBars: [SpendingBar] = (1...7).map { weekday -> SpendingBar in
+            let index = (weekday - 1 + calendar.firstWeekday - 1) % 7
+            let dayLabel = calendar.shortWeekdaySymbols[index]
+            let total = dailyGrouped[weekday]?.reduce(0) { $0 + $1.amount } ?? 0
+            return SpendingBar(label: dayLabel, amount: total)
+        }
+        
+        // 5. Weekly bars (Week 1 to Week 4)
+        let weeklyGrouped = Dictionary(grouping: transactions) { transaction in
+            let week = calendar.component(.weekOfMonth, from: transaction.datetime)
+            return min(week ?? 1, 4)
+        }
+        
+        let weeklyBars: [SpendingBar] = (1...4).map { week in
+            let label = "Week \(week)"
+            let total = weeklyGrouped[week]?.reduce(0) { $0 + $1.amount } ?? 0
+            return SpendingBar(label: label, amount: total)
+        }
+        
+        // 6. Totals
+        let thisWeekTotal = dailyBars.reduce(0) { $0 + $1.amount }
+        let thisMonthTotal = weeklyBars.reduce(0) { $0 + $1.amount }
+        
+        return SpendingReport(
+            thisWeekTotal: thisWeekTotal,
+            thisMonthTotal: thisMonthTotal,
+            dailyBars: dailyBars,
+            weeklyBars: weeklyBars
+        )
+    }
+
+    enum SpendingReportError: Error {
+        case calendarCalculationFailed
+    }
+    
+}

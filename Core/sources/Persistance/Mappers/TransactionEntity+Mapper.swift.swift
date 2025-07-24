@@ -13,7 +13,7 @@ public extension TransactionEntity {
         TransactionCasha(
             id: self.id,
             name: self.name,
-            category: self.category?.name ?? "-",
+            category: self.category?.name ?? "",
             amount: self.amount,
             datetime: self.datetime,
             isConfirm: self.isConfirm,
