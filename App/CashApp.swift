@@ -24,6 +24,7 @@ struct CashaApp: App {
             let queryDataSource = CoreDataTransactionQuery()
             let analyticsDataSource = CoreDataTransactionAnalytics()
             
+            
             // 🔌 Inject all data sources into repository
             let repository = TransactionRepositoryImpl(
                 query: queryDataSource,
@@ -31,10 +32,21 @@ struct CashaApp: App {
                 persistence: persistenceDataSource
             )
             
+            let remoteDataSource = TransactionRemoteDataSourceImpl (
+                client: APIClient(baseURL: "https://api-daruma.selayangsurat.com/"),
+                sessionUserID: "95eb84d2-0a32-4aef-b6c2-bfb5bbc686f5", // TODO: Replace with real session management
+                authorizationToken: "ZG9ydW1hOlFYSnExMVFiRFA=" // TODO: Secure from Keychain or LoginSession
+            )
+
+            let syncManager = TransactionSyncManager(
+                remoteDataSource: remoteDataSource,
+                repository: repository
+            )
+            
             let dashboardState = DashboardState(
                 getRecentTransactions: GetRecentTransactionsUseCase(repository: repository),
                 getTotalSpending: GetTotalSpendingUseCase(repository: repository),
-                getSpendingReport: GetSpendingReportUseCase(repository: repository)
+                getSpendingReport: GetSpendingReportUseCase(repository: repository), transactionSyncManager: syncManager
             )
             
             // Transaction list state

@@ -62,8 +62,10 @@
 		BAEE62F299DAAA385D2F43B0 /* CoreDataCategoryLocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E457543430D120E2DF5DDF1F /* CoreDataCategoryLocalDataSource.swift */; };
 		BFB69DE9348B9372D2987D17 /* CategoryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF354627DC73E1E25D1F4370 /* CategoryEntity.swift */; };
 		C154080530B51A0D73D98748 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F2A9E4C6744DF43F85AAA /* Colors.swift */; };
+		C44A94E91D8E5DBC0066AF21 /* TransactionSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0D8B0F7C8216A23B38B60 /* TransactionSyncManager.swift */; };
 		C709C4419099731F8550E011 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50553C352609501B69B9A84 /* DashboardView.swift */; };
 		C763997D2D9629DAD864088B /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2905F78354DF39757CEBAA7B /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C7B6A7AAFA692AB846781819 /* AddTransactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D2B1177F147475F73D9E21 /* AddTransactionRequest.swift */; };
 		CA068CFD6F03483385242D5F /* CardBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ABDB78AB1D0BF5BD575812 /* CardBalanceView.swift */; };
 		CB1A6A1D8535CDCD401B2D49 /* CoreDataTransactionAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F79B6A7A0EC8A1088476DD /* CoreDataTransactionAnalytics.swift */; };
 		CF1DBC7139E373CA30E4D1C3 /* ReportChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387C2B69FCE43A1C6F3BE337 /* ReportChartView.swift */; };
@@ -142,6 +144,7 @@
 		0FFDDC2066023AD77D9FBC9F /* CoreDataTransactionPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTransactionPersistence.swift; sourceTree = "<group>"; };
 		11BC0FC062734E9E636643AF /* TransactionDateSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDateSection.swift; sourceTree = "<group>"; };
 		129406C2CBE09D689635F154 /* TransactionRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRepositoryProtocol.swift; sourceTree = "<group>"; };
+		17D2B1177F147475F73D9E21 /* AddTransactionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionRequest.swift; sourceTree = "<group>"; };
 		17FF4D41D30C84F0B6579060 /* CalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorView.swift; sourceTree = "<group>"; };
 		1AB692BA94258FB20B79FB74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1C7FA40FE5842F7D3A082E41 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
@@ -188,6 +191,7 @@
 		A822B5B36BC3E1FE96CBBFA6 /* CashaModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CashaModel.xcdatamodel; sourceTree = "<group>"; };
 		B91E69FAA48341700FD4AF6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BFDB0F3E4C8E3D6F56CADC03 /* CashaApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CashaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1B0D8B0F7C8216A23B38B60 /* TransactionSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSyncManager.swift; sourceTree = "<group>"; };
 		C325C8BF9D16506E10A51FC3 /* TransactionRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRemoteDataSource.swift; sourceTree = "<group>"; };
 		C7F9E19C7F7E53909B06A410 /* DashboardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardState.swift; sourceTree = "<group>"; };
 		C91C5E0DAB964010436375A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -511,6 +515,7 @@
 		C29134EDE0F0EE15F61DAA1E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				17D2B1177F147475F73D9E21 /* AddTransactionRequest.swift */,
 				F8116375BA4FCFF7CCCDD120 /* CategoryCasha.swift */,
 				5CFCCB1B76A2A0E7DCC2B386 /* ReportPeriod.swift */,
 				CC63E382014D3A1BD57D5166 /* SpendingReport.swift */,
@@ -534,6 +539,7 @@
 				B91E69FAA48341700FD4AF6B /* Info.plist */,
 				8A9669A7719553B30534CA38 /* TransactionRemoteDataSourceImpl.swift */,
 				DE67E854998BD8FDCB835B6E /* TransactionRepositoryImpl.swift */,
+				C1B0D8B0F7C8216A23B38B60 /* TransactionSyncManager.swift */,
 				0664856FF4242E56B83B15BB /* DataSource */,
 			);
 			path = Data;
@@ -784,6 +790,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7B6A7AAFA692AB846781819 /* AddTransactionRequest.swift in Sources */,
 				7E108FAF821D13E4A9713A28 /* CategoryCasha.swift in Sources */,
 				D0A324667FBCB463A0C908B0 /* GetAllTransactionsUseCase.swift in Sources */,
 				A0DE24385E7D0573C6209153 /* GetRecentTransactionsUseCase.swift in Sources */,
@@ -814,6 +821,7 @@
 				FD66288912FE7034FC742C1E /* TransactionRemoteDataSourceImpl.swift in Sources */,
 				9F93B5CCE8B4BD78E172E1E9 /* TransactionRepositoryImpl.swift in Sources */,
 				B5F429FBCA49515C24BCBB49 /* TransactionResponse.swift in Sources */,
+				C44A94E91D8E5DBC0066AF21 /* TransactionSyncManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

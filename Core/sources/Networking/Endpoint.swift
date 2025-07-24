@@ -17,7 +17,7 @@ public struct Endpoint {
         self.method = method
     }
 
-    public static let spending = Endpoint(path: "/v1/spending", method: .post)
+    public static let spending = Endpoint(path: "v1/spending", method: .post)
 }
 
 public enum HTTPMethod {

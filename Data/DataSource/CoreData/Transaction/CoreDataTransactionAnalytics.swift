@@ -22,57 +22,6 @@ public final class CoreDataTransactionAnalytics: TransactionAnalyticsDataSource 
     }
     
    
-//    public func fetchSpendingReport() throws -> SpendingReport {
-//        let calendar = Calendar.current
-//        let now = Date()
-//        let startOfToday = calendar.startOfDay(for: now)
-//
-//        // 1. Start of this week
-//        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))!
-//        
-//        // 2. Start of this month
-//        let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
-//
-//        // 3. Fetch all transactions since the beginning of this month
-//        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
-//        request.predicate = NSPredicate(format: "datetime >= %@", startOfMonth as NSDate)
-//        let transactions = try context.fetch(request)
-//
-//        // 4. Daily bars (Mon–Sun)
-//        let dailyGrouped = Dictionary(grouping: transactions.filter { $0.datetime >= startOfWeek }) {
-//            calendar.component(.weekday, from: $0.datetime)
-//        }
-//
-//        let dailyBars: [SpendingBar] = (1...7).map { weekday -> SpendingBar in
-//            let index = (weekday - 1 + calendar.firstWeekday - 1) % 7
-//            let dayLabel = calendar.shortWeekdaySymbols[index]
-//            let total = dailyGrouped[weekday]?.reduce(0, { $0 + $1.amount }) ?? 0
-//            return SpendingBar(label: dayLabel, amount: total)
-//        }
-//
-//        // 5. Weekly bars (Week 1 to Week 4)
-//        let weeklyGrouped = Dictionary(grouping: transactions) { tx in
-//            let week = calendar.dateComponents([.weekOfMonth], from: tx.datetime).weekOfMonth ?? 1
-//            return min(week, 4)
-//        }
-//
-//        let weeklyBars: [SpendingBar] = (1...4).map { week in
-//            let label = "Week \(week)"
-//            let total = weeklyGrouped[week]?.reduce(0, { $0 + $1.amount }) ?? 0
-//            return SpendingBar(label: label, amount: total)
-//        }
-//
-//        // 6. Totals
-//        let thisWeekTotal = dailyBars.reduce(0) { $0 + $1.amount }
-//        let thisMonthTotal = transactions.reduce(0) { $0 + $1.amount }
-//
-//        return SpendingReport(
-//            thisWeekTotal: thisWeekTotal,
-//            thisMonthTotal: thisMonthTotal,
-//            dailyBars: dailyBars,
-//            weeklyBars: weeklyBars
-//        )
-//    }
 
 
     public func fetchSpendingReport() throws -> SpendingReport {
@@ -80,7 +29,7 @@ public final class CoreDataTransactionAnalytics: TransactionAnalyticsDataSource 
         let now = Date()
         
         // Get date components for current date
-        let currentDateComponents = calendar.dateComponents([.year, .month, .yearForWeekOfYear, .weekOfYear], from: now)
+        _ = calendar.dateComponents([.year, .month, .yearForWeekOfYear, .weekOfYear], from: now)
         
         // 1. Start of this week
         guard let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)) else {
@@ -113,7 +62,7 @@ public final class CoreDataTransactionAnalytics: TransactionAnalyticsDataSource 
         // 5. Weekly bars (Week 1 to Week 4)
         let weeklyGrouped = Dictionary(grouping: transactions) { transaction in
             let week = calendar.component(.weekOfMonth, from: transaction.datetime)
-            return min(week ?? 1, 4)
+            return min(week, 4)
         }
         
         let weeklyBars: [SpendingBar] = (1...4).map { week in

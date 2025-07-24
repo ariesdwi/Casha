@@ -9,6 +9,6 @@ import Foundation
 import Domain
 
 public protocol TransactionRemoteDataSource {
-    func addTransaction(text: String, image: URL?) async throws -> TransactionCasha
+    func addTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha
 }
 
