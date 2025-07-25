@@ -10,5 +10,12 @@ import Domain
 
 public protocol TransactionRemoteDataSource {
     func addTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha
+    func fetchTransactionList(
+        periodStart: String,
+        periodEnd: String,
+        page: Int,
+        limit: Int
+    ) async throws -> [TransactionCasha]
+
 }
 

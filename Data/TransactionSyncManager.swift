@@ -30,4 +30,21 @@ public final class TransactionSyncManager {
         
         try await repository.addTransaction(transaction)
     }
+    
+    public func syncAllTransactions(
+        periodStart: String,
+        periodEnd: String,
+        page: Int = 1,
+        limit: Int = 50
+    ) async throws {
+        let remoteTransactions = try await remoteDataSource.fetchTransactionList(
+            periodStart: periodStart,
+            periodEnd: periodEnd,
+            page: page,
+            limit: limit
+        )
+
+        try await repository.mergeTransactions(remoteTransactions)
+    }
+
 }

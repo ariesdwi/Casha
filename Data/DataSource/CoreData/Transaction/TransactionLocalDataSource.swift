@@ -11,6 +11,7 @@ import Domain
 
 public protocol TransactionPersistenceDataSource {
     func save(_ transaction: TransactionCasha) throws
+    func update(_ transaction: TransactionCasha) throws
     func delete(byId id: String) throws
     func deleteAll() throws
 }

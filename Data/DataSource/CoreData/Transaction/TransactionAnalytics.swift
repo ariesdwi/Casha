@@ -11,7 +11,7 @@ import Domain
 import Core
 
 
-public final class CoreDataTransactionAnalytics: TransactionAnalyticsDataSource {
+public final class TransactionAnalytics: TransactionAnalyticsDataSource {
     
     private let context: NSManagedObjectContext
     private let manager: CoreDataManager
@@ -21,8 +21,6 @@ public final class CoreDataTransactionAnalytics: TransactionAnalyticsDataSource 
         self.context = manager.context
     }
     
-   
-
 
     public func fetchSpendingReport() throws -> SpendingReport {
         let calendar = Calendar.current

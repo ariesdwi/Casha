@@ -13,14 +13,14 @@ public final class APIClient: NetworkClient {
     
     private let session: Session
     private let baseURL: String
-
+    
     public init(baseURL: String) {
         self.baseURL = baseURL
         self.session = Session()
     }
-
+    
     // MARK: - Standard JSON Request
-
+    
     public func request<T: Decodable>(
         _ endpoint: Endpoint,
         parameters: [String: Any]?,
@@ -43,16 +43,24 @@ public final class APIClient: NetworkClient {
             .responseDecodable(of: T.self) { response in
                 switch response.result {
                 case .success(let value):
+                    if let data = response.data,
+                       let rawJSON = String(data: data, encoding: .utf8) {
+                        print("✅ Raw Response JSON:\n\(rawJSON)")
+                    }
                     continuation.resume(returning: value)
                 case .failure(let error):
+                    if let data = response.data,
+                       let jsonString = String(data: data, encoding: .utf8) {
+                        print("❌ Response JSON Body:\n\(jsonString)")
+                    }
                     continuation.resume(throwing: error)
                 }
             }
         }
     }
-
+    
     // MARK: - Multipart Form Upload
-
+    
     public func uploadForm<T: Decodable>(
         _ endpoint: Endpoint,
         formFields: [String: String],
@@ -95,7 +103,7 @@ public final class APIClient: NetworkClient {
     }
     
     // MARK: - Helper
-
+    
     private func convertToAFMethod(_ method: HTTPMethod) -> Alamofire.HTTPMethod {
         switch method {
         case .get: return .get

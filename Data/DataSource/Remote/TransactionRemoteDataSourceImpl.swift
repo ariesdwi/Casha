@@ -21,48 +21,6 @@ public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource 
         self.sessionUserID = sessionUserID
         self.authorizationToken = authorizationToken
     }
-
-//    public func addTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha {
-//        let endpoint = Endpoint.spending
-//        let headers: [String: String] = [
-//            "Authorization": "Basic \(authorizationToken)",
-//            "session_user_id": sessionUserID
-//        ]
-//       
-//        
-//        // Check that at least one input exists
-//        guard request.message != nil || request.imageURL != nil else {
-//            throw NetworkError.invalidRequest
-//        }
-//
-//        if let image = request.imageURL {
-//            // Multipart upload (text is optional)
-//            var formFields: [String: String] = [:]
-//            if let message = request.message {
-//                formFields["text"] = message
-//            }
-//            let files = [UploadFile(fieldName: "image", fileURL: image)]
-//            let response: TransactionResponse = try await client.uploadForm(
-//                endpoint,
-//                formFields: formFields,
-//                headers: headers,
-//                files: files,
-//                responseType: TransactionResponse.self
-//            )
-//            return response.data.toDomain()
-//        } else {
-//            // Only text (no image)
-//            let parameters = ["text": request.message ?? ""]
-//            let response: TransactionResponse = try await client.request(
-//                endpoint,
-//                
-//                parameters: parameters,
-//                headers: headers,
-//                responseType: TransactionResponse.self
-//            )
-//            return response.data.toDomain()
-//        }
-//    }
     
     public func addTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha {
         let endpoint = Endpoint.spending
@@ -97,6 +55,39 @@ public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource 
 
         return response.data.toDomain()
     }
+    
+    
+    public func fetchTransactionList(
+        periodStart: String,
+        periodEnd: String,
+        page: Int,
+        limit: Int
+    ) async throws -> [TransactionCasha] {
+        let endpoint = Endpoint.spendingList
+
+        let headers: [String: String] = [
+            "Authorization": "Basic \(authorizationToken)",
+            "session_user_id": sessionUserID
+        ]
+
+        let parameters: [String: Any] = [
+            "period_start": periodStart,
+            "period_end": periodStart,
+            "page": page,
+            "limit": limit
+        ]
+
+        let response: TransactionListResponse = try await client.request(
+            endpoint,
+            parameters: parameters,
+            headers: headers,
+            responseType: TransactionListResponse.self
+        )
+
+        return response.results.map { $0.toDomain() }
+    }
+
+
 
 
 }

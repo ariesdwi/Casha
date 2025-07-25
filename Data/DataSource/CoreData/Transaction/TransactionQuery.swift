@@ -9,7 +9,7 @@ import CoreData
 import Domain
 import Core
 
-public final class CoreDataTransactionQuery: TransactionQueryDataSource {
+public final class TransactionQuery: TransactionQueryDataSource {
     private let context: NSManagedObjectContext
     private let manager: CoreDataManager
     

@@ -23,6 +23,7 @@ final class DashboardState: ObservableObject {
     @Published var messageInput: String = ""
     @Published var selectedImageURL: URL? = nil
     @Published var isSending: Bool = false
+    @Published public var isLoading: Bool = false
     @Published var errorMessage: String?
 
     private let getRecentTransactions: GetRecentTransactionsUseCase
@@ -117,6 +118,28 @@ final class DashboardState: ObservableObject {
 
         isSending = false
     }
+    
+    @MainActor
+    func syncTransactionList() async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            try await transactionSyncManager.syncAllTransactions(
+                periodStart: "2025-07-01",
+                periodEnd: "2025-07-30",
+                page: 1,
+                limit: 50
+            )
+
+            await loadData() // Refresh Core Data view
+        } catch {
+            errorMessage = error.localizedDescription
+            print("[Sync Error] \(error.localizedDescription)")
+        }
+    }
+
+
 
 }
 

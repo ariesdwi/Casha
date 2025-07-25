@@ -10,7 +10,9 @@ import CoreData
 import Domain
 import Core
 
-public final class CoreDataTransactionPersistence: TransactionPersistenceDataSource {
+public final class TransactionPersistence: TransactionPersistenceDataSource {
+   
+    
     private let context: NSManagedObjectContext
     private let manager: CoreDataManager
     
@@ -105,5 +107,37 @@ public final class CoreDataTransactionPersistence: TransactionPersistenceDataSou
         
         print("✅ Dummy transactions added across random months in the last year.")
     }
+    
+    public func update(_ transaction: Domain.TransactionCasha) throws {
+        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", transaction.id)
+        request.fetchLimit = 1
+
+        if let entity = try context.fetch(request).first {
+            entity.name = transaction.name
+            entity.amount = transaction.amount
+            entity.datetime = transaction.datetime
+            entity.isConfirm = transaction.isConfirm
+            entity.updatedAt = transaction.updatedAt
+
+            if let existingCategory = try fetchCategoryByName(transaction.category) {
+                entity.category = existingCategory
+            } else {
+                let newCategory = CategoryEntity(context: context)
+                newCategory.id = UUID().uuidString
+                newCategory.name = transaction.category
+                newCategory.isActive = true
+                newCategory.createdAt = Date()
+                newCategory.updatedAt = Date()
+                entity.category = newCategory
+            }
+
+            try manager.saveContext()
+        } else {
+            print("⚠️ Transaction with id \(transaction.id) not found. Saving as new.")
+            try save(transaction)
+        }
+    }
+
 }
 

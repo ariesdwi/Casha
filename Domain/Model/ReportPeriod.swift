@@ -7,7 +7,15 @@
 
 import Foundation
 
-public enum ReportPeriod {
-    case week
-    case month
+public enum ReportFilterPeriod: String, CaseIterable, Identifiable {
+    case week, month, year
+    
+    public var id: String { rawValue }
+    public var title: String {
+        switch self {
+        case .week: return "This Week"
+        case .month: return "This Month"
+        case .year: return "This Year"
+        }
+    }
 }

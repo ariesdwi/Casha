@@ -33,6 +33,17 @@ struct MainTabView: View {
                     Label("Transactions", systemImage: "list.bullet.rectangle")
                 }
             } else { }
+            
+            // MARK: - Report
+            
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    ReportView()
+                }
+                .tabItem {
+                    Label("Report", systemImage: "doc.plaintext")
+                }
+            } else {}
 
             // MARK: - Profile
             if #available(iOS 16.0, *) {
@@ -43,6 +54,8 @@ struct MainTabView: View {
                     Label("Profile", systemImage: "person.crop.circle")
                 }
             } else {}
+            
+
         }
         .accentColor(.cashaPrimary)
         .background(Color.cashaBackground)

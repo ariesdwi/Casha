@@ -84,5 +84,34 @@ public final class TransactionRepositoryImpl: TransactionRepositoryProtocol {
               return []
           }
       }
+    
+    public func mergeTransactions(_ remoteTransactions: [TransactionCasha]) async throws {
+        let localTransactions = try query.fetchAll()
+        let localDict = Dictionary(uniqueKeysWithValues: localTransactions.map { ($0.id, $0) })
+
+        var toInsert: [TransactionCasha] = []
+        var toUpdate: [TransactionCasha] = []
+
+        for remote in remoteTransactions {
+            if let local = localDict[remote.id] {
+                if remote != local {
+                    toUpdate.append(remote)
+                }
+            } else {
+                toInsert.append(remote)
+            }
+        }
+
+        // Save new transactions
+        for transaction in toInsert {
+            try persistence.save(transaction)
+        }
+
+        // Update existing transactions
+        for transaction in toUpdate {
+            try persistence.update(transaction)
+        }
+    }
+
 }
 
