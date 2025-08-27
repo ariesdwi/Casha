@@ -31,6 +31,10 @@ public final class TransactionSyncManager {
         try await repository.addTransaction(transaction)
     }
     
+    /// AI-driven transaction input flow:
+    /// 1. Trigger fetch all transactio when .active  from remote
+    /// 2. Receive list of  transaction from remote.
+    /// 3. cek on coredata if data i avail skip and update data if in coredata not availbale.
     public func syncAllTransactions(
         periodStart: String,
         periodEnd: String,

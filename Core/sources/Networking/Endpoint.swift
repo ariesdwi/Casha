@@ -17,8 +17,9 @@ public struct Endpoint {
         self.method = method
     }
 
-    public static let spending = Endpoint(path: "v1/spending", method: .post)
-    public static let spendingList = Endpoint(path: "v1/spending/list", method: .get)
+    public static let spending = Endpoint(path: "transactions/create-text", method: .post)
+    public static let spendingImage = Endpoint(path: "transactions/create-image", method: .post)
+    public static let spendingList = Endpoint(path: "transactions", method: .get)
 
 }
 

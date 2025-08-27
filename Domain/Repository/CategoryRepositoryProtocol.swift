@@ -8,4 +8,5 @@
 import Foundation
 
 public protocol CategoryRepositoryProtocol {
-    func fetchCategorySpending(startDate: Date, endDate: Date) -> [ChartCategorySpending]}
+    func fetchCategorySpending(startDate: Date, endDate: Date) -> [ChartCategorySpending]
+}

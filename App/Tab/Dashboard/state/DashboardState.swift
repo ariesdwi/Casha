@@ -30,6 +30,7 @@ final class DashboardState: ObservableObject {
     private let getTotalSpending: GetTotalSpendingUseCase
     private let getSpendingReport: GetSpendingReportUseCase
     private let transactionSyncManager: TransactionSyncManager
+    
 
     init(
         getRecentTransactions: GetRecentTransactionsUseCase,

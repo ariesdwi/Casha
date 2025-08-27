@@ -7,7 +7,7 @@
 import Foundation
 import Domain
 
-@MainActor
+
 public final class ReportState: ObservableObject {
     private let getCategorySpendingUseCase: GetCategorySpendingUseCase
 

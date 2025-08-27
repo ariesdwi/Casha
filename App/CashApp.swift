@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 import Domain
 import Data
 import Core
@@ -14,16 +15,19 @@ import Core
 struct CashaApp: App {
     init() {
         // ⚠️ FOR DEBUGGING ONLY
-        let dummyDataSource = TransactionPersistence()
-        dummyDataSource.addDummyTransactions(count: 100)
+//        let dummyDataSource = TransactionPersistence()
+//        dummyDataSource.addDummyTransactions(count: 100)
     }
     
     var body: some Scene {
         WindowGroup {
+
+            let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+
             let remoteDataSource = TransactionRemoteDataSourceImpl (
-                client: APIClient(baseURL: "https://api-daruma.selayangsurat.com/"),
-                sessionUserID: "95eb84d2-0a32-4aef-b6c2-bfb5bbc686f5", // TODO: Replace with real session management
-                authorizationToken: "ZG9ydW1hOlFYSnExMVFiRFA=" // TODO: Secure from Keychain or LoginSession
+                client: APIClient(baseURL: "https://750c262edbca.ngrok-free.app/"),
+                sessionUserID: deviceUUID, // TODO: Replace with real session management
+                authorizationToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxYzYwYWFiYy02Y2Y0LTRjNWItYTc0OC0zZWNkMDViMzBiOTMiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJpYXQiOjE3NTU3NTU0NDQsImV4cCI6MTc1NjM2MDI0NH0.sHPrBaNtIrsluhODd2suS9POk3vmL8Vd3QTTDVEhjM4" // TODO: Secure from Keychain or LoginSession
             )
             
             let persistenceDataSource = TransactionPersistence()
@@ -37,9 +41,6 @@ struct CashaApp: App {
                 persistence: persistenceDataSource
             )
             
-           
-            
-
             let syncManager = TransactionSyncManager(
                 remoteDataSource: remoteDataSource,
                 repository: transactionRepository
@@ -50,8 +51,6 @@ struct CashaApp: App {
                 getTotalSpending: GetTotalSpendingUseCase(repository: transactionRepository),
                 getSpendingReport: GetSpendingReportUseCase(repository: transactionRepository), transactionSyncManager: syncManager
             )
-            
-           
             
             // Transaction list state
             let transactionListState = TransactionListState(
@@ -70,3 +69,17 @@ struct CashaApp: App {
         }
     }
 }
+
+//@main
+//struct CashaApp: App {
+//    let container = DependencyContainer.shared
+//
+//    var body: some Scene {
+//        WindowGroup {
+//            SplashView()
+//                .environmentObject(container.makeDashboardState())
+//                .environmentObject(container.makeTransactionListState())
+//                .environmentObject(container.makeReportState())
+//        }
+//    }
+//}

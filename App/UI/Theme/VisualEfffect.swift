@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 struct VisualEffectBlur: UIViewRepresentable {
     var blurStyle: UIBlurEffect.Style

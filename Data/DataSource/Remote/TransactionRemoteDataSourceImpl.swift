@@ -25,8 +25,8 @@ public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource 
     public func addTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha {
         let endpoint = Endpoint.spending
         let headers: [String: String] = [
-            "Authorization": "Basic \(authorizationToken)",
-            "session_user_id": sessionUserID
+            "Authorization": "Bearer \(authorizationToken)",
+//            "session_user_id": sessionUserID
         ]
 
         // ✅ Validate input
@@ -44,6 +44,65 @@ public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource 
         if let image = request.imageURL {
             files.append(UploadFile(fieldName: "file", fileURL: image))
         }
+        
+        let parameters: [String: Any] = [
+//            "period_start": periodStart,
+//            "period_end": periodStart,
+//            "page": page,
+            "input": request.message ?? ""
+                                         
+        ]
+
+//        let response: TransactionResponse = try await client.uploadForm(
+//            endpoint,
+//            formFields: formFields,
+//            headers: headers,
+//            files: files,
+//            responseType: TransactionResponse.self
+//        )
+        
+        let response: TransactionResponse = try await client.request(
+            endpoint,
+            parameters: parameters,
+            headers: headers,
+            responseType: TransactionResponse.self
+        )
+
+        return response.data.toDomain()
+    }
+    
+    
+    public func addTransactionImage(_ request: AddTransactionRequest) async throws -> TransactionCasha {
+        let endpoint = Endpoint.spending
+        let headers: [String: String] = [
+            "Authorization": "Bearer \(authorizationToken)",
+//            "session_user_id": sessionUserID
+        ]
+
+        // ✅ Validate input
+        guard request.message != nil || request.imageURL != nil else {
+            throw NetworkError.invalidRequest
+        }
+
+        // ✅ Always send as multipart/form-data
+        var formFields: [String: String] = [:]
+        
+        if let message = request.message {
+            formFields["text"] = message
+        }
+
+        var files: [UploadFile] = []
+        if let image = request.imageURL {
+            files.append(UploadFile(fieldName: "receipt", fileURL: image))
+        }
+        
+        let parameters: [String: Any] = [
+//            "period_start": periodStart,
+//            "period_end": periodStart,
+//            "page": page,
+            "input": request.message ?? ""
+                                         
+        ]
 
         let response: TransactionResponse = try await client.uploadForm(
             endpoint,
@@ -52,10 +111,16 @@ public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource 
             files: files,
             responseType: TransactionResponse.self
         )
+        
+//        let response: TransactionResponse = try await client.request(
+//            endpoint,
+//            parameters: parameters,
+//            headers: headers,
+//            responseType: TransactionResponse.self
+//        )
 
         return response.data.toDomain()
     }
-    
     
     public func fetchTransactionList(
         periodStart: String,
@@ -66,15 +131,15 @@ public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource 
         let endpoint = Endpoint.spendingList
 
         let headers: [String: String] = [
-            "Authorization": "Basic \(authorizationToken)",
-            "session_user_id": sessionUserID
+            "Authorization": "Bearer \(authorizationToken)",
+//            "session_user_id": sessionUserID
         ]
 
-        let parameters: [String: Any] = [
-            "period_start": periodStart,
-            "period_end": periodStart,
-            "page": page,
-            "limit": limit
+        let parameters: [String: Any] = [:
+//            "period_start": periodStart,
+//            "period_end": periodStart,
+//            "page": page,
+//            "limit": limit
         ]
 
         let response: TransactionListResponse = try await client.request(
@@ -84,7 +149,7 @@ public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource 
             responseType: TransactionListResponse.self
         )
 
-        return response.results.map { $0.toDomain() }
+        return response.data.map { $0.toDomain() }
     }
 
 

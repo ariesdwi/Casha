@@ -13,10 +13,13 @@ import Domain
 struct DashboardView: View {
     @State private var selectedTab: Tab = .week
     @State private var showAddTransaction = false
+    
     @State private var showImagePicker = false
     @State private var selectedImage: UIImage? = nil
     @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
     @State private var showSourceDialog = false
+    
+    
     @EnvironmentObject var dashboardState: DashboardState
     @Environment(\.scenePhase) private var scenePhase
 
@@ -35,9 +38,9 @@ struct DashboardView: View {
                         Text("Report This Month")
                             .font(.headline)
                         Spacer()
-                        Button("See Report") {
-                            // Navigate to report
-                        }
+//                        Button("See Report") {
+//                            // Navigate to report
+//                        }
                         .font(.subheadline)
                         .foregroundColor(.cashaAccent)
                     }
@@ -87,9 +90,9 @@ struct DashboardView: View {
             }
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {
-//                    Task {
-//                        await dashboardState.syncTransactionList()
-//                    }
+                    Task {
+                        await dashboardState.syncTransactionList()
+                    }
                 }
             }
 
