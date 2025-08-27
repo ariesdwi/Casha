@@ -25,9 +25,9 @@ struct CashaApp: App {
             let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
 
             let remoteDataSource = TransactionRemoteDataSourceImpl (
-                client: APIClient(baseURL: "https://750c262edbca.ngrok-free.app/"),
+                client: APIClient(baseURL: "https://dd680ea64b65.ngrok-free.app/"),
                 sessionUserID: deviceUUID, // TODO: Replace with real session management
-                authorizationToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxYzYwYWFiYy02Y2Y0LTRjNWItYTc0OC0zZWNkMDViMzBiOTMiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJpYXQiOjE3NTU3NTU0NDQsImV4cCI6MTc1NjM2MDI0NH0.sHPrBaNtIrsluhODd2suS9POk3vmL8Vd3QTTDVEhjM4" // TODO: Secure from Keychain or LoginSession
+                authorizationToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzOWQ3ODIwYi0yNTU4LTRiZTgtYWRmZC1kYjBkMTI2YjQyMzYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJpYXQiOjE3NTYxMTA2MzgsImV4cCI6MTc1NjcxNTQzOH0.R7uKuAxHx4ogiQK8WEKCOzsFup19EPut6UgEk6M5vy8" // TODO: Secure from Keychain or LoginSession
             )
             
             let persistenceDataSource = TransactionPersistence()
