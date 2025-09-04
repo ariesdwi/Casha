@@ -15,19 +15,26 @@ import Core
 struct CashaApp: App {
     init() {
         // ⚠️ FOR DEBUGGING ONLY
-//        let dummyDataSource = TransactionPersistence()
-//        dummyDataSource.addDummyTransactions(count: 100)
+        //        let dummyDataSource = TransactionPersistence()
+        //        dummyDataSource.addDummyTransactions(count: 100)
     }
     
     var body: some Scene {
         WindowGroup {
-
+            
             let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
-
+            
             let remoteDataSource = TransactionRemoteDataSourceImpl (
-                client: APIClient(baseURL: "https://dd680ea64b65.ngrok-free.app/"),
+                client: APIClient(baseURL: "https://5eb6f0c0cd97.ngrok-free.app/"),
                 sessionUserID: deviceUUID, // TODO: Replace with real session management
-                authorizationToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzOWQ3ODIwYi0yNTU4LTRiZTgtYWRmZC1kYjBkMTI2YjQyMzYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJpYXQiOjE3NTYxMTA2MzgsImV4cCI6MTc1NjcxNTQzOH0.R7uKuAxHx4ogiQK8WEKCOzsFup19EPut6UgEk6M5vy8" // TODO: Secure from Keychain or LoginSession
+                authorizationToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOTE2NzU1Mi04ZGYyLTQwNTQtODI2OS01MGUyZWEwZjNhYmYiLCJlbWFpbCI6InRlc3QzQGV4YW1wbGUuY29tIiwiaWF0IjoxNzU2OTU0MzY4LCJleHAiOjE3NjIxMzgzNjh9.eFWa6Ie6EbJNDzZ6-BHcjJlMYpIs0YXG-v5DaLThstg" // TODO: Secure from Keychain or LoginSession
+            )
+            
+            // MARK: Budget setup
+            let budgetRemoteDataSource = BudgetRemoteDataSourceImpl(
+                client: APIClient(baseURL: "https://5eb6f0c0cd97.ngrok-free.app/"),
+                sessionUserID: deviceUUID,
+                authorizationToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOTE2NzU1Mi04ZGYyLTQwNTQtODI2OS01MGUyZWEwZjNhYmYiLCJlbWFpbCI6InRlc3QzQGV4YW1wbGUuY29tIiwiaWF0IjoxNzU2OTU0MzY4LCJleHAiOjE3NjIxMzgzNjh9.eFWa6Ie6EbJNDzZ6-BHcjJlMYpIs0YXG-v5DaLThstg"
             )
             
             let persistenceDataSource = TransactionPersistence()
@@ -61,10 +68,20 @@ struct CashaApp: App {
             let categoryRepository = CategoryRepositoryImpl( analytics: CategoryAnalytics())
             let reportState = ReportState(getCategorySpendingUseCase: GetCategorySpendingUseCase(repository: categoryRepository))
             
+            
+            
+            
+            
+            let budgetState = BudgetState(
+                fetchUseCase: GetAllBudgetUseCase(repository: budgetRemoteDataSource),
+                addBudgetUseCase: AddBudgetUseCase(repository: budgetRemoteDataSource), getTotalSummaryBudget: GetTotalSummaryBudget(repository: budgetRemoteDataSource)
+            )
+            
             SplashView()
                 .environmentObject(dashboardState)
                 .environmentObject(transactionListState)
                 .environmentObject(reportState)
+                .environmentObject(budgetState)
             
         }
     }

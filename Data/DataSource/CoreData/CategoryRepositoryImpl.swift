@@ -9,7 +9,7 @@
 import Foundation
 import Domain
 
-public final class CategoryRepositoryImpl: CategoryRepositoryProtocol {
+public final class CategoryRepositoryImpl: LocalCategoryRepositoryProtocol {
    
     
 //    private let query: CategoryQueryDataSource

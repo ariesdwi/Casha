@@ -1,9 +1,3 @@
-//
-//  MassageFormInput.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 17/07/25.
-//
 import SwiftUI
 
 struct MessageFormCard: View {
@@ -30,20 +24,20 @@ struct MessageFormCard: View {
                     
                     Spacer()
                     
-                    Button(action: {
-                        onClose()
-                    }) {
+                    Button(action: { onClose() }) {
                         Image(systemName: "xmark.circle.fill")
                             .font(.title2)
                             .foregroundColor(.gray)
                     }
+                    .disabled(dashboardState.isSending) // disable close while sending
                 }
                 
-                // MARK: Message Input
+                // MARK: Message Input with overlay
                 ZStack(alignment: .topLeading) {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color(.systemGray6))
                         .frame(height: 140)
+                    
                     AutoFocusTextEditor(
                         text: $dashboardState.messageInput,
                         onBecomeFirstResponder: true
@@ -55,6 +49,18 @@ struct MessageFormCard: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                     )
+                    .disabled(dashboardState.isSending)
+                    
+                    // Overlay loader if sending
+                    if dashboardState.isSending {
+                        ZStack {
+                            Color.black.opacity(0.05)
+                                .cornerRadius(12)
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle())
+                        }
+                        .frame(height: 140)
+                    }
                 }
                 
                 // MARK: Send Button
@@ -81,23 +87,16 @@ struct MessageFormCard: View {
                     .cornerRadius(12)
                 }
                 .padding(.top)
+                .disabled(dashboardState.isSending) // prevent double tap
             }
             .padding()
             .background(Color.cashaCard)
             .cornerRadius(16)
             .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 4)
             .padding(.horizontal)
-            
         }
         .padding(.bottom, keyboard.currentHeight + 20)
         .animation(.easeOut(duration: 0.3), value: keyboard.currentHeight)
         .edgesIgnoringSafeArea(.bottom)
     }
 }
-
-
-//#Preview {
-//    MessageFormCard(onClose: {
-//
-//    })
-//}

@@ -8,9 +8,9 @@
 import Foundation
 
 public struct GetCategorySpendingUseCase {
-    private let repository: CategoryRepositoryProtocol
+    private let repository: LocalCategoryRepositoryProtocol
 
-    public init(repository: CategoryRepositoryProtocol) {
+    public init(repository: LocalCategoryRepositoryProtocol) {
         self.repository = repository
     }
 

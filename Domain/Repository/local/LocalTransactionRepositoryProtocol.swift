@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol TransactionRepositoryProtocol {
+public protocol LocalTransactionRepositoryProtocol {
     func addTransaction(_ transaction: TransactionCasha) async throws
     func fetchRecentTransactions(limit: Int) -> [TransactionCasha]
     func fetchTotalSpending() -> Double

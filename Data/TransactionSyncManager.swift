@@ -10,15 +10,15 @@ import Foundation
 import Domain
 
 public final class TransactionSyncManager {
-    private let remoteDataSource: TransactionRemoteDataSource
-    private let repository: TransactionRepositoryProtocol
+    private let remoteRepository: RemoteTransactionRepositoryProtocol
+    private let localRepository: LocalTransactionRepositoryProtocol
 
     public init(
-        remoteDataSource: TransactionRemoteDataSource,
-        repository: TransactionRepositoryProtocol
+        remoteDataSource: RemoteTransactionRepositoryProtocol,
+        repository: LocalTransactionRepositoryProtocol
     ) {
-        self.remoteDataSource = remoteDataSource
-        self.repository = repository
+        self.remoteRepository = remoteDataSource
+        self.localRepository = repository
     }
 
     /// AI-driven transaction input flow:
@@ -26,9 +26,9 @@ public final class TransactionSyncManager {
     /// 2. Receive structured transaction.
     /// 3. Save to CoreData.
     public func syncAddTransaction(_ request: AddTransactionRequest) async throws {
-        let transaction = try await remoteDataSource.addTransaction(request)
+        let transaction = try await remoteRepository.addTransaction(request)
         
-        try await repository.addTransaction(transaction)
+        try await localRepository.addTransaction(transaction)
     }
     
     /// AI-driven transaction input flow:
@@ -41,14 +41,14 @@ public final class TransactionSyncManager {
         page: Int = 1,
         limit: Int = 50
     ) async throws {
-        let remoteTransactions = try await remoteDataSource.fetchTransactionList(
+        let remoteTransactions = try await remoteRepository.fetchTransactionList(
             periodStart: periodStart,
             periodEnd: periodEnd,
             page: page,
             limit: limit
         )
 
-        try await repository.mergeTransactions(remoteTransactions)
+        try await localRepository.mergeTransactions(remoteTransactions)
     }
 
 }

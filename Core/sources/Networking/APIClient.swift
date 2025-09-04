@@ -52,8 +52,10 @@ public final class APIClient: NetworkClient {
                     if let data = response.data,
                        let jsonString = String(data: data, encoding: .utf8) {
                         print("❌ Response JSON Body:\n\(jsonString)")
+                        continuation.resume(throwing: NetworkError.serverError(message: jsonString))
+                    } else {
+                        continuation.resume(throwing: NetworkError.fromAFError(error))
                     }
-                    continuation.resume(throwing: error)
                 }
             }
         }

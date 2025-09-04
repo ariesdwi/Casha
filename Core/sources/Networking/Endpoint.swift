@@ -19,7 +19,11 @@ public struct Endpoint {
 
     public static let spending = Endpoint(path: "transactions/create", method: .post)
     public static let spendingList = Endpoint(path: "transactions", method: .get)
-
+    public static let budgetList = Endpoint(path: "budgets/", method: .get)
+    public static let budgetSummary = Endpoint(path: "budgets/summary", method: .get)
+    public static let budgetCreate = Endpoint(path: "budgets/", method: .post)
+    public static let budegtUpdate = Endpoint(path: "budgets/", method: .put)
+    public static let budgetDelete = Endpoint(path: "budgets/", method: .delete)
 }
 
 public enum HTTPMethod {

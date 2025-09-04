@@ -8,7 +8,7 @@
 import Foundation
 import Domain
 
-public protocol TransactionRemoteDataSource {
+public protocol RemoteTransactionRepositoryProtocol {
     func addTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha
     func fetchTransactionList(
         periodStart: String,

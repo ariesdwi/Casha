@@ -11,7 +11,7 @@ import Foundation
 import Core
 import Domain
 
-public final class TransactionRemoteDataSourceImpl: TransactionRemoteDataSource {
+public final class TransactionRemoteDataSourceImpl: RemoteTransactionRepositoryProtocol {
     private let client: NetworkClient
     private let sessionUserID: String
     private let authorizationToken: String

@@ -1,14 +1,6 @@
-//
-//  DashboardView.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 14/07/25.
-//
-
 import SwiftUI
 import Core
 import Domain
-
 
 struct DashboardView: View {
     @State private var selectedTab: Tab = .week
@@ -19,6 +11,9 @@ struct DashboardView: View {
     @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
     @State private var showSourceDialog = false
     
+    // Snackbar states
+    @State private var showSnackbar = false
+    @State private var snackbarMessage = ""
     
     @EnvironmentObject var dashboardState: DashboardState
     @Environment(\.scenePhase) private var scenePhase
@@ -38,11 +33,6 @@ struct DashboardView: View {
                         Text("Report This Month")
                             .font(.headline)
                         Spacer()
-//                        Button("See Report") {
-//                            // Navigate to report
-//                        }
-                        .font(.subheadline)
-                        .foregroundColor(.cashaAccent)
                     }
                     
                     // MARK: Modular Chart View
@@ -58,8 +48,12 @@ struct DashboardView: View {
                     Text("Recent Transaction")
                         .font(.headline)
                         .padding(.top)
+                    if dashboardState.recentTransactions.isEmpty {
+                        EmptyStateView(message: "Trasactions")
+                    } else {
+                        RecentTransactionList(transactions: dashboardState.recentTransactions)
+                    }
                     
-                    RecentTransactionList(transactions: dashboardState.recentTransactions)
                     Spacer(minLength: 40)
                 }
                 .padding()
@@ -95,7 +89,6 @@ struct DashboardView: View {
                     }
                 }
             }
-
             .confirmationDialog("Choose Image Source", isPresented: $showSourceDialog) {
                 Button("Camera") {
                     imageSource = .camera
@@ -133,20 +126,56 @@ struct DashboardView: View {
                     }
                 }
             }
-
-            // MARK: Loading Overlay
+            
+            // MARK: Global Loading Overlay
             if dashboardState.isSending {
-                Color.black.opacity(0.4).ignoresSafeArea()
-                ProgressView("Sending...")
+                ZStack {
+                    Color.black.opacity(0.3).ignoresSafeArea()
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .scaleEffect(1.2)
+                        Text("Sending transaction...")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
                     .padding(20)
-                    .background(Color.white)
+                    .background(.thinMaterial)
                     .cornerRadius(12)
+                }
+                .transition(.opacity)
+                .animation(.easeInOut, value: dashboardState.isSending)
+            }
+            
+            // MARK: Snackbar Overlay
+            if showSnackbar {
+                VStack {
+                    Spacer()
+                    SnackbarView(message: snackbarMessage, isError: true)
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .animation(.easeInOut, value: showSnackbar)
+            }
+        }
+        // Instead of .alert → use snackbar
+        .onChange(of: dashboardState.errorMessage) { newValue in
+            if let error = newValue {
+                showSnackbarMessage(error)
+                dashboardState.errorMessage = nil // reset
+            }
+        }
+    }
+    
+    private func showSnackbarMessage(_ message: String) {
+        snackbarMessage = message
+        withAnimation {
+            showSnackbar = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            withAnimation {
+                showSnackbar = false
             }
         }
     }
 }
-
-
-//#Preview {
-//    DashboardView()
-//}

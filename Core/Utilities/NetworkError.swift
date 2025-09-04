@@ -14,6 +14,7 @@ public enum NetworkError: Error, Equatable {
     case requestFailed(description: String)
     case invalidResponse(statusCode: Int)
     case decodingFailed(underlyingError: Error)
+    case serverError(message: String)
     case unknown(Error)
     
     static func fromAFError(_ error: AFError) -> NetworkError {

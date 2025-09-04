@@ -8,9 +8,9 @@
 import Foundation
 
 public struct GetTotalSpendingUseCase {
-    private let repository: TransactionRepositoryProtocol
+    private let repository: LocalTransactionRepositoryProtocol
 
-    public init(repository: TransactionRepositoryProtocol) {
+    public init(repository: LocalTransactionRepositoryProtocol) {
         self.repository = repository
     }
 

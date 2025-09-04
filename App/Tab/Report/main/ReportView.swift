@@ -11,21 +11,25 @@ import Domain
 
 struct ReportView: View {
     @EnvironmentObject var reportState: ReportState
-
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
                 Text("Spending by Category (\(reportState.selectedPeriod.title))")
                     .font(.title2)
                     .bold()
-
+                
                 if #available(iOS 17.0, *) {
                     ReportCategoryPieChart(data: reportState.categorySpendings)
                 } else {
                     Text("Chart only supported on iOS 17+")
                 }
-
-                ReportCategoryList(data: reportState.categorySpendings)
+                if reportState.categorySpendings.isEmpty {
+                    EmptyStateView(message: "Report")
+                } else {
+                    ReportCategoryList(data: reportState.categorySpendings)
+                }
+                
             }
             .padding()
         }

@@ -134,11 +134,29 @@ final class DashboardState: ObservableObject {
             )
 
             await loadData() // Refresh Core Data view
+        } catch let networkError as NetworkError {
+            switch networkError {
+            case .serverError(let message):
+                errorMessage = "Server error: \(message)"
+            case .invalidResponse(let code):
+                errorMessage = "Invalid response (code: \(code))"
+            case .requestFailed(let description):
+                errorMessage = "Request failed: \(description)"
+            case .decodingFailed(let underlying):
+                errorMessage = "Failed to decode response: \(underlying.localizedDescription)"
+            case .invalidURL, .invalidRequest:
+                errorMessage = "Invalid request"
+            case .unknown(let err):
+                errorMessage = "Unexpected error: \(err.localizedDescription)"
+            }
+            print("[Sync Error] \(errorMessage ?? "Unknown")")
         } catch {
-            errorMessage = error.localizedDescription
+            // fallback for non-NetworkError
+            errorMessage = "Unexpected: \(error.localizedDescription)"
             print("[Sync Error] \(error.localizedDescription)")
         }
     }
+
 
 
 

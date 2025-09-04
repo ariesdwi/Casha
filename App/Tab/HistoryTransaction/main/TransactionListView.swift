@@ -34,7 +34,7 @@ struct TransactionListView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     if state.filteredTransactions.isEmpty {
-                        EmptyStateView()
+                        EmptyStateView(message: "Transactions")
                     } else {
                         ForEach(state.filteredTransactions) { section in
                             TransactionCardView(section: section)

@@ -5,6 +5,7 @@
 //  Created by PT Siaga Abdi Utama on 14/07/25.
 
 import SwiftUI
+import Domain
 
 struct MainTabView: View {
     init() {
@@ -35,7 +36,6 @@ struct MainTabView: View {
             } else { }
             
             // MARK: - Report
-            
             if #available(iOS 16.0, *) {
                 NavigationStack {
                     ReportView()
@@ -44,18 +44,15 @@ struct MainTabView: View {
                     Label("Report", systemImage: "doc.plaintext")
                 }
             } else {}
-
             // MARK: - Profile
             if #available(iOS 16.0, *) {
                 NavigationStack {
-                    ProfileView()
+                    BudgetView()
                 }
                 .tabItem {
-                    Label("Profile", systemImage: "person.crop.circle")
+                    Label("Budget", systemImage: "creditcard")
                 }
             } else {}
-            
-
         }
         .accentColor(.cashaPrimary)
         .background(Color.cashaBackground)
