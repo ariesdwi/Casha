@@ -12,12 +12,10 @@ import CoreData
 import Domain
 
 public final class CategoryAnalytics: CategoryAnalyticsDataSource {
-    private let context: NSManagedObjectContext
     private let manager: CoreDataManager
 
     public init(manager: CoreDataManager = .shared) {
         self.manager = manager
-        self.context = manager.context
     }
 
     public func fetchCategorySpending(startDate: Date, endDate: Date) throws -> [ChartCategorySpending] {
@@ -30,24 +28,38 @@ public final class CategoryAnalytics: CategoryAnalyticsDataSource {
             endDate as NSDate
         )
 
-        let transactions = try context.fetch(request)
+        var categorySpendings: [ChartCategorySpending] = []
+        var fetchError: Error?
 
-        // Group by category name
-        let groupedByCategory = Dictionary(grouping: transactions) { transaction in
-            transaction.category?.name ?? "Uncategorized"
+        manager.context.performAndWait {
+            do {
+                let transactions = try manager.context.fetch(request)
+
+                // Group by category name
+                let groupedByCategory = Dictionary(grouping: transactions) { transaction in
+                    transaction.category?.name ?? "Uncategorized"
+                }
+
+                // Calculate total spending overall
+                let overallTotal = transactions.reduce(0) { $0 + $1.amount }
+
+                // Map to ChartCategorySpending
+                categorySpendings = groupedByCategory.map { (categoryName, transactions) -> ChartCategorySpending in
+                    let total = transactions.reduce(0) { $0 + $1.amount }
+                    let percentage = overallTotal == 0 ? 0 : (total / overallTotal)
+                    return ChartCategorySpending(category: categoryName, total: total, percentage: percentage)
+                }
+                .sorted { $0.total > $1.total }
+
+            } catch {
+                fetchError = error
+            }
         }
 
-        // Calculate total spending overall
-        let overallTotal = transactions.reduce(0) { $0 + $1.amount }
-
-        // Map to ChartCategorySpending
-        let categorySpendings = groupedByCategory.map { (categoryName, transactions) -> ChartCategorySpending in
-            let total = transactions.reduce(0) { $0 + $1.amount }
-            let percentage = overallTotal == 0 ? 0 : (total / overallTotal)
-            return ChartCategorySpending(category: categoryName, total: total, percentage: percentage)
+        if let error = fetchError {
+            throw error
         }
-
-        return categorySpendings.sorted { $0.total > $1.total }
+        return categorySpendings
     }
-
 }
+

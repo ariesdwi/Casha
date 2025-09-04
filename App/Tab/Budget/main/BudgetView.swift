@@ -109,7 +109,7 @@ struct BudgetView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(Color(.systemBackground))
+                .background(Color.cashaCard)
                 .cornerRadius(12)
                 .padding(.horizontal)
             } else {
@@ -123,7 +123,7 @@ struct BudgetView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(Color(.systemBackground))
+                .background(Color.cashaCard)
                 .cornerRadius(12)
                 .padding(.horizontal)
             }

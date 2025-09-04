@@ -77,10 +77,8 @@ struct DashboardView: View {
                     }
                 }
             }
-            .onAppear {
-                Task {
-                    await dashboardState.loadData()
-                }
+            .task {
+                await dashboardState.loadData()
             }
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {

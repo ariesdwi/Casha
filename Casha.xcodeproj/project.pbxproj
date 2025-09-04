@@ -63,7 +63,6 @@
 		6FD7BDD78563A9BD3BBDF61A /* CategoryAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460203219C2B22865645CF16 /* CategoryAnalytics.swift */; };
 		7003DB9D43E18C16D11978A6 /* ReportCategoryPieChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AD5DE806E00DCE2DE24B09 /* ReportCategoryPieChart.swift */; };
 		70AECA4CDFFF01BBEC339C89 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD06A3A543F891F7D822A839 /* SearchView.swift */; };
-		7135534BE09277DA720BFF4E /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14A656622CE52EB07B7AA94 /* DependencyContainer.swift */; };
 		7150F9DE9869B8E1DB4646B1 /* GetTotalSpendingUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D763A49BF1781B1720CD8F6 /* GetTotalSpendingUseCase.swift */; };
 		739092A44851BB0B4BFFF35C /* TransactionLocalDataSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F541794652C89554912A64 /* TransactionLocalDataSourceProtocol.swift */; };
 		792E6B5073586C567E8E0941 /* ReportPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFCCB1B76A2A0E7DCC2B386 /* ReportPeriod.swift */; };
@@ -265,7 +264,6 @@
 		EEC0996241464FF8BD6ED1FE /* CashApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashApp.swift; sourceTree = "<group>"; };
 		EFC8ED3D11C8CBFD6B5784A7 /* Data.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Data.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFCF73D968E57E861B39B825 /* ReportState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportState.swift; sourceTree = "<group>"; };
-		F14A656622CE52EB07B7AA94 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		F1DE5220BF61F5392240CE3D /* TransactionListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListState.swift; sourceTree = "<group>"; };
 		F22F2A9E4C6744DF43F85AAA /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		F8116375BA4FCFF7CCCDD120 /* CategoryCasha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCasha.swift; sourceTree = "<group>"; };
@@ -596,7 +594,6 @@
 			children = (
 				E4AE8EA15BAC1D8BBDF4F731 /* Assets.xcassets */,
 				EEC0996241464FF8BD6ED1FE /* CashApp.swift */,
-				F14A656622CE52EB07B7AA94 /* DependencyContainer.swift */,
 				1AB692BA94258FB20B79FB74 /* Info.plist */,
 				3857BADB13D82851AE4EA0E6 /* LaunchScreen.storyboard */,
 				5056D19EC0C7F7B76FAB19DB /* MainTabView.swift */,
@@ -1012,7 +1009,6 @@
 				C154080530B51A0D73D98748 /* Colors.swift in Sources */,
 				81FEBA747CF6C153F776B8E4 /* DashboardState.swift in Sources */,
 				BD6A059634E94A48E25D3BD6 /* DashboardView.swift in Sources */,
-				7135534BE09277DA720BFF4E /* DependencyContainer.swift in Sources */,
 				7EDCD8605FB2E5300363735A /* EmptyView.swift in Sources */,
 				F833AE73037AE5E865CF9113 /* ImagePicker.swift in Sources */,
 				549B65102E68277B00DEF8F6 /* BudgetState.swift in Sources */,

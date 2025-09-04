@@ -5,44 +5,55 @@
 //  Created by PT Siaga Abdi Utama on 23/07/25.
 //
 
+
 import Foundation
 import CoreData
 import Domain
 import Core
 
-
 public final class TransactionAnalytics: TransactionAnalyticsDataSource {
-    
-    private let context: NSManagedObjectContext
     private let manager: CoreDataManager
-    
+
     public init(manager: CoreDataManager = .shared) {
         self.manager = manager
-        self.context = manager.context
     }
-    
 
     public func fetchSpendingReport() throws -> SpendingReport {
         let calendar = Calendar.current
         let now = Date()
         
-        // Get date components for current date
-        _ = calendar.dateComponents([.year, .month, .yearForWeekOfYear, .weekOfYear], from: now)
-        
         // 1. Start of this week
-        guard let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)) else {
+        guard let startOfWeek = calendar.date(
+            from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)
+        ) else {
             throw SpendingReportError.calendarCalculationFailed
         }
         
         // 2. Start of this month
-        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) else {
+        guard let startOfMonth = calendar.date(
+            from: calendar.dateComponents([.year, .month], from: now)
+        ) else {
             throw SpendingReportError.calendarCalculationFailed
         }
         
         // 3. Fetch all transactions since the beginning of this month
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.predicate = NSPredicate(format: "datetime >= %@", startOfMonth as NSDate)
-        let transactions = try context.fetch(request)
+        
+        var transactions: [TransactionEntity] = []
+        var fetchError: Error?
+        
+        manager.context.performAndWait {
+            do {
+                transactions = try manager.context.fetch(request)
+            } catch {
+                fetchError = error
+            }
+        }
+        
+        if let error = fetchError {
+            throw error
+        }
         
         // 4. Daily bars (Mon–Sun)
         let thisWeekTransactions = transactions.filter { $0.datetime >= startOfWeek }
@@ -84,5 +95,4 @@ public final class TransactionAnalytics: TransactionAnalyticsDataSource {
     enum SpendingReportError: Error {
         case calendarCalculationFailed
     }
-    
 }

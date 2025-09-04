@@ -4,39 +4,37 @@
 //
 //  Created by PT Siaga Abdi Utama on 23/07/25.
 //
+
 import Foundation
 import CoreData
 import Domain
 import Core
 
 public final class TransactionQuery: TransactionQueryDataSource {
-    private let context: NSManagedObjectContext
     private let manager: CoreDataManager
     
     public init(manager: CoreDataManager = .shared) {
         self.manager = manager
-        self.context = manager.context
     }
     
     public func fetch(limit: Int) throws -> [TransactionCasha] {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.fetchLimit = limit
         request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
-        
-        let result = try context.fetch(request)
-        return result.map { $0.toDomain() }
+
+        return try performFetch(request)
     }
-    
+
     public func fetchAll() throws -> [TransactionCasha] {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
-        
-        let result = try context.fetch(request)
-        return result.map { $0.toDomain() }
+
+        return try performFetch(request)
     }
     
     public func fetch(startDate: Date, endDate: Date?) throws -> [TransactionCasha] {
-        let request = TransactionEntity.fetchRequest()
+        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+        
         var predicates: [NSPredicate] = [
             NSPredicate(format: "datetime >= %@", startDate as NSDate)
         ]
@@ -47,33 +45,41 @@ public final class TransactionQuery: TransactionQueryDataSource {
         
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
-        let results = try context.fetch(request)
-        return results.map { $0.toDomain() }
+        
+        return try performFetch(request)
     }
     
     public func search(query: String) throws -> [TransactionCasha] {
-        let request = TransactionEntity.fetchRequest()
+        let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
             NSPredicate(format: "name CONTAINS[cd] %@", query),
             NSPredicate(format: "category.name CONTAINS[cd] %@", query)
         ])
         request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
         
-        let results = try context.fetch(request)
-        
-        return results.map { entity in
-            TransactionCasha(
-                id: entity.id,
-                name: entity.name,
-                category: entity.category?.name ?? "(Uncategorized)",
-                amount: entity.amount,
-                datetime: entity.datetime,
-                isConfirm: entity.isConfirm,
-                createdAt: entity.createdAt,
-                updatedAt: entity.updatedAt
-            )
-        }
+        return try performFetch(request)
     }
     
+    // MARK: - Private helper
+    
+    private func performFetch(_ request: NSFetchRequest<TransactionEntity>) throws -> [TransactionCasha] {
+        var results: [TransactionCasha] = []
+        var fetchError: Error?
+
+        manager.context.performAndWait {
+            do {
+                let entities = try manager.context.fetch(request)
+                results = entities.map { $0.toDomain() }
+            } catch {
+                fetchError = error
+            }
+        }
+
+        if let error = fetchError {
+            throw error
+        }
+        return results
+    }
 }
+
 
