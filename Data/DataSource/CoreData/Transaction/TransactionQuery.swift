@@ -11,6 +11,8 @@ import Domain
 import Core
 
 public final class TransactionQuery: TransactionQueryDataSource {
+   
+    
     private let manager: CoreDataManager
     
     public init(manager: CoreDataManager = .shared) {
@@ -79,6 +81,65 @@ public final class TransactionQuery: TransactionQueryDataSource {
             throw error
         }
         return results
+    }
+    
+    
+    public func fetchUnsyncedTransactions() throws -> [TransactionCasha] {
+        var transactions: [TransactionCasha] = []
+        var fetchError: Error?
+        
+        manager.context.performAndWait {
+            do {
+                let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+                // Use isConfirm = false for unsynced transactions
+                request.predicate = NSPredicate(format: "isConfirm == %@", NSNumber(value: false))
+                
+                let entities = try manager.context.fetch(request)
+                transactions = entities.map { entity in
+                    TransactionCasha(
+                        id: entity.id ?? UUID().uuidString,
+                        name: entity.name ?? "",
+                        category: entity.category?.name ?? "",
+                        amount: entity.amount,
+                        datetime: entity.datetime ?? Date(),
+                        isConfirm: entity.isConfirm,
+                        createdAt: entity.createdAt ?? Date(),
+                        updatedAt: entity.updatedAt ?? Date()
+                    )
+                }
+            } catch {
+                fetchError = error
+            }
+        }
+        
+        if let error = fetchError {
+            throw error
+        }
+        
+        return transactions
+    }
+    
+    public func fetchUnsyncedTransactionsCount() throws -> Int {
+        var count = 0
+        var countError: Error?
+        
+        manager.context.performAndWait {
+            do {
+                let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+                // Use isConfirm = false for unsynced transactions
+                request.predicate = NSPredicate(format: "isConfirm == %@", NSNumber(value: false))
+                
+                count = try manager.context.count(for: request)
+            } catch {
+                countError = error
+            }
+        }
+        
+        if let error = countError {
+            throw error
+        }
+        
+        return count
     }
 }
 

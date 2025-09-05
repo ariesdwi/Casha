@@ -12,6 +12,8 @@ import Domain
 import Core
 
 public final class TransactionPersistence: TransactionPersistenceDataSource {
+  
+    
     private let manager: CoreDataManager
 
     public init(manager: CoreDataManager = .shared) {
@@ -183,6 +185,52 @@ public final class TransactionPersistence: TransactionPersistenceDataSource {
         request.predicate = NSPredicate(format: "name == %@", name)
         request.fetchLimit = 1
         return try manager.context.fetch(request).first
+    }
+    
+    
+    public func markAsSynced(transactionId: String, remoteData: TransactionCasha) throws {
+        var updateError: Error?
+        
+        manager.context.performAndWait {
+            do {
+                let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+                request.predicate = NSPredicate(format: "id == %@", transactionId)
+                request.fetchLimit = 1
+                
+                if let entity = try manager.context.fetch(request).first {
+                    // Update with remote data and mark as synced (isConfirm = true)
+                    entity.name = remoteData.name
+                    entity.amount = remoteData.amount
+                    entity.datetime = remoteData.datetime
+                    entity.isConfirm = true // This marks it as synced
+                    entity.updatedAt = Date()
+                    
+                    // Update category if needed
+                    if let category = try fetchCategoryByName(remoteData.category) {
+                        entity.category = category
+                    } else {
+                        let newCategory = CategoryEntity(context: manager.context)
+                        newCategory.id = UUID().uuidString
+                        newCategory.name = remoteData.category
+                        newCategory.isActive = true
+                        newCategory.createdAt = Date()
+                        newCategory.updatedAt = Date()
+                        entity.category = newCategory
+                    }
+                    
+                    try manager.saveContext()
+                } else {
+                    throw NSError(domain: "TransactionPersistence", code: 404,
+                                userInfo: [NSLocalizedDescriptionKey: "Transaction not found"])
+                }
+            } catch {
+                updateError = error
+            }
+        }
+        
+        if let error = updateError {
+            throw error
+        }
     }
 }
 

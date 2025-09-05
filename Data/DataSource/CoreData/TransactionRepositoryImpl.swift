@@ -10,10 +10,12 @@ import Foundation
 import Domain
 
 public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol {
+    
+    
     private let query: TransactionQueryDataSource
     private let analytics: TransactionAnalyticsDataSource
     private let persistence: TransactionPersistenceDataSource
-
+    
     public init(
         query: TransactionQueryDataSource,
         analytics: TransactionAnalyticsDataSource,
@@ -23,11 +25,11 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
         self.analytics = analytics
         self.persistence = persistence
     }
-
+    
     public func addTransaction(_ transaction: TransactionCasha) async throws {
         try persistence.save(transaction)
     }
-
+    
     public func fetchRecentTransactions(limit: Int) -> [TransactionCasha] {
         do {
             return try query.fetch(limit: limit)
@@ -36,7 +38,7 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
             return []
         }
     }
-
+    
     public func fetchTotalSpending() -> Double {
         do {
             let all = try query.fetchAll()
@@ -46,7 +48,7 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
             return 0
         }
     }
-
+    
     public func fetchSpendingReport() -> [SpendingReport] {
         do {
             let report = try analytics.fetchSpendingReport()
@@ -56,7 +58,7 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
             return []
         }
     }
-
+    
     public func fetchAllTransactions() async -> [TransactionCasha] {
         do {
             return try query.fetchAll()
@@ -67,30 +69,30 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
     }
     
     public func fetchTransactions(startDate: Date, endDate: Date?) async -> [TransactionCasha] {
-          do {
-              return try query.fetch(startDate: startDate, endDate: endDate)
-          } catch {
-              print("Error fetching transactions by period: \(error)")
-              return []
-          }
-      }
-
-      public func searchTransactions(text: String) async -> [TransactionCasha] {
-          do {
-              return try query.search(query: text)
-          } catch {
-              print("Error searching transactions: \(error)")
-              return []
-          }
-      }
+        do {
+            return try query.fetch(startDate: startDate, endDate: endDate)
+        } catch {
+            print("Error fetching transactions by period: \(error)")
+            return []
+        }
+    }
+    
+    public func searchTransactions(text: String) async -> [TransactionCasha] {
+        do {
+            return try query.search(query: text)
+        } catch {
+            print("Error searching transactions: \(error)")
+            return []
+        }
+    }
     
     public func mergeTransactions(_ remoteTransactions: [TransactionCasha]) async throws {
         let localTransactions = try query.fetchAll()
         let localDict = Dictionary(uniqueKeysWithValues: localTransactions.map { ($0.id, $0) })
-
+        
         var toInsert: [TransactionCasha] = []
         var toUpdate: [TransactionCasha] = []
-
+        
         for remote in remoteTransactions {
             if let local = localDict[remote.id] {
                 if remote != local {
@@ -100,17 +102,49 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
                 toInsert.append(remote)
             }
         }
-
+        
         // Save new transactions
         for transaction in toInsert {
             try persistence.save(transaction)
         }
-
+        
         // Update existing transactions
         for transaction in toUpdate {
             try persistence.update(transaction)
         }
     }
-
+    
+    
+    public func getUnsyncedTransactions() async throws -> [TransactionCasha] {
+        do {
+            // Use isConfirm = false to indicate unsynced transactions
+            return try query.fetchUnsyncedTransactions()
+        } catch {
+            print("❌ Failed to fetch unsynced transactions: \(error)")
+            throw error
+        }
+    }
+    
+    public func getUnsyncedTransactionsCount() async throws -> Int {
+        do {
+            // Use isConfirm = false to count unsynced transactions
+            return try query.fetchUnsyncedTransactionsCount()
+        } catch {
+            print("❌ Failed to count unsynced transactions: \(error)")
+            throw error
+        }
+    }
+    
+    public func markAsSynced(transactionId: String, remoteData: TransactionCasha) async throws {
+        do {
+            // Update the transaction to mark it as synced (isConfirm = true)
+            // and update with remote data
+            try persistence.markAsSynced(transactionId: transactionId, remoteData: remoteData)
+        } catch {
+            print("❌ Failed to mark transaction as synced: \(error)")
+            throw error
+        }
+    }
+    
 }
 

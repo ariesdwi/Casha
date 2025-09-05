@@ -16,4 +16,8 @@ public protocol LocalTransactionRepositoryProtocol {
     func searchTransactions(text: String) async -> [TransactionCasha]
     func fetchTransactions(startDate: Date, endDate: Date?) async -> [TransactionCasha]
     func mergeTransactions(_ remoteTransactions: [TransactionCasha]) async throws
+    
+    func getUnsyncedTransactions() async throws -> [TransactionCasha]
+    func getUnsyncedTransactionsCount() async throws -> Int
+    func markAsSynced(transactionId: String, remoteData: TransactionCasha) async throws
 }

@@ -11,6 +11,7 @@ struct DashboardView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
     @State private var showSourceDialog = false
+    @State private var showSyncConfirmation = false
     
     // Snackbar states
     @State private var showSnackbar = false
@@ -29,6 +30,17 @@ struct DashboardView: View {
                     // MARK: Card Balance
                     CardBalanceView(balance: CurrencyFormatter.format(dashboardState.totalSpending))
                     
+                    // MARK: Sync Status Banner
+                    if dashboardState.unsyncedCount > 0 {
+                        SyncStatusBanner(
+                            unsyncedCount: dashboardState.unsyncedCount,
+                            onSyncNow: {
+                                showSyncConfirmation = true
+                            }
+                        )
+                        .padding(.horizontal, -16) // Full width
+                    }
+                    
                     // MARK: Report Section Title
                     HStack {
                         Text("Report This Month")
@@ -46,11 +58,25 @@ struct DashboardView: View {
                     )
                     
                     // MARK: Recent Transactions
-                    Text("Recent Transaction")
-                        .font(.headline)
-                        .padding(.top)
+                    HStack {
+                        Text("Recent Transaction")
+                            .font(.headline)
+                        
+                        Spacer()
+                        
+                        // Sync button in header
+//                        if dashboardState.unsyncedCount > 0 {
+//                            Button {
+//                                showSyncConfirmation = true
+//                            } label: {
+//                                SyncBadgeView(count: dashboardState.unsyncedCount)
+//                            }
+//                        }
+                    }
+                    .padding(.top)
+                    
                     if dashboardState.recentTransactions.isEmpty {
-                        EmptyStateView(message: "Trasactions")
+                        EmptyStateView(message: "Transactions")
                     } else {
                         RecentTransactionList(transactions: dashboardState.recentTransactions)
                     }
@@ -63,6 +89,15 @@ struct DashboardView: View {
             .navigationTitle("Home")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    // Sync button in toolbar
+//                    if dashboardState.unsyncedCount > 0 {
+//                        Button {
+//                            showSyncConfirmation = true
+//                        } label: {
+//                            SyncBadgeView(count: dashboardState.unsyncedCount)
+//                        }
+//                    }
+                    
                     Button {
                         showSourceDialog = true
                     } label: {
@@ -101,7 +136,7 @@ struct DashboardView: View {
                 
                 Button("Cancel", role: .cancel) {}
             }
-            .confirmationDialog("Choose Image Source", isPresented: $showAddTransaction) {
+            .confirmationDialog("Add Transaction", isPresented: $showAddTransaction) {
                 Button("Manual Entry") {
                     showAddManual = true
                 }
@@ -111,6 +146,17 @@ struct DashboardView: View {
                 }
                 
                 Button("Cancel", role: .cancel) {}
+            }
+            .confirmationDialog("Sync Transactions", isPresented: $showSyncConfirmation) {
+                Button("Sync Now") {
+                    Task {
+                        await dashboardState.manualSync()
+                    }
+                }
+                
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("You have \(dashboardState.unsyncedCount) unsynced transaction(s). Sync them to the cloud now?")
             }
             .fullScreenCover(isPresented: $showImagePicker) {
                 ImagePicker(sourceType: imageSource) { image in
@@ -139,31 +185,37 @@ struct DashboardView: View {
             }
             .sheet(isPresented: $showAddManual) {
                 AddTransactionView { newTransaction in
-                    print(newTransaction)
                     Task {
-                        await dashboardState.addTransactionToLocal(newTransaction)
+                        await dashboardState.addTransactionManually(newTransaction)
                     }
                 }
             }
             
             // MARK: Global Loading Overlay
-            if dashboardState.isSending {
+            if dashboardState.isLoading || dashboardState.isSending || dashboardState.isSyncing {
                 ZStack {
                     Color.black.opacity(0.3).ignoresSafeArea()
                     VStack(spacing: 12) {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle())
                             .scaleEffect(1.2)
-                        Text("Sending transaction...")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        
+                        if dashboardState.isSending {
+                            Text("Sending transaction...")
+                        } else if dashboardState.isSyncing {
+                            Text("Syncing \(dashboardState.unsyncedCount) transactions...")
+                        } else {
+                            Text("Loading...")
+                        }
                     }
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                     .padding(20)
                     .background(.thinMaterial)
                     .cornerRadius(12)
                 }
                 .transition(.opacity)
-                .animation(.easeInOut, value: dashboardState.isSending)
+                .animation(.easeInOut, value: dashboardState.isLoading || dashboardState.isSending || dashboardState.isSyncing)
             }
             
             // MARK: Snackbar Overlay
@@ -175,12 +227,27 @@ struct DashboardView: View {
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .animation(.easeInOut, value: showSnackbar)
             }
+            
+            // Floating Sync Button
+//            if dashboardState.unsyncedCount > 0 {
+//                VStack {
+//                    Spacer()
+//                    HStack {
+//                        Spacer()
+//                        Button {
+//                            showSyncConfirmation = true
+//                        } label: {
+//                            SyncFloatingButton(count: dashboardState.unsyncedCount)
+//                        }
+//                        .padding()
+//                    }
+//                }
+//            }
         }
-        // Instead of .alert → use snackbar
         .onChange(of: dashboardState.errorMessage) { newValue in
             if let error = newValue {
                 showSnackbarMessage(error)
-                dashboardState.errorMessage = nil // reset
+                dashboardState.errorMessage = nil
             }
         }
     }
@@ -194,6 +261,84 @@ struct DashboardView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             withAnimation {
                 showSnackbar = false
+            }
+        }
+    }
+}
+
+// MARK: - Sync UI Components
+
+struct SyncStatusBanner: View {
+    let unsyncedCount: Int
+    let onSyncNow: () -> Void
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.orange)
+            
+            Text("\(unsyncedCount) transaction(s) waiting to sync")
+                .font(.subheadline)
+            
+            Spacer()
+            
+            Button("Sync Now", action: onSyncNow)
+                .font(.subheadline.bold())
+                .foregroundColor(.blue)
+        }
+        .padding()
+        .background(Color.orange.opacity(0.1))
+        .cornerRadius(8)
+        .padding(.horizontal, 16)
+    }
+}
+
+struct SyncBadgeView: View {
+    let count: Int
+    
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            Image(systemName: "arrow.triangle.2.circlepath")
+                .font(.system(size: 20))
+                .foregroundColor(.blue)
+            
+            if count > 0 {
+                Text("\(count)")
+                    .font(.system(size: 11, weight: .bold))
+                    .padding(4)
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .offset(x: 8, y: -8)
+            }
+        }
+    }
+}
+
+struct SyncFloatingButton: View {
+    let count: Int
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(Color.blue)
+                .frame(width: 56, height: 56)
+                .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
+            
+            ZStack {
+                Image(systemName: "arrow.triangle.2.circlepath")
+                    .font(.system(size: 22))
+                    .foregroundColor(.white)
+                
+                if count > 0 {
+                    Text("\(count)")
+                        .font(.system(size: 12, weight: .bold))
+                        .padding(4)
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
+                        .offset(x: 12, y: -12)
+                }
             }
         }
     }
