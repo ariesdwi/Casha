@@ -5,31 +5,36 @@
 //  Created by PT Siaga Abdi Utama on 04/09/25.
 //
 
+
 import Foundation
 import Domain
 
 @MainActor
 final class ProfileState: ObservableObject {
+    // Data
     @Published var profile: ProfileCasha?
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
+
+    // Metadata
+    @Published var lastUpdated: Date? = nil
+    @Published var lastError: String? = nil
 
     private let getProfileUsecase: GetProfileUsecase
-    // later you can add: private let updateProfileUsecase: UpdateProfileUsecase
+    // later: private let updateProfileUsecase: UpdateProfileUsecase
 
     init(getProfileUsecase: GetProfileUsecase) {
         self.getProfileUsecase = getProfileUsecase
     }
 
-    func fetchProfile() async {
-        isLoading = true
-        errorMessage = nil
+    func refreshProfile() async {
         do {
             let result = try await getProfileUsecase.execute()
             self.profile = result
+            self.lastUpdated = Date()
+            self.lastError = nil
+            print("✅ Profile refreshed at \(self.lastUpdated!)")
         } catch {
-            self.errorMessage = error.localizedDescription
+            self.lastError = error.localizedDescription
+            print("❌ Failed to refresh profile: \(error.localizedDescription)")
         }
-        isLoading = false
     }
 }

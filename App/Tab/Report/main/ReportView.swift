@@ -49,7 +49,7 @@ struct ReportView: View {
         .onAppear {
             reportState.loadCategorySpending()
         }
-        .background(Color.cashaBackground.ignoresSafeArea())
+        .background(Color.clear)
         .navigationTitle("Report")
     }
 }

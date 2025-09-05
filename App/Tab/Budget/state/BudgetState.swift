@@ -1,10 +1,10 @@
+////
+////  BudgetState.swift
+////  Casha
+////
+////  Created by PT Siaga Abdi Utama on 03/09/25.
+////
 //
-//  BudgetState.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 03/09/25.
-//
-
 import Foundation
 import Domain
 
@@ -68,5 +68,8 @@ public final class BudgetState: ObservableObject {
         isLoading = false
     }
 }
+
+
+
 
 

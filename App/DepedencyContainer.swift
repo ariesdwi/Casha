@@ -290,6 +290,12 @@ final class DependencyContainer {
         GetProfileUsecase(repository: profileRemoteDataSource)
     }()
     
+    private lazy var networkMonitor: NetworkMonitorProtocol = {
+        let monitor = NetworkMonitor()
+        monitor.startMonitoring()
+        return monitor
+    }()
+    
     // MARK: - State Objects Factory Methods
     nonisolated func makeDashboardState() -> DashboardState {
         MainActor.assumeIsolated {
@@ -297,7 +303,8 @@ final class DependencyContainer {
                 getRecentTransactions: getRecentTransactions,
                 getTotalSpending: getTotalSpending,
                 getSpendingReport: getSpendingReport,
-                transactionSyncManager: syncManager
+                transactionSyncManager: syncManager,
+                networkMonitor: networkMonitor
             )
         }
     }

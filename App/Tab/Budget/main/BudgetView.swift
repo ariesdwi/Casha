@@ -21,7 +21,7 @@ struct BudgetView: View {
     
     var body: some View {
         ZStack {
-            Color.cashaBackground.ignoresSafeArea()
+            Color.clear
             
             if state.isLoading {
                 ProgressView("Loading budgets...")

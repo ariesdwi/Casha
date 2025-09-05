@@ -66,6 +66,11 @@
 		549B653F2E69839400DEF8F6 /* DebugTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B653E2E69838F00DEF8F6 /* DebugTools.swift */; };
 		549B65412E6A9F0700DEF8F6 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65402E6A9EFF00DEF8F6 /* AddTransactionView.swift */; };
 		549B65432E6AA0E800DEF8F6 /* AddTransactionLocalUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65422E6AA0CF00DEF8F6 /* AddTransactionLocalUseCase.swift */; };
+		549B65452E6AC4FE00DEF8F6 /* SyncBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65442E6AC4F600DEF8F6 /* SyncBadgeView.swift */; };
+		549B65472E6AC50E00DEF8F6 /* SyncFloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65462E6AC50500DEF8F6 /* SyncFloatingButton.swift */; };
+		549B65492E6ACA7500DEF8F6 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65482E6ACA6D00DEF8F6 /* NetworkMonitor.swift */; };
+		549B654B2E6B182300DEF8F6 /* SyncBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B654A2E6B181C00DEF8F6 /* SyncBanner.swift */; };
+		549B654D2E6B4B9100DEF8F6 /* BudgetSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B654C2E6B4B8B00DEF8F6 /* BudgetSummaryView.swift */; };
 		5C8B7B50E1E818514B3C28C4 /* GetCategorySpendingUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F924F3D1C46578CC32C7FC8B /* GetCategorySpendingUseCase.swift */; };
 		62DE36A24ECD0F9F2D88687C /* TransactionEntity+Mapper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA684ADA57BE48C163D3B156 /* TransactionEntity+Mapper.swift.swift */; };
 		630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650F06C995A36AF03739D2DE /* SplashScreen.swift */; };
@@ -236,6 +241,11 @@
 		549B653E2E69838F00DEF8F6 /* DebugTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugTools.swift; sourceTree = "<group>"; };
 		549B65402E6A9EFF00DEF8F6 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 		549B65422E6AA0CF00DEF8F6 /* AddTransactionLocalUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionLocalUseCase.swift; sourceTree = "<group>"; };
+		549B65442E6AC4F600DEF8F6 /* SyncBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncBadgeView.swift; sourceTree = "<group>"; };
+		549B65462E6AC50500DEF8F6 /* SyncFloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncFloatingButton.swift; sourceTree = "<group>"; };
+		549B65482E6ACA6D00DEF8F6 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		549B654A2E6B181C00DEF8F6 /* SyncBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncBanner.swift; sourceTree = "<group>"; };
+		549B654C2E6B4B8B00DEF8F6 /* BudgetSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetSummaryView.swift; sourceTree = "<group>"; };
 		571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRecentTransactionsUseCase.swift; sourceTree = "<group>"; };
 		5BC10A9EBF4A765B06804F7D /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassageFormInput.swift; sourceTree = "<group>"; };
@@ -412,6 +422,7 @@
 		393CB48AE280BD9BE9A6213C /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				549B65482E6ACA6D00DEF8F6 /* NetworkMonitor.swift */,
 				7E8028FEAC89836B6AA99B85 /* APIClient.swift */,
 				D9A092D37960230010E7D62D /* Endpoint.swift */,
 				5BC10A9EBF4A765B06804F7D /* NetworkClient.swift */,
@@ -468,6 +479,7 @@
 		549B64F12E61823600DEF8F6 /* subView */ = {
 			isa = PBXGroup;
 			children = (
+				549B654C2E6B4B8B00DEF8F6 /* BudgetSummaryView.swift */,
 				549B64F42E619D2700DEF8F6 /* BudgetCardView.swift */,
 			);
 			path = subView;
@@ -731,6 +743,9 @@
 		B400C39F1B591A82F19E3B5C /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				549B654A2E6B181C00DEF8F6 /* SyncBanner.swift */,
+				549B65462E6AC50500DEF8F6 /* SyncFloatingButton.swift */,
+				549B65442E6AC4F600DEF8F6 /* SyncBadgeView.swift */,
 				549B65172E69193400DEF8F6 /* SnackbarView.swift */,
 				20F0EBB436012B473FBF812B /* AutoFocusKeyboard.swift */,
 				17FF4D41D30C84F0B6579060 /* CalculatorView.swift */,
@@ -1046,6 +1061,7 @@
 				8C262D6C7E393D07FC727960 /* CoreDataManager.swift in Sources */,
 				958A1B862CDF5D990F549B52 /* CoreDataStack.swift in Sources */,
 				E80D1483C0A9755F63198C3A /* CurrencyFormatter.swift in Sources */,
+				549B65492E6ACA7500DEF8F6 /* NetworkMonitor.swift in Sources */,
 				052B3E1DE7E62655F0E07420 /* DateHelper.swift in Sources */,
 				3BAE19FFC5C724F23659F849 /* Endpoint.swift in Sources */,
 				26C4C4BA1864C3403EAA9DFB /* NetworkClient.swift in Sources */,
@@ -1083,11 +1099,13 @@
 				0FEA738E4DCD5EE8EF28C817 /* KeyboardHelper.swift in Sources */,
 				4DF19D3BC6841EFF365E8EDE /* MainTabView.swift in Sources */,
 				6CC78093CF69137B940EFC5A /* MassageFormInput.swift in Sources */,
+				549B65452E6AC4FE00DEF8F6 /* SyncBadgeView.swift in Sources */,
 				3B1100E3D85FCEC474B5D845 /* ProfileView.swift in Sources */,
 				549B64F52E619D2F00DEF8F6 /* BudgetCardView.swift in Sources */,
 				D7775C1C9849E7E7A3358A09 /* RecentTransactionList.swift in Sources */,
 				549B65412E6A9F0700DEF8F6 /* AddTransactionView.swift in Sources */,
 				66447906718611F0B83631CC /* ReportCategoryList.swift in Sources */,
+				549B65472E6AC50E00DEF8F6 /* SyncFloatingButton.swift in Sources */,
 				7003DB9D43E18C16D11978A6 /* ReportCategoryPieChart.swift in Sources */,
 				BF704CEDB9E833A0EC96AAA6 /* ReportChartView.swift in Sources */,
 				A012C3E0BF7E778C31CE9B7C /* ReportHeaderView.swift in Sources */,
@@ -1096,9 +1114,11 @@
 				70AECA4CDFFF01BBEC339C89 /* SearchView.swift in Sources */,
 				630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */,
 				8D1A10B1F7803DE3E07E88D1 /* TransactionCardView.swift in Sources */,
+				549B654B2E6B182300DEF8F6 /* SyncBanner.swift in Sources */,
 				3DB356E802B74B04009507C2 /* TransactionFilterBar.swift in Sources */,
 				06102EE794A16FD13312F985 /* TransactionListState.swift in Sources */,
 				549B653D2E69835C00DEF8F6 /* AppConfig.swift in Sources */,
+				549B654D2E6B4B9100DEF8F6 /* BudgetSummaryView.swift in Sources */,
 				BC8699FDA4702CA09ADCE047 /* TransactionListView.swift in Sources */,
 				A4EBF45FD0C32BF588AC9E36 /* VisualEfffect.swift in Sources */,
 			);

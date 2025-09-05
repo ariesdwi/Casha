@@ -1,9 +1,12 @@
 import SwiftUI
 
+
 struct MessageFormCard: View {
     @EnvironmentObject var dashboardState: DashboardState
     @ObservedObject private var keyboard = KeyboardResponder()
     var onClose: () -> Void
+    
+    @State private var isSending: Bool = false
     
     var body: some View {
         VStack {
@@ -29,7 +32,7 @@ struct MessageFormCard: View {
                             .font(.title2)
                             .foregroundColor(.gray)
                     }
-                    .disabled(dashboardState.isSending) // disable close while sending
+                    .disabled(isSending) // disable close while sending
                 }
                 
                 // MARK: Message Input with overlay
@@ -49,10 +52,10 @@ struct MessageFormCard: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                     )
-                    .disabled(dashboardState.isSending)
+                    .disabled(isSending)
                     
                     // Overlay loader if sending
-                    if dashboardState.isSending {
+                    if isSending {
                         ZStack {
                             Color.black.opacity(0.05)
                                 .cornerRadius(12)
@@ -66,12 +69,14 @@ struct MessageFormCard: View {
                 // MARK: Send Button
                 Button(action: {
                     Task {
+                        isSending = true
                         await dashboardState.sendTransaction()
+                        isSending = false
                         onClose()
                     }
                 }) {
                     HStack {
-                        if dashboardState.isSending {
+                        if isSending {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         } else {
@@ -87,7 +92,7 @@ struct MessageFormCard: View {
                     .cornerRadius(12)
                 }
                 .padding(.top)
-                .disabled(dashboardState.isSending) // prevent double tap
+                .disabled(isSending || dashboardState.messageInput.isEmpty) // prevent double tap / empty
             }
             .padding()
             .background(Color(.systemGray6))

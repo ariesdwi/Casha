@@ -46,7 +46,6 @@ struct AddTransactionView: View {
                         }
                     }
                     
-                    Toggle("Confirmed", isOn: $isConfirm)
                 }
                 
                 Section(header: Text("Date & Time")) {
