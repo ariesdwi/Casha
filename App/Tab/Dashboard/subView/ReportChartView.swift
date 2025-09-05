@@ -59,7 +59,7 @@ struct ReportChartView: View {
             .padding(.top, 12)
         }
         .padding()
-        .background(Color.cashaCard)
+        .background(Color(.systemGray6))
         .cornerRadius(12)
     }
 

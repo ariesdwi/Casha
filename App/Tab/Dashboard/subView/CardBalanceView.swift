@@ -22,7 +22,7 @@ struct CardBalanceView: View {
             }
         }
         .padding()
-        .background(Color.cashaCard)
+        .background(Color(.systemGray6))
         .cornerRadius(12)
     }
 }

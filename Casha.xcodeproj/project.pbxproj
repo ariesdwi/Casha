@@ -53,6 +53,19 @@
 		549B65222E693AC500DEF8F6 /* BaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65212E693AC000DEF8F6 /* BaseResponse.swift */; };
 		549B65242E693B0C00DEF8F6 /* BudgetSumarryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65232E693B0000DEF8F6 /* BudgetSumarryDTO.swift */; };
 		549B65262E693DAF00DEF8F6 /* GetTotalSummaryBudgetUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65252E693DA600DEF8F6 /* GetTotalSummaryBudgetUseCase.swift */; };
+		549B65292E6974DD00DEF8F6 /* GetProfileUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65282E6974D000DEF8F6 /* GetProfileUsecase.swift */; };
+		549B652E2E69754E00DEF8F6 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B652D2E69754C00DEF8F6 /* Profile.swift */; };
+		549B652F2E6975F400DEF8F6 /* RemoteTransactionRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C325C8BF9D16506E10A51FC3 /* RemoteTransactionRepositoryProtocol.swift */; };
+		549B65302E69760400DEF8F6 /* RemoteProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B652A2E69750200DEF8F6 /* RemoteProfileRepository.swift */; };
+		549B65322E69766B00DEF8F6 /* ProfileRemoteDataSourceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65312E69765A00DEF8F6 /* ProfileRemoteDataSourceImpl.swift */; };
+		549B65352E69771C00DEF8F6 /* ProfileDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65342E69771700DEF8F6 /* ProfileDTO.swift */; };
+		549B65372E69780700DEF8F6 /* ProfileState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65362E69780200DEF8F6 /* ProfileState.swift */; };
+		549B65392E6982D100DEF8F6 /* DepedencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65382E6982C800DEF8F6 /* DepedencyContainer.swift */; };
+		549B653B2E69831600DEF8F6 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B653A2E69831500DEF8F6 /* EnvironmentKeys.swift */; };
+		549B653D2E69835C00DEF8F6 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B653C2E69835800DEF8F6 /* AppConfig.swift */; };
+		549B653F2E69839400DEF8F6 /* DebugTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B653E2E69838F00DEF8F6 /* DebugTools.swift */; };
+		549B65412E6A9F0700DEF8F6 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65402E6A9EFF00DEF8F6 /* AddTransactionView.swift */; };
+		549B65432E6AA0E800DEF8F6 /* AddTransactionLocalUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65422E6AA0CF00DEF8F6 /* AddTransactionLocalUseCase.swift */; };
 		5C8B7B50E1E818514B3C28C4 /* GetCategorySpendingUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F924F3D1C46578CC32C7FC8B /* GetCategorySpendingUseCase.swift */; };
 		62DE36A24ECD0F9F2D88687C /* TransactionEntity+Mapper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA684ADA57BE48C163D3B156 /* TransactionEntity+Mapper.swift.swift */; };
 		630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650F06C995A36AF03739D2DE /* SplashScreen.swift */; };
@@ -73,7 +86,6 @@
 		8924FAE6B81E47E82FD170D1 /* GetSpendingReportUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD591FF7DB61B921BFF21CE2 /* GetSpendingReportUseCase.swift */; };
 		8C262D6C7E393D07FC727960 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBA490E725E317DAEBD1CB0 /* CoreDataManager.swift */; };
 		8D1A10B1F7803DE3E07E88D1 /* TransactionCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BC2962D413A363669186DC /* TransactionCardView.swift */; };
-		8DF7418BB7F5B2B75CA9A05B /* RemoteTransactionRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C325C8BF9D16506E10A51FC3 /* RemoteTransactionRepositoryProtocol.swift */; };
 		8E55D6E1525B9730F4ABA305 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2905F78354DF39757CEBAA7B /* Domain.framework */; };
 		93C4E6D0423AC18B6B13DEE2 /* TransactionAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA12C3BBD91B2690CA6AD7E /* TransactionAnalytics.swift */; };
 		958A1B862CDF5D990F549B52 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BD8BA610EB29B44E4F6539 /* CoreDataStack.swift */; };
@@ -212,6 +224,18 @@
 		549B65212E693AC000DEF8F6 /* BaseResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseResponse.swift; sourceTree = "<group>"; };
 		549B65232E693B0000DEF8F6 /* BudgetSumarryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetSumarryDTO.swift; sourceTree = "<group>"; };
 		549B65252E693DA600DEF8F6 /* GetTotalSummaryBudgetUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTotalSummaryBudgetUseCase.swift; sourceTree = "<group>"; };
+		549B65282E6974D000DEF8F6 /* GetProfileUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProfileUsecase.swift; sourceTree = "<group>"; };
+		549B652A2E69750200DEF8F6 /* RemoteProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteProfileRepository.swift; sourceTree = "<group>"; };
+		549B652D2E69754C00DEF8F6 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		549B65312E69765A00DEF8F6 /* ProfileRemoteDataSourceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRemoteDataSourceImpl.swift; sourceTree = "<group>"; };
+		549B65342E69771700DEF8F6 /* ProfileDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDTO.swift; sourceTree = "<group>"; };
+		549B65362E69780200DEF8F6 /* ProfileState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileState.swift; sourceTree = "<group>"; };
+		549B65382E6982C800DEF8F6 /* DepedencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepedencyContainer.swift; sourceTree = "<group>"; };
+		549B653A2E69831500DEF8F6 /* EnvironmentKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentKeys.swift; sourceTree = "<group>"; };
+		549B653C2E69835800DEF8F6 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		549B653E2E69838F00DEF8F6 /* DebugTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugTools.swift; sourceTree = "<group>"; };
+		549B65402E6A9EFF00DEF8F6 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
+		549B65422E6AA0CF00DEF8F6 /* AddTransactionLocalUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionLocalUseCase.swift; sourceTree = "<group>"; };
 		571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRecentTransactionsUseCase.swift; sourceTree = "<group>"; };
 		5BC10A9EBF4A765B06804F7D /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassageFormInput.swift; sourceTree = "<group>"; };
@@ -347,6 +371,7 @@
 		11E71D2C5465ED504B03D627 /* DTOs */ = {
 			isa = PBXGroup;
 			children = (
+				549B65332E69771000DEF8F6 /* Profile */,
 				549B65212E693AC000DEF8F6 /* BaseResponse.swift */,
 				549B64FF2E6815D900DEF8F6 /* Budget */,
 				549B64FE2E6815CB00DEF8F6 /* Transaction */,
@@ -405,6 +430,7 @@
 		3FB853C8B34744E8E25818AC /* UseCase */ = {
 			isa = PBXGroup;
 			children = (
+				549B65272E6974C200DEF8F6 /* Profile */,
 				549B650C2E6820B100DEF8F6 /* Budget */,
 				549B650B2E6820AB00DEF8F6 /* Category */,
 				549B650A2E6820A400DEF8F6 /* Transaction */,
@@ -468,6 +494,7 @@
 		549B650A2E6820A400DEF8F6 /* Transaction */ = {
 			isa = PBXGroup;
 			children = (
+				549B65422E6AA0CF00DEF8F6 /* AddTransactionLocalUseCase.swift */,
 				460B0D1441D3B0D965783C26 /* GetTransactionsByPeriodUseCase.swift */,
 				72DF5E101038B0811386468C /* SearchTransactionsUseCase.swift */,
 				1D763A49BF1781B1720CD8F6 /* GetTotalSpendingUseCase.swift */,
@@ -499,6 +526,7 @@
 		549B65112E682FF400DEF8F6 /* remote */ = {
 			isa = PBXGroup;
 			children = (
+				549B652A2E69750200DEF8F6 /* RemoteProfileRepository.swift */,
 				549B65082E68204100DEF8F6 /* RemoteBudgetRepositoryProtocol.swift */,
 				C325C8BF9D16506E10A51FC3 /* RemoteTransactionRepositoryProtocol.swift */,
 			);
@@ -552,6 +580,30 @@
 			path = Report;
 			sourceTree = "<group>";
 		};
+		549B65272E6974C200DEF8F6 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				549B65282E6974D000DEF8F6 /* GetProfileUsecase.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		549B652C2E69754500DEF8F6 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				549B652D2E69754C00DEF8F6 /* Profile.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		549B65332E69771000DEF8F6 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				549B65342E69771700DEF8F6 /* ProfileDTO.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		61BCE8922609673F4AC8D8FD /* Domain */ = {
 			isa = PBXGroup;
 			children = (
@@ -575,6 +627,7 @@
 		68C8F44500C5356673D32279 /* main */ = {
 			isa = PBXGroup;
 			children = (
+				549B65402E6A9EFF00DEF8F6 /* AddTransactionView.swift */,
 				6BAD414E0EE7CA9B3B45E9F7 /* DashboardView.swift */,
 			);
 			path = main;
@@ -592,6 +645,10 @@
 		7212616A616E951CAC6F705E /* App */ = {
 			isa = PBXGroup;
 			children = (
+				549B653E2E69838F00DEF8F6 /* DebugTools.swift */,
+				549B653C2E69835800DEF8F6 /* AppConfig.swift */,
+				549B653A2E69831500DEF8F6 /* EnvironmentKeys.swift */,
+				549B65382E6982C800DEF8F6 /* DepedencyContainer.swift */,
 				E4AE8EA15BAC1D8BBDF4F731 /* Assets.xcassets */,
 				EEC0996241464FF8BD6ED1FE /* CashApp.swift */,
 				1AB692BA94258FB20B79FB74 /* Info.plist */,
@@ -607,6 +664,7 @@
 		7DB13684F2C22655CBC47FE9 /* Remote */ = {
 			isa = PBXGroup;
 			children = (
+				549B65312E69765A00DEF8F6 /* ProfileRemoteDataSourceImpl.swift */,
 				549B64FC2E6814FD00DEF8F6 /* BudgetRemoteDataSourceImpl.swift */,
 				DA195ABA222D4B98C6AA1F7C /* TransactionRemoteDataSourceImpl.swift */,
 				11E71D2C5465ED504B03D627 /* DTOs */,
@@ -617,6 +675,7 @@
 		8AD8CCADD27CD478796E1401 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				549B65362E69780200DEF8F6 /* ProfileState.swift */,
 				A5E1D704E367B0916D91A95B /* ProfileView.swift */,
 			);
 			path = Profile;
@@ -729,6 +788,7 @@
 		C29134EDE0F0EE15F61DAA1E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				549B652C2E69754500DEF8F6 /* Profile */,
 				549B651C2E69381500DEF8F6 /* Report */,
 				549B651B2E6937F600DEF8F6 /* Category */,
 				549B651A2E6937D400DEF8F6 /* Transaction */,
@@ -1000,13 +1060,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				549B65392E6982D100DEF8F6 /* DepedencyContainer.swift in Sources */,
 				3240461EEE65F5553745F1EA /* AutoFocusKeyboard.swift in Sources */,
 				549B64F32E61824500DEF8F6 /* BudgetView.swift in Sources */,
 				FEF460A630A468EA5BD0804B /* CalculatorView.swift in Sources */,
+				549B65372E69780700DEF8F6 /* ProfileState.swift in Sources */,
 				F595EAABC76C93D07D197F7F /* CardBalanceView.swift in Sources */,
 				EBF66CF69B88CD6B2022368D /* CashApp.swift in Sources */,
 				549B64F72E619D4400DEF8F6 /* AddBudgetView.swift in Sources */,
 				C154080530B51A0D73D98748 /* Colors.swift in Sources */,
+				549B653B2E69831600DEF8F6 /* EnvironmentKeys.swift in Sources */,
 				81FEBA747CF6C153F776B8E4 /* DashboardState.swift in Sources */,
 				BD6A059634E94A48E25D3BD6 /* DashboardView.swift in Sources */,
 				7EDCD8605FB2E5300363735A /* EmptyView.swift in Sources */,
@@ -1016,12 +1079,14 @@
 				4D891B6FCAAF9CD8910906CD /* ImagePickerCoordinator.swift in Sources */,
 				CC1668BDED0A931E3FD8C642 /* ImagePickerService.swift in Sources */,
 				7CF63D2893BDFE07F35ABF1F /* ImagePickerServiceProtocol.swift in Sources */,
+				549B653F2E69839400DEF8F6 /* DebugTools.swift in Sources */,
 				0FEA738E4DCD5EE8EF28C817 /* KeyboardHelper.swift in Sources */,
 				4DF19D3BC6841EFF365E8EDE /* MainTabView.swift in Sources */,
 				6CC78093CF69137B940EFC5A /* MassageFormInput.swift in Sources */,
 				3B1100E3D85FCEC474B5D845 /* ProfileView.swift in Sources */,
 				549B64F52E619D2F00DEF8F6 /* BudgetCardView.swift in Sources */,
 				D7775C1C9849E7E7A3358A09 /* RecentTransactionList.swift in Sources */,
+				549B65412E6A9F0700DEF8F6 /* AddTransactionView.swift in Sources */,
 				66447906718611F0B83631CC /* ReportCategoryList.swift in Sources */,
 				7003DB9D43E18C16D11978A6 /* ReportCategoryPieChart.swift in Sources */,
 				BF704CEDB9E833A0EC96AAA6 /* ReportChartView.swift in Sources */,
@@ -1033,6 +1098,7 @@
 				8D1A10B1F7803DE3E07E88D1 /* TransactionCardView.swift in Sources */,
 				3DB356E802B74B04009507C2 /* TransactionFilterBar.swift in Sources */,
 				06102EE794A16FD13312F985 /* TransactionListState.swift in Sources */,
+				549B653D2E69835C00DEF8F6 /* AppConfig.swift in Sources */,
 				BC8699FDA4702CA09ADCE047 /* TransactionListView.swift in Sources */,
 				A4EBF45FD0C32BF588AC9E36 /* VisualEfffect.swift in Sources */,
 			);
@@ -1044,8 +1110,11 @@
 			files = (
 				C7B6A7AAFA692AB846781819 /* AddTransactionRequest.swift in Sources */,
 				7E108FAF821D13E4A9713A28 /* CategoryCasha.swift in Sources */,
+				549B65432E6AA0E800DEF8F6 /* AddTransactionLocalUseCase.swift in Sources */,
 				549B65262E693DAF00DEF8F6 /* GetTotalSummaryBudgetUseCase.swift in Sources */,
 				F7F46DA801F9A1EE860F1050 /* LocalCategoryRepositoryProtocol.swift in Sources */,
+				549B65292E6974DD00DEF8F6 /* GetProfileUsecase.swift in Sources */,
+				549B65302E69760400DEF8F6 /* RemoteProfileRepository.swift in Sources */,
 				D65DF4A0D62CE543ABDDA3DF /* ChartCategorySpending.swift in Sources */,
 				549B65092E68204C00DEF8F6 /* RemoteBudgetRepositoryProtocol.swift in Sources */,
 				D0A324667FBCB463A0C908B0 /* GetAllTransactionsUseCase.swift in Sources */,
@@ -1057,6 +1126,7 @@
 				549B65162E68358600DEF8F6 /* AddBudgetUseCase.swift in Sources */,
 				4336F13B6FEE638E4A13D572 /* GetTransactionsByPeriodUseCase.swift in Sources */,
 				549B650E2E68229700DEF8F6 /* GetAllBudgetUseCase.swift in Sources */,
+				549B652E2E69754E00DEF8F6 /* Profile.swift in Sources */,
 				792E6B5073586C567E8E0941 /* ReportPeriod.swift in Sources */,
 				549B64F92E619E3A00DEF8F6 /* BudgetCasha.swift in Sources */,
 				1E2F46380F4737998F6D02F9 /* SearchTransactionsUseCase.swift in Sources */,
@@ -1064,6 +1134,7 @@
 				3F57337828F84F228D281EF6 /* TransactionCasha.swift in Sources */,
 				30874FBA47A28284C7D95865 /* TransactionDateSection.swift in Sources */,
 				549B651E2E69385B00DEF8F6 /* NewBudgetReq.swift in Sources */,
+				549B652F2E6975F400DEF8F6 /* RemoteTransactionRepositoryProtocol.swift in Sources */,
 				0102372D339AE51D7FCDD9DC /* LocalTransactionRepositoryProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1079,14 +1150,15 @@
 				3821809AAC706A2AF5C71B90 /* CategoryRepositoryImpl.swift in Sources */,
 				549B65072E681C2500DEF8F6 /* CategoryDTO.swift in Sources */,
 				93C4E6D0423AC18B6B13DEE2 /* TransactionAnalytics.swift in Sources */,
+				549B65352E69771C00DEF8F6 /* ProfileDTO.swift in Sources */,
 				549B65222E693AC500DEF8F6 /* BaseResponse.swift in Sources */,
 				539F8C347A64DB46B9482A8D /* TransactionDTO.swift in Sources */,
+				549B65322E69766B00DEF8F6 /* ProfileRemoteDataSourceImpl.swift in Sources */,
 				549B65032E68165600DEF8F6 /* BudgetDTO.swift in Sources */,
 				739092A44851BB0B4BFFF35C /* TransactionLocalDataSourceProtocol.swift in Sources */,
 				BCDAD453FC0545075E6C4DE5 /* TransactionPersistence.swift in Sources */,
 				549B64FD2E68150E00DEF8F6 /* BudgetRemoteDataSourceImpl.swift in Sources */,
 				A95EDD5249D07A447A0D044B /* TransactionQuery.swift in Sources */,
-				8DF7418BB7F5B2B75CA9A05B /* RemoteTransactionRepositoryProtocol.swift in Sources */,
 				A20CD717D8EC97EFB79BF8A5 /* TransactionRemoteDataSourceImpl.swift in Sources */,
 				549B65242E693B0C00DEF8F6 /* BudgetSumarryDTO.swift in Sources */,
 				980324928B8EC9A945036BE6 /* TransactionRepositoryImpl.swift in Sources */,

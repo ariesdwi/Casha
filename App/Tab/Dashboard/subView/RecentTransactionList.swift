@@ -26,7 +26,7 @@ struct RecentTransactionList: View {
                         .fontWeight(.bold)
                 }
                 .padding()
-                .background(Color.cashaCard)
+                .background(Color(.systemGray6))
                 .cornerRadius(10)
             }
         }

@@ -50,5 +50,11 @@ public final class TransactionSyncManager {
 
         try await localRepository.mergeTransactions(remoteTransactions)
     }
+    
+    
+    // Add Function Local
+    public func localAddTransaction(_ request: TransactionCasha) async throws {
+        try await localRepository.addTransaction(request)
+    }
 
 }

@@ -23,3 +23,4 @@ typealias BudgetListResponse = BaseResponse<[BudgetDTO]>
 typealias TransactionResponse = BaseResponse<TransactionDTO>
 typealias TransactionListResponse = BaseResponse<[TransactionDTO]>
 typealias BudgetSummaryResponse = BaseResponse<BudgetSummaryDTO>
+typealias ProfileResponse = BaseResponse<ProfileDTO>

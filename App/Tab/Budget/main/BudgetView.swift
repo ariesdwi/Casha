@@ -21,8 +21,7 @@ struct BudgetView: View {
     
     var body: some View {
         ZStack {
-            Color(.systemGroupedBackground)
-                .edgesIgnoringSafeArea(.all)
+            Color.cashaBackground.ignoresSafeArea()
             
             if state.isLoading {
                 ProgressView("Loading budgets...")
@@ -109,7 +108,7 @@ struct BudgetView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(Color.cashaCard)
+                .background(Color(.systemGray6))
                 .cornerRadius(12)
                 .padding(.horizontal)
             } else {
@@ -123,7 +122,7 @@ struct BudgetView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(Color.cashaCard)
+                .background(Color(.systemGray6))
                 .cornerRadius(12)
                 .padding(.horizontal)
             }

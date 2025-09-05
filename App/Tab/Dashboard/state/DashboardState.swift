@@ -42,7 +42,6 @@ final class DashboardState: ObservableObject {
         self.getTotalSpending = getTotalSpending
         self.getSpendingReport = getSpendingReport
         self.transactionSyncManager = transactionSyncManager
-
     }
 
     @MainActor
@@ -93,6 +92,22 @@ final class DashboardState: ObservableObject {
 
         isSending = false
     }
+    
+    @MainActor
+    func addTransactionToLocal(_ transaction: TransactionCasha) async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            try await transactionSyncManager.localAddTransaction(transaction)
+            await loadData() // Refresh the data
+        } catch {
+            errorMessage = "Failed to add transaction: \(error.localizedDescription)"
+        }
+
+        isLoading = false
+    }
+
 
     @MainActor
     func sendTransactionFromImage() async {

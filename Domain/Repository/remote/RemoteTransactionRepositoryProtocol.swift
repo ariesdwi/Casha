@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Domain
 
 public protocol RemoteTransactionRepositoryProtocol {
     func addTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha

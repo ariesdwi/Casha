@@ -1,20 +1,120 @@
+////
+////  MainTabbar.swift
+////  Casha
+////
+////  Created by PT Siaga Abdi Utama on 14/07/25.
 //
-//  MainTabbar.swift
-//  Casha
+//import SwiftUI
+//import Domain
 //
-//  Created by PT Siaga Abdi Utama on 14/07/25.
+//struct MainTabView: View {
+//    init() {
+//        UITabBar.appearance().backgroundColor = UIColor(Color.cashaBackground)
+//        UITabBar.appearance().unselectedItemTintColor = UIColor.gray
+//    }
+//
+//    var body: some View {
+//        TabView {
+//
+//            // MARK: - Transactions
+//            if #available(iOS 16.0, *) {
+//                NavigationStack {
+//                    TransactionListView()
+//                }
+//                .tabItem {
+//                    Label("Transactions", systemImage: "list.bullet.rectangle")
+//                }
+//            } else { }
+//            
+//            // MARK: - Report
+//            if #available(iOS 16.0, *) {
+//                NavigationStack {
+//                    ReportView()
+//                }
+//                .tabItem {
+//                    Label("Report", systemImage: "doc.plaintext")
+//                }
+//            } else {}
+//            
+//            // MARK: - Home
+//            if #available(iOS 16.0, *) {
+//                NavigationStack {
+//                    DashboardView()
+//                }
+//                .tabItem {
+//                    Label("Home", systemImage: "house.fill")
+//                }
+//            } else { }
+//            
+//            // MARK: - Profile
+//            if #available(iOS 16.0, *) {
+//                NavigationStack {
+//                    BudgetView()
+//                }
+//                .tabItem {
+//                    Label("Budget", systemImage: "creditcard")
+//                }
+//            } else {}
+//            
+//            if #available(iOS 16.0, *) {
+//                NavigationStack {
+//                    ProfileView()
+//                }
+//                .tabItem {
+//                    Label("Profile", systemImage: "person.circle")
+//                }
+//            } else {}
+//        }
+//        .accentColor(.cashaPrimary)
+//        .background(Color.cashaBackground)
+//    }
+//}
+//
+////#Preview {
+////    MainTabView()
+////}
+//
+//
+//
 
 import SwiftUI
 import Domain
 
 struct MainTabView: View {
+    @State private var selectedTab = 2 // 👈 Set default tab index (0 = first tab)
+
     init() {
         UITabBar.appearance().backgroundColor = UIColor(Color.cashaBackground)
         UITabBar.appearance().unselectedItemTintColor = UIColor.gray
     }
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
+            
+            
+            
+            // MARK: - Report
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    ReportView()
+                }
+                .tabItem {
+                    Label("Report", systemImage: "chart.pie.fill")
+                }
+                .tag(1)
+            }
+            
+            // MARK: - Budget
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    BudgetView()
+                }
+                .tabItem {
+                    Label("Budget", systemImage: "creditcard")
+                }
+                .tag(3)
+            }
+            
             // MARK: - Home
             if #available(iOS 16.0, *) {
                 NavigationStack {
@@ -23,8 +123,9 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
-            } else { }
-
+                .tag(2) // 👈 Default tab (set in @State)
+            }
+            
             // MARK: - Transactions
             if #available(iOS 16.0, *) {
                 NavigationStack {
@@ -33,35 +134,21 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Transactions", systemImage: "list.bullet.rectangle")
                 }
-            } else { }
+                .tag(0) // 👈 Give each tab a tag
+            }
             
-            // MARK: - Report
-            if #available(iOS 16.0, *) {
-                NavigationStack {
-                    ReportView()
-                }
-                .tabItem {
-                    Label("Report", systemImage: "doc.plaintext")
-                }
-            } else {}
             // MARK: - Profile
             if #available(iOS 16.0, *) {
                 NavigationStack {
-                    BudgetView()
+                    ProfileView()
                 }
                 .tabItem {
-                    Label("Budget", systemImage: "creditcard")
+                    Label("Profile", systemImage: "person.circle")
                 }
-            } else {}
+                .tag(4)
+            }
         }
         .accentColor(.cashaPrimary)
         .background(Color.cashaBackground)
     }
 }
-
-//#Preview {
-//    MainTabView()
-//}
-
-
-

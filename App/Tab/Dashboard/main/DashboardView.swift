@@ -5,7 +5,8 @@ import Domain
 struct DashboardView: View {
     @State private var selectedTab: Tab = .week
     @State private var showAddTransaction = false
-    
+    @State private var showAddManual = false
+    @State private var showAddChat = false
     @State private var showImagePicker = false
     @State private var selectedImage: UIImage? = nil
     @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
@@ -100,6 +101,17 @@ struct DashboardView: View {
                 
                 Button("Cancel", role: .cancel) {}
             }
+            .confirmationDialog("Choose Image Source", isPresented: $showAddTransaction) {
+                Button("Manual Entry") {
+                    showAddManual = true
+                }
+                
+                Button("Chat AI") {
+                    showAddChat = true
+                }
+                
+                Button("Cancel", role: .cancel) {}
+            }
             .fullScreenCover(isPresented: $showImagePicker) {
                 ImagePicker(sourceType: imageSource) { image in
                     Task {
@@ -110,7 +122,7 @@ struct DashboardView: View {
                     }
                 }
             }
-            .fullScreenCover(isPresented: $showAddTransaction) {
+            .fullScreenCover(isPresented: $showAddChat) {
                 ZStack {
                     VisualEffectBlur(blurStyle: .systemThinMaterialDark)
                         .ignoresSafeArea()
@@ -118,9 +130,18 @@ struct DashboardView: View {
                     VStack {
                         Spacer()
                         MessageFormCard {
-                            showAddTransaction = false
+                            showAddManual = false
+                            showAddChat = false
                         }
                         Spacer()
+                    }
+                }
+            }
+            .sheet(isPresented: $showAddManual) {
+                AddTransactionView { newTransaction in
+                    print(newTransaction)
+                    Task {
+                        await dashboardState.addTransactionToLocal(newTransaction)
                     }
                 }
             }

@@ -90,7 +90,7 @@ struct MessageFormCard: View {
                 .disabled(dashboardState.isSending) // prevent double tap
             }
             .padding()
-            .background(Color.cashaCard)
+            .background(Color(.systemGray6))
             .cornerRadius(16)
             .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 4)
             .padding(.horizontal)

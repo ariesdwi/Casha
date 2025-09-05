@@ -24,6 +24,7 @@ public struct Endpoint {
     public static let budgetCreate = Endpoint(path: "budgets/", method: .post)
     public static let budegtUpdate = Endpoint(path: "budgets/", method: .put)
     public static let budgetDelete = Endpoint(path: "budgets/", method: .delete)
+    public static let getProfile = Endpoint(path: "auth/profile", method: .get)
 }
 
 public enum HTTPMethod {
