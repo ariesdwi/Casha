@@ -81,7 +81,7 @@ public final class TransactionRemoteDataSourceImpl: RemoteTransactionRepositoryP
         let endpoint = Endpoint.spendingList
 
         let headers: [String: String] = [
-            "Authorization": "Bearer \(authorizationToken)",
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? ""),
 //            "session_user_id": sessionUserID
         ]
 

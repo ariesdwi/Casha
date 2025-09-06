@@ -28,11 +28,11 @@ public struct ProfileDTO: Decodable {
         case updatedAt
     }
 
-    public func toDomain() -> ProfileCasha {
+    public func toDomain() -> UserCasha {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
-        return ProfileCasha(
+        return UserCasha(
             id: id,
             email: email,
             name: name,

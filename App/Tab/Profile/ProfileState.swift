@@ -8,23 +8,24 @@
 
 import Foundation
 import Domain
+import Core
 
 @MainActor
 final class ProfileState: ObservableObject {
     // Data
-    @Published var profile: ProfileCasha?
-
+    @Published var profile: UserCasha?
+    
     // Metadata
     @Published var lastUpdated: Date? = nil
     @Published var lastError: String? = nil
-
+    
     private let getProfileUsecase: GetProfileUsecase
     // later: private let updateProfileUsecase: UpdateProfileUsecase
-
+    
     init(getProfileUsecase: GetProfileUsecase) {
         self.getProfileUsecase = getProfileUsecase
     }
-
+    
     func refreshProfile() async {
         do {
             let result = try await getProfileUsecase.execute()
@@ -37,4 +38,7 @@ final class ProfileState: ObservableObject {
             print("❌ Failed to refresh profile: \(error.localizedDescription)")
         }
     }
+    
+    
+    
 }

@@ -1,3 +1,4 @@
+//
 
 import SwiftUI
 import Domain
@@ -7,40 +8,42 @@ import Core
 @main
 struct CashaApp: App {
     private let container = DependencyContainer.shared
+    @StateObject private var loginState: LoginState
     
     init() {
+        let state = container.makeLoginState()
+        _loginState = StateObject(wrappedValue: state)
         setupApp()
     }
     
     var body: some Scene {
         WindowGroup {
-            SplashView()
-                // Using environment objects (traditional approach)
-                .environmentObject(container.makeDashboardState())
-                .environmentObject(container.makeTransactionListState())
-                .environmentObject(container.makeReportState())
-                .environmentObject(container.makeBudgetState())
-                .environmentObject(container.makeProfileState())
-                
-                // Alternative: Using environment values (more SwiftUI-like)
-                .environment(\.dashboardState, container.makeDashboardState())
-                .environment(\.transactionListState, container.makeTransactionListState())
-                .environment(\.reportState, container.makeReportState())
-                .environment(\.budgetState, container.makeBudgetState())
-                .environment(\.profileState, container.makeProfileState())
+            if loginState.isLoggedIn {
+                MainTabView()
+                    .environmentObject(loginState)
+                    .environmentObject(container.makeDashboardState())
+                    .environmentObject(container.makeTransactionListState())
+                    .environmentObject(container.makeReportState())
+                    .environmentObject(container.makeBudgetState())
+                    .environmentObject(container.makeProfileState())
+            } else {
+                SplashView()
+                    .environmentObject(loginState)
+            }
         }
     }
+    
     
     private func setupApp() {
         // App-wide configuration
         configureAppearance()
         
-        #if DEBUG
+#if DEBUG
         DebugTools.printEnvironmentInfo()
         
         // Uncomment to add dummy data for debugging
         // DebugTools.addDummyTransactions(count: 50)
-        #endif
+#endif
     }
     
     private func configureAppearance() {
@@ -57,3 +60,5 @@ struct CashaApp: App {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
 }
+
+

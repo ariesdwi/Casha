@@ -31,6 +31,10 @@ struct ProfileStateKey: EnvironmentKey {
     static let defaultValue: ProfileState = DependencyContainer.shared.makeProfileState()
 }
 
+struct LoginStateKey: EnvironmentKey {
+    static let defaultValue: LoginState = DependencyContainer.shared.makeLoginState()
+}
+
 // MARK: - Environment Values Extension
 extension EnvironmentValues {
     var dashboardState: DashboardState {
@@ -57,4 +61,8 @@ extension EnvironmentValues {
         get { self[ProfileStateKey.self] }
         set { self[ProfileStateKey.self] = newValue }
     }
+    var loginState: LoginState {
+           get { self[LoginStateKey.self] }
+           set { self[LoginStateKey.self] = newValue }
+       }
 }

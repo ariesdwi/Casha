@@ -8,13 +8,13 @@
 import Foundation
 
 public final class GetProfileUsecase {
-    private let repository: RemoteProfileRepository
+    private let repository: RemoteAuthRepositoryProtocol
 
-    public init(repository: RemoteProfileRepository) {
+    public init(repository: RemoteAuthRepositoryProtocol) {
         self.repository = repository
     }
     
-    public func execute() async throws -> ProfileCasha {
+    public func execute() async throws -> UserCasha {
         return try await repository.getProfile()
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ProfileCasha: Identifiable, Equatable {
+public struct UserCasha: Identifiable, Equatable {
     public let id: String
     public let email: String
     public let name: String

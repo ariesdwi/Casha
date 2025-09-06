@@ -10,7 +10,7 @@ import Foundation
 import Core
 import Domain
 
-public final class ProfileRemoteDataSourceImpl: RemoteProfileRepository {
+public final class AuthRemoteDataSourceImpl: RemoteAuthRepositoryProtocol {
     
     private let client: NetworkClient
     private let sessionUserID: String
@@ -23,7 +23,7 @@ public final class ProfileRemoteDataSourceImpl: RemoteProfileRepository {
     }
     
     
-    public func getProfile() async throws -> ProfileCasha {
+    public func getProfile() async throws -> UserCasha {
         let endpoint = Endpoint.getProfile
         
         let headers: [String: String] = [
@@ -46,5 +46,29 @@ public final class ProfileRemoteDataSourceImpl: RemoteProfileRepository {
         return response.data.toDomain()
     }
     
+    
+    public func login(email: String, password: String) async throws -> String {
+        let endpoint = Endpoint.login
+        
+        let body: [String: Any] = [
+            "email": email,
+            "password": password
+        ]
+        
+        let headers: [String: String] = [
+            "Content-Type": "application/json",
+        ]
+        
+        let response: LoginResponse = try await client.request(
+            endpoint,
+            parameters: body,
+            headers: headers, // Usually no auth needed for login
+            responseType: LoginResponse.self
+        )
+        
+       
+        
+        return response.data.accessToken
+    }
     
 }
