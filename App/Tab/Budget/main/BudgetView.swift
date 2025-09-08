@@ -1,3 +1,11 @@
+
+//
+//  BudgetView.swift
+//  Casha
+//
+//  Created by PT Siaga Abdi Utama on 14/07/25.
+//
+
 import SwiftUI
 import Domain
 import Core
@@ -7,12 +15,7 @@ struct BudgetView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showingAddBudget = false
     
-    // Snackbar states
-    @State private var showSnackbar = false
-    @State private var snackbarMessage = ""
-    @State private var snackbarIsError = false
-    
-    // Get current month name for the header
+    // Current month name
     private var currentMonth: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM"
@@ -20,167 +23,151 @@ struct BudgetView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color.clear
-            
-            if state.isLoading {
-                ProgressView("Loading budgets...")
-            } else {
+        if #available(iOS 16.0, *) {
+            VStack(spacing: 0) {
+                // Inline banner for error messages
+                if let error = state.errorMessage {
+                    ErrorBanner(message: error)
+                }
+                
                 ScrollView {
                     VStack(spacing: 20) {
-                        summarySection
-                        budgetsHeader
-                        budgetListOrEmptyState
+                        SummaryView(summary: state.budgetSummary, month: currentMonth)
+                        BudgetsHeaderView(count: state.budgets.count)
+                        BudgetListView(budgets: state.budgets)
                     }
                     .padding(.vertical)
                 }
+                .refreshable {
+                    await state.fetchBudgets()
+                    await state.fetchSummaryBudgets()
+                }
             }
+            .navigationTitle("Budgets")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                loadingIndicator
+                addBudgetButton
+            }
+            .sheet(isPresented: $showingAddBudget) {
+                AddBudgetView { newBudget in
+                    Task { await state.addBudget(request: newBudget) }
+                }
+            }
+            .task {
+                await state.fetchBudgets()
+                await state.fetchSummaryBudgets()
+            }
+        }
+    }
+}
+
+// MARK: - Toolbar
+private extension BudgetView {
+    var loadingIndicator: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            if state.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+            }
+        }
+    }
+    
+    var addBudgetButton: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                showingAddBudget = true
+            } label: {
+                Image(systemName: "plus")
+                    .font(.headline)
+                    .foregroundColor(.cashaAccent)
+            }
+        }
+    }
+}
+
+// MARK: - Subviews
+
+private struct SummaryView: View {
+    let summary: BudgetSummary?
+    let month: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("\(month) Budget")
+                .font(.headline)
             
-            // Snackbar Overlay
-            if showSnackbar {
-                VStack {
-                    Spacer()
-                    SnackbarView(message: snackbarMessage, isError: snackbarIsError)
-                        .onTapGesture {
-                            withAnimation { showSnackbar = false }
-                        }
-                }
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-                .animation(.easeInOut, value: showSnackbar)
-                .zIndex(1)
-            }
-        }
-        .navigationTitle("Budgets")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showingAddBudget = true
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.headline)
-                        .foregroundColor(.cashaAccent)
-                }
-                .disabled(state.isLoading)
-            }
-        }
-        .sheet(isPresented: $showingAddBudget) {
-            AddBudgetView { newBudget in
-                Task {
-                    await state.addBudget(request: newBudget)
-                }
-            }
-        }
-        .task {
-            await state.fetchBudgets()
-            await state.fetchSummaryBudgets()
-        }
-        .onChange(of: state.errorMessage) { newValue in
-            if let error = newValue {
-                showSnackbarMessage(error, isError: true)
-            }
-        }
-    }
-    
-    // MARK: - Subviews
-    
-    private var summarySection: some View {
-        Group {
-            if let summary = state.budgetSummary {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("\(currentMonth) Budget")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
-                    Text("\(CurrencyFormatter.format(summary.totalSpent)) of \(CurrencyFormatter.format(summary.totalBudget)) spent")
+            if let summary {
+                Text("\(CurrencyFormatter.format(summary.totalSpent)) of \(CurrencyFormatter.format(summary.totalBudget)) spent")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                if summary.totalRemaining >= 0 {
+                    Text("Great job! You have \(CurrencyFormatter.format(summary.totalRemaining)) left.")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    if summary.totalRemaining >= 0 {
-                        Text("Great job! You have \(CurrencyFormatter.format(summary.totalRemaining)) left.")
-                            .font(.subheadline)
-                            .foregroundColor(.green)
-                    } else {
-                        Text("You've exceeded your budget by \(CurrencyFormatter.format(summary.totalRemaining)).")
-                            .font(.subheadline)
-                            .foregroundColor(.red)
-                    }
+                        .foregroundColor(.green)
+                } else {
+                    Text("You've exceeded your budget by \(CurrencyFormatter.format(abs(summary.totalRemaining))).")
+                        .font(.subheadline)
+                        .foregroundColor(.red)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
-                .padding(.horizontal)
             } else {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("\(currentMonth) Budget")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    Text("No data available")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
-                .padding(.horizontal)
+                Text("Loading...")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .redacted(reason: .placeholder)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+        .padding(.horizontal)
     }
+}
+
+private struct BudgetsHeaderView: View {
+    let count: Int
     
-    private var budgetsHeader: some View {
+    var body: some View {
         HStack {
             Text("Monthly Budgets")
                 .font(.headline)
-                .foregroundColor(.primary)
-            
             Spacer()
-            
-            Text("\(state.budgets.count)")
+            Text("\(count)")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
         .padding(.horizontal)
     }
+}
+
+private struct BudgetListView: View {
+    let budgets: [BudgetCasha]
     
-    private var budgetListOrEmptyState: some View {
-        Group {
-            if state.budgets.isEmpty {
-                VStack(spacing: 16) {
-                    Image(systemName: "chart.pie.fill")
-                        .font(.system(size: 50))
-                        .foregroundColor(.secondary)
-                    Text("No budgets yet")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    Text("Add a budget to start tracking your expenses")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
+    var body: some View {
+        if budgets.isEmpty {
+            EmptyStateView(message: "Budgets")
+        } else {
+            LazyVStack(spacing: 12) {
+                ForEach(budgets) { budget in
+                    BudgetCardView(budget: budget)
                 }
-                .padding()
-                .frame(maxWidth: .infinity)
-            } else {
-                LazyVStack(spacing: 12) {
-                    ForEach(state.budgets) { budget in
-                        BudgetCardView(budget: budget)
-                    }
-                }
-                .padding(.horizontal)
             }
+            .padding(.horizontal)
         }
     }
+}
+
+private struct ErrorBanner: View {
+    let message: String
     
-    // MARK: - Methods
-    
-    private func showSnackbarMessage(_ message: String, isError: Bool) {
-        snackbarMessage = message
-        snackbarIsError = isError
-        withAnimation { showSnackbar = true }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            withAnimation { showSnackbar = false }
-        }
+    var body: some View {
+        Text(message)
+            .font(.subheadline)
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .background(Color.red)
     }
 }

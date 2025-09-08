@@ -6,11 +6,11 @@
 //
 import SwiftUI
 import Core
-import Domain 
+import Domain
 
 struct ReportCategoryList: View {
     let data: [ChartCategorySpending]
-
+    
     var body: some View {
         VStack(spacing: 16) {
             ForEach(data) { item in
@@ -19,16 +19,16 @@ struct ReportCategoryList: View {
                     HStack {
                         Text(item.category)
                             .font(.title3.bold())
+                        Text(" (\(Int(round(item.percentage * 100)))%)")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(.secondary)
                         Spacer()
                         Text(CurrencyFormatter.format(item.total))
                             .font(.headline)
                             .foregroundColor(.red)
+                        
+                        
                     }
-
-                    // Sub-info like percentage
-                    Text(String(format: "%.1f%% of total spending", item.percentage))
-                        .font(.caption)
-                        .foregroundColor(.gray)
                 }
                 .padding()
                 .background(Color(.systemGray6))
@@ -38,4 +38,5 @@ struct ReportCategoryList: View {
         .padding(.horizontal)
     }
 }
+
 

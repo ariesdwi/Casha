@@ -5,7 +5,6 @@
 //  Created by PT Siaga Abdi Utama on 14/07/25.
 //
 
-
 import SwiftUI
 import Domain
 
@@ -13,23 +12,39 @@ struct ProfileView: View {
     // MARK: - Environment & State
     @EnvironmentObject var state: ProfileState
     @EnvironmentObject var loginState: LoginState
-    
-    @State private var showSnackbar = false
-    @State private var snackbarMessage = ""
-    @State private var snackbarIsError = false
 
     // MARK: - Body
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
-                ZStack {
-                    backgroundLayer
-                    contentLayer
-                    snackbarOverlay
+                ZStack(alignment: .top) {
+                    Color.clear.ignoresSafeArea()
+
+                    VStack(spacing: 0) {
+                        // Error banner
+                        if let error = state.lastError {
+                            Text(error)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.red)
+                        }
+
+                        // Content
+                        if let profile = state.profile {
+                            profileContent(profile)
+                        } else {
+                            placeholderContent
+                        }
+                    }
                 }
                 .navigationTitle("Profile")
+                .navigationBarTitleDisplayMode(.large)
+                .toolbarBackground(.hidden, for: .navigationBar)
+                .toolbar {
+                    loadingIndicator
+                }
                 .task { await state.refreshProfile() }
-                .onChange(of: state.lastError, perform: handleErrorChange)
             }
         } else {
             Text("Only supported on iOS 16+")
@@ -37,34 +52,13 @@ struct ProfileView: View {
     }
 }
 
-// MARK: - Layers
+// MARK: - Toolbar
 private extension ProfileView {
-    var backgroundLayer: some View {
-        Color.clear.ignoresSafeArea()
-    }
-
-    @ViewBuilder
-    var contentLayer: some View {
-        if let profile = state.profile {
-            profileContent(profile)
-        } else {
-            placeholderContent
-        }
-    }
-
-    var snackbarOverlay: some View {
-        Group {
-            if showSnackbar {
-                VStack {
-                    Spacer()
-                    SnackbarView(message: snackbarMessage, isError: snackbarIsError)
-                        .onTapGesture {
-                            withAnimation { showSnackbar = false }
-                        }
-                }
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-                .animation(.easeInOut, value: showSnackbar)
-                .zIndex(1)
+    var loadingIndicator: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            if state.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
             }
         }
     }
@@ -141,6 +135,7 @@ private extension ProfileView {
             Text("No profile loaded")
                 .foregroundColor(.cashaTextSecondary)
         }
+        .padding(.top, 40)
     }
 
     struct ScrollContentBackgroundHiddenIfAvailable: ViewModifier {
@@ -150,25 +145,6 @@ private extension ProfileView {
             } else {
                 content
             }
-        }
-    }
-}
-
-// MARK: - Event Handlers
-private extension ProfileView {
-    func handleErrorChange(_ newValue: String?) {
-        if let error = newValue {
-            showSnackbarMessage(error, isError: true)
-        }
-    }
-
-    func showSnackbarMessage(_ message: String, isError: Bool) {
-        snackbarMessage = message
-        snackbarIsError = isError
-        withAnimation { showSnackbar = true }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            withAnimation { showSnackbar = false }
         }
     }
 }

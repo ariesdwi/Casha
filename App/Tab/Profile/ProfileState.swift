@@ -5,7 +5,6 @@
 //  Created by PT Siaga Abdi Utama on 04/09/25.
 //
 
-
 import Foundation
 import Domain
 import Core
@@ -18,6 +17,7 @@ final class ProfileState: ObservableObject {
     // Metadata
     @Published var lastUpdated: Date? = nil
     @Published var lastError: String? = nil
+    @Published var isLoading: Bool = false   // ✅ add loading flag
     
     private let getProfileUsecase: GetProfileUsecase
     // later: private let updateProfileUsecase: UpdateProfileUsecase
@@ -27,6 +27,9 @@ final class ProfileState: ObservableObject {
     }
     
     func refreshProfile() async {
+        isLoading = true
+        defer { isLoading = false }   // ✅ always reset when done
+        
         do {
             let result = try await getProfileUsecase.execute()
             self.profile = result
@@ -38,7 +41,5 @@ final class ProfileState: ObservableObject {
             print("❌ Failed to refresh profile: \(error.localizedDescription)")
         }
     }
-    
-    
-    
 }
+

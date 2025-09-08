@@ -3,8 +3,6 @@
 //import Domain
 //
 
-
-
 import SwiftUI
 import Core
 import Domain
@@ -46,6 +44,7 @@ struct DashboardView: View {
                 }
                 .navigationTitle("Home")
                 .navigationBarTitleDisplayMode(.large)
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbar { navigationToolbar }
                 .task { await dashboardState.refreshDashboard() }
                 .onChange(of: scenePhase, perform: handleScenePhaseChange)
