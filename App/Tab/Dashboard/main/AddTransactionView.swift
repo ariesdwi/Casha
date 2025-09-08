@@ -24,7 +24,24 @@ struct AddTransactionView: View {
     let onSave: (TransactionCasha) -> Void
     
     // MARK: - Static Data
-    private let categories = ["Food", "Shopping", "Entertainment", "Transportation", "Utilities", "Rent", "Other"]
+    private let categories = [
+        "Food",             // Restaurants, groceries, cafes
+        "Shopping",         // Clothes, electronics, goods
+        "Entertainment",    // Movies, games, events, hobbies
+        "Transportation",   // Gas, public transport, taxis, flights
+        "Utilities",        // Electricity, water, internet, phone
+        "Rent",             // Housing payments
+        "Healthcare",       // Doctor visits, medicine, insurance
+        "Education",        // Tuition, courses, books
+        "Travel",           // Hotels, flights, tours
+        "Subscriptions",    // Netflix, Spotify, apps
+        "Gifts",            // Presents, donations
+        "Investments",      // Stocks, crypto, funds
+        "Taxes",            // Income tax, property tax
+        "Insurance",        // Life, car, health
+        "Savings",          // Bank deposits, emergency funds
+        "Other"             // Anything else not listed
+    ]
     
     // MARK: - Body
     var body: some View {
