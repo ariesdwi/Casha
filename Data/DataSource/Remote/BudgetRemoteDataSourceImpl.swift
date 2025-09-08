@@ -10,24 +10,17 @@ import Core
 import Domain
 
 public final class BudgetRemoteDataSourceImpl: RemoteBudgetRepositoryProtocol {
-  
-    
     private let client: NetworkClient
-    private let sessionUserID: String
-    private let authorizationToken: String
-    
-    public init(client: NetworkClient, sessionUserID: String, authorizationToken: String) {
+
+    public init(client: NetworkClient) {
         self.client = client
-        self.sessionUserID = sessionUserID
-        self.authorizationToken = authorizationToken
     }
     
     public func fetchBudgets() async throws -> [BudgetCasha] {
         let endpoint = Endpoint.budgetList
         
         let headers: [String: String] = [
-            "Authorization": "Bearer \(authorizationToken)",
-            "session_user_id": sessionUserID
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? ""),
         ]
         
         let parameters: [String: Any] = [ :
@@ -49,8 +42,7 @@ public final class BudgetRemoteDataSourceImpl: RemoteBudgetRepositoryProtocol {
         let endpoint = Endpoint.budgetCreate // You'll need to define this endpoint
         
         let headers: [String: String] = [
-            "Authorization": "Bearer \(authorizationToken)",
-            "session_user_id": sessionUserID,
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? ""),
             "Content-Type": "application/json"
         ]
         
@@ -76,8 +68,7 @@ public final class BudgetRemoteDataSourceImpl: RemoteBudgetRepositoryProtocol {
         let endpoint = Endpoint.budgetSummary
         
         let headers: [String: String] = [
-            "Authorization": "Bearer \(authorizationToken)",
-            "session_user_id": sessionUserID
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? "")
         ]
         
         let parameters: [String: Any] = [ :

@@ -76,6 +76,9 @@
 		549B65542E6C04C800DEF8F6 /* LoginDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65532E6C04C500DEF8F6 /* LoginDTO.swift */; };
 		549B65562E6C09B900DEF8F6 /* LoginUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65552E6C09B200DEF8F6 /* LoginUseCase.swift */; };
 		549B65592E6C114200DEF8F6 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65582E6C113F00DEF8F6 /* AuthManager.swift */; };
+		549B655B2E6E7DB100DEF8F6 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B655A2E6E7DAD00DEF8F6 /* RegisterView.swift */; };
+		549B655D2E6E7DBD00DEF8F6 /* RegisterState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B655C2E6E7DB600DEF8F6 /* RegisterState.swift */; };
+		549B655F2E6E82A700DEF8F6 /* RegisterUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B655E2E6E82A000DEF8F6 /* RegisterUseCase.swift */; };
 		5C8B7B50E1E818514B3C28C4 /* GetCategorySpendingUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F924F3D1C46578CC32C7FC8B /* GetCategorySpendingUseCase.swift */; };
 		62DE36A24ECD0F9F2D88687C /* TransactionEntity+Mapper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA684ADA57BE48C163D3B156 /* TransactionEntity+Mapper.swift.swift */; };
 		630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650F06C995A36AF03739D2DE /* SplashScreen.swift */; };
@@ -256,6 +259,9 @@
 		549B65532E6C04C500DEF8F6 /* LoginDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginDTO.swift; sourceTree = "<group>"; };
 		549B65552E6C09B200DEF8F6 /* LoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUseCase.swift; sourceTree = "<group>"; };
 		549B65582E6C113F00DEF8F6 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		549B655A2E6E7DAD00DEF8F6 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		549B655C2E6E7DB600DEF8F6 /* RegisterState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterState.swift; sourceTree = "<group>"; };
+		549B655E2E6E82A000DEF8F6 /* RegisterUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUseCase.swift; sourceTree = "<group>"; };
 		571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRecentTransactionsUseCase.swift; sourceTree = "<group>"; };
 		5BC10A9EBF4A765B06804F7D /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassageFormInput.swift; sourceTree = "<group>"; };
@@ -606,6 +612,7 @@
 		549B65272E6974C200DEF8F6 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				549B655E2E6E82A000DEF8F6 /* RegisterUseCase.swift */,
 				549B65552E6C09B200DEF8F6 /* LoginUseCase.swift */,
 				549B65282E6974D000DEF8F6 /* GetProfileUsecase.swift */,
 			);
@@ -632,6 +639,8 @@
 		549B654E2E6C032A00DEF8F6 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				549B655C2E6E7DB600DEF8F6 /* RegisterState.swift */,
+				549B655A2E6E7DAD00DEF8F6 /* RegisterView.swift */,
 				549B65512E6C033B00DEF8F6 /* LoginState.swift */,
 				549B654F2E6C033300DEF8F6 /* LoginView.swift */,
 			);
@@ -1153,6 +1162,8 @@
 				06102EE794A16FD13312F985 /* TransactionListState.swift in Sources */,
 				549B653D2E69835C00DEF8F6 /* AppConfig.swift in Sources */,
 				549B654D2E6B4B9100DEF8F6 /* BudgetSummaryView.swift in Sources */,
+				549B655B2E6E7DB100DEF8F6 /* RegisterView.swift in Sources */,
+				549B655D2E6E7DBD00DEF8F6 /* RegisterState.swift in Sources */,
 				BC8699FDA4702CA09ADCE047 /* TransactionListView.swift in Sources */,
 				A4EBF45FD0C32BF588AC9E36 /* VisualEfffect.swift in Sources */,
 			);
@@ -1180,6 +1191,7 @@
 				549B65162E68358600DEF8F6 /* AddBudgetUseCase.swift in Sources */,
 				4336F13B6FEE638E4A13D572 /* GetTransactionsByPeriodUseCase.swift in Sources */,
 				549B650E2E68229700DEF8F6 /* GetAllBudgetUseCase.swift in Sources */,
+				549B655F2E6E82A700DEF8F6 /* RegisterUseCase.swift in Sources */,
 				549B652E2E69754E00DEF8F6 /* Profile.swift in Sources */,
 				792E6B5073586C567E8E0941 /* ReportPeriod.swift in Sources */,
 				549B64F92E619E3A00DEF8F6 /* BudgetCasha.swift in Sources */,

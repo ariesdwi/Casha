@@ -19,7 +19,7 @@ final class DependencyContainer {
     private init() {} // Prevent external initialization
     
     // MARK: - Configuration
-    private let baseURL = "https://5eb6f0c0cd97.ngrok-free.app/"
+    private let baseURL = AppConfig.baseURL
     private let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
     
     // TODO: Move to secure storage (Keychain)
@@ -36,33 +36,31 @@ final class DependencyContainer {
     // MARK: - Data Sources
     private lazy var remoteDataSource: TransactionRemoteDataSourceImpl = {
         TransactionRemoteDataSourceImpl(
-            client: apiClient,
-            sessionUserID: deviceUUID,
-            authorizationToken: authToken()
+            client: apiClient
         )
     }()
     
     private lazy var budgetRemoteDataSource: BudgetRemoteDataSourceImpl = {
         BudgetRemoteDataSourceImpl(
-            client: apiClient,
-            sessionUserID: deviceUUID,
-            authorizationToken: authToken()
+            client: apiClient
         )
     }()
     
     private lazy var profileRemoteDataSource: AuthRemoteDataSourceImpl = {
         AuthRemoteDataSourceImpl(
-            client: apiClient,
-            sessionUserID: deviceUUID,
-            authorizationToken: AuthManager.shared.getToken() ?? ""
+            client: apiClient
         )
     }()
     
     private lazy var loginRemoteDataSource: AuthRemoteDataSourceImpl = {
         AuthRemoteDataSourceImpl(
-            client: apiClient,
-            sessionUserID: deviceUUID,
-            authorizationToken: AuthManager.shared.getToken() ?? ""
+            client: apiClient
+        )
+    }()
+    
+    private lazy var registerRemoteDataSource: AuthRemoteDataSourceImpl = {
+        AuthRemoteDataSourceImpl(
+            client: apiClient
         )
     }()
     
@@ -146,6 +144,10 @@ final class DependencyContainer {
         LoginUseCase(repository: loginRemoteDataSource)
     }()
     
+    private lazy var registerUseCase: RegisterUseCase = {
+        RegisterUseCase(repository: registerRemoteDataSource)
+    }()
+    
     private lazy var networkMonitor: NetworkMonitorProtocol = {
         let monitor = NetworkMonitor()
         monitor.startMonitoring()
@@ -204,4 +206,14 @@ final class DependencyContainer {
             )
         }
     }
+    
+    nonisolated func makeRegisterState() -> RegisterState {
+        MainActor.assumeIsolated {
+            RegisterState(
+                registerUseCase: registerUseCase,
+                transactionSyncManager: syncManager
+            )
+        }
+    }
+    
 }

@@ -9,11 +9,11 @@ import Foundation
 import Domain
 
 public struct TransactionDTO: Decodable {
-    public let id: String
-    public let name: String
-    public let amount: Double
-    public let datetime: String
-    public let category: String
+    public let id: String?
+    public let name: String?
+    public let amount: Double?
+    public let datetime: String?
+    public let category: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -28,14 +28,14 @@ public struct TransactionDTO: Decodable {
             formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         
         return TransactionCasha(
-            id: id,
-            name: name,
-            category: category,
-            amount: amount,
-            datetime: formatter.date(from: datetime) ?? Date(),
+            id: id ?? "",
+            name: name ?? "",
+            category: category ?? "",
+            amount: amount ?? 0.0,
+            datetime: formatter.date(from: datetime ?? "") ?? Date(),
             isConfirm: true,
-            createdAt: formatter.date(from: datetime) ?? Date(),   // Or parse if provided
-            updatedAt: formatter.date(from: datetime) ?? Date(),   // Or parse if provided
+            createdAt: formatter.date(from: datetime ?? "") ?? Date(),   // Or parse if provided
+            updatedAt: formatter.date(from: datetime ?? "") ?? Date(),   // Or parse if provided
         )
     }
 }

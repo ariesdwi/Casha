@@ -58,29 +58,21 @@ public final class TransactionSyncManager {
     }
     
     public func syncLocalTransactionsToRemote() async throws {
-        // 1. Get all unsynced transactions from local repository
         let unsyncedTransactions = try await localRepository.getUnsyncedTransactions()
         
         guard !unsyncedTransactions.isEmpty else {
             print("✅ No unsynced transactions found")
             return
         }
-        
         print("🔄 Syncing \(unsyncedTransactions.count) transactions to remote...")
-        
-        // 2. Sync each unsynced transaction one by one
         for transaction in unsyncedTransactions {
             do {
-                // Convert local transaction to remote request format
                 let request = AddTransactionRequest(
                     message: "\(transaction.name) - \(transaction.category) - \(transaction.amount)",
-                    imageURL: nil // Add image URL if you store receipt images
+                    imageURL: nil
                 )
                 
-                // 3. Send to remote server
                 let remoteTransaction = try await remoteRepository.addTransaction(request)
-                
-                // 4. Mark as synced in local database
                 try await localRepository.markAsSynced(
                     transactionId: transaction.id,
                     remoteData: remoteTransaction
@@ -90,17 +82,18 @@ public final class TransactionSyncManager {
                 
             } catch {
                 print("❌ Failed to sync transaction \(transaction.id): \(error)")
-                // Continue with other transactions instead of stopping
-                // Remove this if you want to stop on first error: throw error
             }
         }
         
         print("🎉 All transactions synced successfully!")
     }
     
-    // Add Function Local
     public func getUnsyncTransactionCount() async throws -> Int{
         try await localRepository.getUnsyncedTransactionsCount()
+    }
+    
+    public func deleteAlllocalData() async throws {
+        try await localRepository.deleteAllLocal()
     }
     
 }

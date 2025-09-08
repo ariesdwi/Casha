@@ -12,8 +12,6 @@ import Domain
 import Core
 
 public final class TransactionPersistence: TransactionPersistenceDataSource {
-  
-    
     private let manager: CoreDataManager
 
     public init(manager: CoreDataManager = .shared) {

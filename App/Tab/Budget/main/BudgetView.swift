@@ -45,6 +45,7 @@ struct BudgetView: View {
             }
             .navigationTitle("Budgets")
             .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 loadingIndicator
                 addBudgetButton

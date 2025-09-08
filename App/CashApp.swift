@@ -9,10 +9,13 @@ import Core
 struct CashaApp: App {
     private let container = DependencyContainer.shared
     @StateObject private var loginState: LoginState
+    @StateObject private var registerState: RegisterState
     
     init() {
         let state = container.makeLoginState()
+        let stateRegister = container.makeRegisterState()
         _loginState = StateObject(wrappedValue: state)
+        _registerState = StateObject(wrappedValue: stateRegister)
         setupApp()
     }
     
@@ -29,6 +32,7 @@ struct CashaApp: App {
             } else {
                 SplashView()
                     .environmentObject(loginState)
+                    .environmentObject(registerState)
             }
         }
     }

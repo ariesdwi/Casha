@@ -18,9 +18,6 @@ struct MainTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            
-            
-            
             // MARK: - Report
             if #available(iOS 16.0, *) {
                 NavigationStack {

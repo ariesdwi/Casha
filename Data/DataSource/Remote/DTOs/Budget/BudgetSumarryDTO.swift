@@ -9,9 +9,9 @@ import Foundation
 import Domain
 
 public struct BudgetSummaryDTO: Decodable {
-    public let totalBudget: Double
-    public let totalSpent: Double
-    public let totalRemaining: Double
+    public let totalBudget: Double?
+    public let totalSpent: Double?
+    public let totalRemaining: Double?
    
     public init(
         totalBudget: Double,
@@ -24,6 +24,10 @@ public struct BudgetSummaryDTO: Decodable {
     }
     
     public func toDomain() -> BudgetSummary {
-        return BudgetSummary(totalBudget: totalBudget, totalSpent: totalSpent, totalRemaining: totalRemaining)
+        return BudgetSummary(
+            totalBudget: totalBudget ?? 0.0,
+            totalSpent: totalSpent ?? 0.0,
+            totalRemaining: totalRemaining ?? 0.0
+        )
     }
 }

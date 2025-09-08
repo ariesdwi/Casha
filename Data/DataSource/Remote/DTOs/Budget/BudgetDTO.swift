@@ -9,14 +9,14 @@ import Foundation
 import Domain
 
 public struct BudgetDTO: Decodable {
-    public let id: String
-    public let amount: Double
-    public let spent: Double
-    public let remaining: Double
-    public let period: String
-    public let startDate: String
-    public let endDate: String
-    public let category: CategoryDTO
+    public let id: String?
+    public let amount: Double?
+    public let spent: Double?
+    public let remaining: Double?
+    public let period: String?
+    public let startDate: String?
+    public let endDate: String?
+    public let category: CategoryDTO?
 
     public struct CategoryDTO: Decodable {
         public let id: String
@@ -39,14 +39,14 @@ public struct BudgetDTO: Decodable {
             formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         
         return BudgetCasha(
-            id: id,
-            amount: amount,
-            spent: spent,
-            remaining: remaining,
-            period: period,
-            startDate: formatter.date(from: startDate) ?? Date(),
-                   endDate: formatter.date(from: endDate) ?? Date(),
-            category: category.name // use category name in domain model
+            id: id ?? "",
+            amount: amount ?? 0.0,
+            spent: spent ?? 0.0,
+            remaining: remaining ?? 0.0,
+            period: period ?? "",
+            startDate: formatter.date(from: startDate ?? "") ?? Date(),
+                   endDate: formatter.date(from: endDate ?? "") ?? Date(),
+            category: category?.name ?? "" // use category name in domain model
         )
     }
 }

@@ -112,6 +112,9 @@ private extension ProfileView {
             Section {
                 Button(role: .destructive) {
                     loginState.logout()
+                    Task {
+                        await loginState.deleteLocalData()
+                    }
                     print("Logout tapped")
                 } label: {
                     HStack {

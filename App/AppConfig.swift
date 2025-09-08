@@ -9,7 +9,7 @@
 import Foundation
 
 enum AppConfig {
-    static let baseURL = "https://5eb6f0c0cd97.ngrok-free.app/"
+    static let baseURL = "https://0b1f8da97613.ngrok-free.app/"
     static let appName = "Casha"
     
     #if DEBUG

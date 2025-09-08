@@ -11,15 +11,10 @@ import Core
 import Domain
 
 public final class AuthRemoteDataSourceImpl: RemoteAuthRepositoryProtocol {
-    
     private let client: NetworkClient
-    private let sessionUserID: String
-    private let authorizationToken: String
-    
-    public init(client: NetworkClient, sessionUserID: String, authorizationToken: String) {
+   
+    public init(client: NetworkClient) {
         self.client = client
-        self.sessionUserID = sessionUserID
-        self.authorizationToken = authorizationToken
     }
     
     
@@ -27,8 +22,7 @@ public final class AuthRemoteDataSourceImpl: RemoteAuthRepositoryProtocol {
         let endpoint = Endpoint.getProfile
         
         let headers: [String: String] = [
-            "Authorization": "Bearer \(authorizationToken)",
-            "session_user_id": sessionUserID
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? "")
         ]
         
         let parameters: [String: Any] = [ :
@@ -68,7 +62,33 @@ public final class AuthRemoteDataSourceImpl: RemoteAuthRepositoryProtocol {
         
        
         
-        return response.data.accessToken
+        return response.data.accessToken ?? ""
     }
+    
+    public func register(email: String, password: String, name: String, avatar: String) async throws -> String {
+        let endpoint = Endpoint.signup
+        
+        let body: [String: Any] = [
+            "email": email,
+            "password": password,
+            "name": name,
+            "avatar": avatar
+        ]
+        
+        let headers: [String: String] = [
+            "Content-Type": "application/json",
+        ]
+        
+        let response: LoginResponse = try await client.request(
+            endpoint,
+            parameters: body,
+            headers: headers,
+            responseType: LoginResponse.self
+        )
+        
+        return response.data.accessToken ?? ""
+
+    }
+    
     
 }

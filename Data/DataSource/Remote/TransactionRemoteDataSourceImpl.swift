@@ -6,26 +6,21 @@
 //
 
 
-
 import Foundation
 import Core
 import Domain
 
 public final class TransactionRemoteDataSourceImpl: RemoteTransactionRepositoryProtocol {
     private let client: NetworkClient
-    private let sessionUserID: String
-    private let authorizationToken: String
-
-    public init(client: NetworkClient, sessionUserID: String, authorizationToken: String) {
+  
+    public init(client: NetworkClient) {
         self.client = client
-        self.sessionUserID = sessionUserID
-        self.authorizationToken = authorizationToken
     }
     
     public func addTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha {
         let endpoint = Endpoint.spending
         let headers: [String: String] = [
-            "Authorization": "Bearer \(authorizationToken)",
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? ""),
 //            "session_user_id": sessionUserID
         ]
 

@@ -146,5 +146,17 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
         }
     }
     
+    
+    public func deleteAllLocal() async throws {
+        do {
+            // Update the transaction to mark it as synced (isConfirm = true)
+            // and update with remote data
+            try persistence.deleteAll()
+        } catch {
+            print("❌ Failed to mark transaction as synced: \(error)")
+            throw error
+        }
+    }
+    
 }
 

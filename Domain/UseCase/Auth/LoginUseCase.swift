@@ -18,9 +18,4 @@ public final class LoginUseCase {
     public func execute(email: String, password: String) async throws -> String {
         return try await repository.login(email: email, password: password)
     }
-
-    /// Optionally fetch profile after login
-    public func fetchProfile() async throws -> UserCasha {
-        return try await repository.getProfile()
-    }
 }

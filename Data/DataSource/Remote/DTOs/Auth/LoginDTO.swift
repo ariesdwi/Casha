@@ -7,7 +7,7 @@
 import Domain
 
 public struct LoginDTO: Decodable {
-    public let accessToken: String
+    public let accessToken: String?
 
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"

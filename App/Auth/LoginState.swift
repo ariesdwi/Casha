@@ -73,6 +73,16 @@ final class LoginState: ObservableObject {
             isLoggedIn = true
         }
     }
+    
+    
+    func deleteLocalData() async {
+        do {
+            try await transactionSyncManager.deleteAlllocalData()
+        } catch {
+            
+        }
+        
+    }
 }
 
 

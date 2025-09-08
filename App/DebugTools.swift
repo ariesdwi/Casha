@@ -20,8 +20,13 @@ struct DebugTools {
     
     static func clearAllData() {
         let persistence = TransactionPersistence()
-        // Implement clear method if available, or handle persistence reset
-        print("🧹 All data cleared (if implemented)")
+        do {
+             try persistence.deleteAll()
+            print("🧹 All data cleared (if implemented)")
+        } catch {
+            
+        }
+        
     }
     
     static func printEnvironmentInfo() {

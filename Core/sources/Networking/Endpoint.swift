@@ -26,6 +26,7 @@ public struct Endpoint {
     public static let budgetDelete = Endpoint(path: "budgets/", method: .delete)
     public static let getProfile = Endpoint(path: "auth/profile", method: .get)
     public static let login = Endpoint(path: "auth/login", method: .post)
+    public static let signup = Endpoint(path: "auth/signup", method: .post)
 }
 
 public enum HTTPMethod {
