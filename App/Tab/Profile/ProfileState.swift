@@ -19,10 +19,10 @@ final class ProfileState: ObservableObject {
     @Published var lastError: String? = nil
     @Published var isLoading: Bool = false   // ✅ add loading flag
     
-    private let getProfileUsecase: GetProfileUsecase
+    private let getProfileUsecase: GetProfileUseCase
     // later: private let updateProfileUsecase: UpdateProfileUsecase
     
-    init(getProfileUsecase: GetProfileUsecase) {
+    init(getProfileUsecase: GetProfileUseCase) {
         self.getProfileUsecase = getProfileUsecase
     }
     

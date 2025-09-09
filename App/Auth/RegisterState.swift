@@ -18,22 +18,16 @@ final class RegisterState: ObservableObject {
     @Published var name = ""
     @Published var email = ""
     @Published var password = ""
-    @Published var avatar = ""
-    
-    // MARK: - State
+    @Published var phone = ""
     @Published private(set) var isLoading: Bool = false
-    
-    
+
     private let registerUseCase: RegisterUseCase
-    private let transactionSyncManager: TransactionSyncManager
     
     // MARK: - Init
     init(
         registerUseCase: RegisterUseCase,
-        transactionSyncManager: TransactionSyncManager
     ) {
         self.registerUseCase = registerUseCase
-        self.transactionSyncManager = transactionSyncManager
     }
     
     // MARK: - Actions
@@ -46,21 +40,8 @@ final class RegisterState: ObservableObject {
                 email: email,
                 password: password,
                 name: name,
-                avatar: avatar
+                phone: phone
             )
-            
-            // Save token persistently
-            AuthManager.shared.saveToken(token)
-            
-             
-            // Sync transactions after register (optional)
-            try await transactionSyncManager.syncAllTransactions(
-                periodStart: "2025-07-01",
-                periodEnd: "2025-09-30",
-                page: 1,
-                limit: 50
-            )
-            
         } catch {
             print("❌ Registration failed: \(error)")
             

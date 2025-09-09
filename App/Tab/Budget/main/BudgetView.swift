@@ -1,64 +1,46 @@
-
-//
-//  BudgetView.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 14/07/25.
-//
-
 import SwiftUI
 import Domain
 import Core
 
 struct BudgetView: View {
     @EnvironmentObject var state: BudgetState
-    @Environment(\.dismiss) private var dismiss
+    @State private var selectedMonthYear: String = ""
     @State private var showingAddBudget = false
     
-    // Current month name
-    private var currentMonth: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM"
-        return formatter.string(from: Date())
-    }
-    
     var body: some View {
-        if #available(iOS 16.0, *) {
-            VStack(spacing: 0) {
-                // Inline banner for error messages
-                if let error = state.errorMessage {
-                    ErrorBanner(message: error)
-                }
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        SummaryView(summary: state.budgetSummary, month: currentMonth)
-                        BudgetsHeaderView(count: state.budgets.count)
-                        BudgetListView(budgets: state.budgets)
-                    }
-                    .padding(.vertical)
-                }
-                .refreshable {
-                    await state.fetchBudgets()
-                    await state.fetchSummaryBudgets()
-                }
+        VStack(spacing: 0) {
+            // Inline error banner
+            if let error = state.errorMessage {
+                ErrorBanner(message: error)
             }
-            .navigationTitle("Budgets")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar {
-                loadingIndicator
-                addBudgetButton
-            }
-            .sheet(isPresented: $showingAddBudget) {
-                AddBudgetView { newBudget in
-                    Task { await state.addBudget(request: newBudget) }
+            
+            // 👇 Month/year filter bar
+            ScrollView {
+                VStack(spacing: 20) {
+                    SummaryView(summary: state.budgetSummary, month: selectedMonthYear)
+                    BudgetsHeaderView(count: state.budgets.count)
+                    BudgetListView(budgets: state.budgets)
                 }
+                .padding(.vertical)
             }
-            .task {
-                await state.fetchBudgets()
-                await state.fetchSummaryBudgets()
+        }
+        .navigationTitle("Budgets")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            loadingIndicator
+            addBudgetButton
+            monthFilterButton
+        }
+        .sheet(isPresented: $showingAddBudget) {
+            AddBudgetView { newBudget in
+                Task { await state.addBudget(request: newBudget) }
             }
+        }
+        .task {
+            let current = DateHelper.generateMonthYearOptions().first ?? ""
+            selectedMonthYear = current
+            await state.fetchBudgets(monthYear: current)
+            await state.fetchSummaryBudgets(monthYear: current)
         }
     }
 }
@@ -88,7 +70,6 @@ private extension BudgetView {
 }
 
 // MARK: - Subviews
-
 private struct SummaryView: View {
     let summary: BudgetSummary?
     let month: String
@@ -124,6 +105,38 @@ private struct SummaryView: View {
         .background(Color(.systemGray6))
         .cornerRadius(12)
         .padding(.horizontal)
+    }
+}
+
+private extension BudgetView {
+    var monthFilterButton: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            // Generate month options once
+            let monthOptions = DateHelper.generateMonthYearOptions()
+
+            Menu {
+                ForEach(monthOptions, id: \.self) { option in
+                    Button {
+                        selectedMonthYear = option
+                        Task {
+                            await state.fetchBudgets(monthYear: option)
+                            await state.fetchSummaryBudgets(monthYear: option)
+                        }
+                    } label: {
+                        HStack {
+                            Text(option)
+                            if option == selectedMonthYear {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                    .font(.headline)
+                    .foregroundColor(.cashaAccent)
+            }
+        }
     }
 }
 
@@ -172,3 +185,4 @@ private struct ErrorBanner: View {
             .background(Color.red)
     }
 }
+

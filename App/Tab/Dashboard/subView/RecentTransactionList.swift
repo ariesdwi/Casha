@@ -20,6 +20,8 @@ struct RecentTransactionList: View {
                             .font(.subheadline)
                         Text(transaction.name)
                             .font(.caption)
+                        Text(DateHelper.format(transaction.datetime, style: .sectionDate))
+                            .font(.caption)
                     }
                     Spacer()
                     Text(CurrencyFormatter.format(transaction.amount))

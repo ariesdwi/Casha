@@ -14,9 +14,36 @@ struct RegisterView: View {
     @EnvironmentObject var loginState: LoginState
     @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Field?
+    @State private var showCountryPicker = false
+    @State private var selectedCountry: Country = .indonesia
     
     enum Field: Hashable {
-        case name, email, password, avatar
+        case name, email, password, phone
+    }
+    
+    struct Country: Identifiable, Hashable {
+        let id = UUID()
+        let name: String
+        let code: String
+        let flag: String
+        let dialCode: String
+        
+        static let indonesia = Country(name: "Indonesia", code: "ID", flag: "🇮🇩", dialCode: "+62")
+        static let singapore = Country(name: "Singapore", code: "SG", flag: "🇸🇬", dialCode: "+65")
+        static let malaysia = Country(name: "Malaysia", code: "MY", flag: "🇲🇾", dialCode: "+60")
+        static let vietnam = Country(name: "Vietnam", code: "VN", flag: "🇻🇳", dialCode: "+84")
+        static let thailand = Country(name: "Thailand", code: "TH", flag: "🇹🇭", dialCode: "+66")
+        
+        static let popularCountries: [Country] = [
+            .indonesia, .singapore, .malaysia, .vietnam, .thailand,
+            Country(name: "United States", code: "US", flag: "🇺🇸", dialCode: "+1"),
+            Country(name: "United Kingdom", code: "GB", flag: "🇬🇧", dialCode: "+44"),
+            Country(name: "Australia", code: "AU", flag: "🇦🇺", dialCode: "+61"),
+            Country(name: "Japan", code: "JP", flag: "🇯🇵", dialCode: "+81"),
+            Country(name: "South Korea", code: "KR", flag: "🇰🇷", dialCode: "+82"),
+            Country(name: "China", code: "CN", flag: "🇨🇳", dialCode: "+86"),
+            Country(name: "India", code: "IN", flag: "🇮🇳", dialCode: "+91")
+        ]
     }
     
     var body: some View {
@@ -51,6 +78,9 @@ struct RegisterView: View {
                     }
                 }
                 .onTapGesture { hideKeyboard() }
+                .sheet(isPresented: $showCountryPicker) {
+                    CountryPickerView(selectedCountry: $selectedCountry, isPresented: $showCountryPicker)
+                }
             }
         } else {
             // Fallback on earlier versions
@@ -91,7 +121,7 @@ struct RegisterView: View {
                 field: .name,
                 placeholder: "Enter your full name",
                 contentType: .name,
-                submitField: .email,           // next focus field
+                submitField: .email,
                 submitLabel: .next
             )
             
@@ -103,7 +133,7 @@ struct RegisterView: View {
                 placeholder: "Enter your email",
                 contentType: .emailAddress,
                 keyboard: .emailAddress,
-                submitField: .password,        // next focus field
+                submitField: .password,
                 submitLabel: .next
             )
             
@@ -113,26 +143,73 @@ struct RegisterView: View {
                 text: $state.password,
                 field: .password,
                 placeholder: "Create a password",
-                submit: .avatar           // next focus field
+                submit: .phone
             )
             
-            // Avatar URL (optional)
-            formField(
-                title: "Avatar URL (optional)",
-                text: $state.avatar,
-                field: .avatar,
-                placeholder: "Paste avatar image URL",
-                contentType: .URL,
-                keyboard: .URL,
-                submitLabel: .done,            // Done key for last field
-                onSubmit: {
-                    Task { await performRegistration() }
-                }
-            )
+            // Phone with country code selection
+            phoneField
         }
         .padding(.horizontal)
     }
-
+    
+    private var phoneField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Phone")
+                .font(.caption)
+                .foregroundColor(.cashaTextSecondary)
+                .padding(.horizontal, 4)
+            
+            HStack(spacing: 0) {
+                // Country Code Button
+                Button(action: { showCountryPicker = true }) {
+                    HStack(spacing: 4) {
+                        Text(selectedCountry.flag)
+                        Text(selectedCountry.dialCode)
+                            .foregroundColor(.cashaTextPrimary)
+                        Image(systemName: "chevron.down")
+                            .font(.caption)
+                            .foregroundColor(.cashaTextSecondary)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
+                    .background(Color.cashaCard)
+                }
+                
+                // Phone Number TextField
+                TextField("Phone Number", text: Binding(
+                    get: {
+                        // Remove country code prefix for display
+                        if state.phone.hasPrefix(selectedCountry.dialCode) {
+                            return String(state.phone.dropFirst(selectedCountry.dialCode.count))
+                        }
+                        return state.phone
+                    },
+                    set: { newValue in
+                        // Automatically add country code prefix and filter non-numeric characters
+                        let numericString = newValue.filter { $0.isNumber }
+                        state.phone = selectedCountry.dialCode + numericString
+                    }
+                ))
+                .keyboardType(.phonePad)
+                .textContentType(.telephoneNumber)
+                .autocapitalization(.none)
+                .autocorrectionDisabled()
+                .submitLabel(.done)
+                .onSubmit {
+                    Task { await performRegistration() }
+                }
+                .focused($focusedField, equals: .phone)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 12)
+            }
+            .background(Color.cashaCard)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(focusedField == .phone ? Color.cashaPrimary : Color.clear, lineWidth: 1)
+            )
+        }
+    }
     
     private var termsView: some View {
         Text("By signing up, you agree to our Terms of Service and Privacy Policy")
@@ -225,7 +302,8 @@ struct RegisterView: View {
     private var isFormValid: Bool {
         !state.name.trimmingCharacters(in: .whitespaces).isEmpty &&
         !state.email.trimmingCharacters(in: .whitespaces).isEmpty &&
-        state.password.count >= 6
+        state.password.count >= 6 &&
+        state.phone.count > selectedCountry.dialCode.count // Country code plus at least 1 digit
     }
     
     // MARK: - Private Methods
@@ -263,8 +341,8 @@ struct RegisterView: View {
         placeholder: String,
         contentType: UITextContentType,
         keyboard: UIKeyboardType = .default,
-        submitField: Field? = nil,             // next field to focus
-        submitLabel: SubmitLabel = .next,      // return key type
+        submitField: Field? = nil,
+        submitLabel: SubmitLabel = .next,
         onSubmit: (() -> Void)? = nil
     ) -> some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -282,7 +360,7 @@ struct RegisterView: View {
                 .background(Color.cashaCard)
                 .cornerRadius(12)
                 .focused($focusedField, equals: field)
-                .submitLabel(submitLabel)              // use SubmitLabel here
+                .submitLabel(submitLabel)
                 .onSubmit {
                     if let action = onSubmit {
                         action()
@@ -292,7 +370,6 @@ struct RegisterView: View {
                 }
         }
     }
-
     
     private func secureFormField(title: String, text: Binding<String>, field: Field, placeholder: String, submit: Field) -> some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -313,5 +390,59 @@ struct RegisterView: View {
     }
 }
 
-
-
+// MARK: - Country Picker View
+struct CountryPickerView: View {
+    @Binding var selectedCountry: RegisterView.Country
+    @Binding var isPresented: Bool
+    @State private var searchText = ""
+    
+    var filteredCountries: [RegisterView.Country] {
+        if searchText.isEmpty {
+            return RegisterView.Country.popularCountries
+        } else {
+            return RegisterView.Country.popularCountries.filter {
+                $0.name.localizedCaseInsensitiveContains(searchText) ||
+                $0.dialCode.localizedCaseInsensitiveContains(searchText) ||
+                $0.code.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+    
+    var body: some View {
+        NavigationView {
+            List(filteredCountries) { country in
+                Button(action: {
+                    selectedCountry = country
+                    isPresented = false
+                }) {
+                    HStack {
+                        Text(country.flag)
+                            .font(.title2)
+                        VStack(alignment: .leading) {
+                            Text(country.name)
+                                .foregroundColor(.primary)
+                            Text(country.dialCode)
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
+                        Spacer()
+                        if country.id == selectedCountry.id {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+            }
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search country")
+            .navigationTitle("Select Country")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                }
+            }
+        }
+    }
+}

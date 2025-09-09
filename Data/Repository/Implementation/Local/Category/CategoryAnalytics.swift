@@ -11,6 +11,10 @@ import Core
 import CoreData
 import Domain
 
+public protocol CategoryAnalyticsDataSource {
+    func fetchCategorySpending(startDate: Date, endDate: Date) throws -> [ChartCategorySpending]
+}
+
 public final class CategoryAnalytics: CategoryAnalyticsDataSource {
     private let manager: CoreDataManager
 

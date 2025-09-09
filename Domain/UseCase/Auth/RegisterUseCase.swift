@@ -15,12 +15,12 @@ public final class RegisterUseCase {
     }
 
     /// Perform register and return access token
-    public func execute(email: String, password: String, name: String, avatar: String) async throws -> String {
+    public func execute(email: String, password: String, name: String, phone: String) async throws -> String {
         return try await repository.register(
             email: email,
             password: password,
             name: name,
-            avatar: avatar
+            phone: phone
         )
     }
 }

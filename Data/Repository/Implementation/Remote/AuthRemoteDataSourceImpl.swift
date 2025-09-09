@@ -65,14 +65,15 @@ public final class AuthRemoteDataSourceImpl: RemoteAuthRepositoryProtocol {
         return response.data.accessToken ?? ""
     }
     
-    public func register(email: String, password: String, name: String, avatar: String) async throws -> String {
+    public func register(email: String, password: String, name: String, phone: String) async throws -> String {
         let endpoint = Endpoint.signup
         
         let body: [String: Any] = [
             "email": email,
             "password": password,
             "name": name,
-            "avatar": avatar
+            "phone": phone,
+            "avatar": ""
         ]
         
         let headers: [String: String] = [

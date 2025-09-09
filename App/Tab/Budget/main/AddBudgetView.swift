@@ -1,48 +1,54 @@
-//
-//  AddBudgetView.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 29/08/25.
-//
+//////
+//////  AddBudgetView.swift
+//////  Casha
+//////
+//////  Created by PT Siaga Abdi Utama on 29/08/25.
+///
 import SwiftUI
 import Domain
+import Core
 
 struct AddBudgetView: View {
     @Environment(\.dismiss) private var dismiss
     
     // MARK: - State
     @State private var amount: String = ""
-    @State private var selectedPeriod: String = "monthly"
-    @State private var startDate: Date = Date()
-    @State private var endDate: Date = Date()
+    @State private var selectedMonth: String = ""
     @State private var selectedCategory: String = ""
-    
     @State private var errorMessage: String? = nil
     
     // MARK: - Callback
     let onSave: (NewBudgetRequest) -> Void
     
-    // MARK: - Static Data
-    private let periods = ["daily", "weekly", "monthly", "yearly"]
+    // MARK: - Categories
     private let categories = [
-        "Food",             // Restaurants, groceries, cafes
-        "Shopping",         // Clothes, electronics, goods
-        "Entertainment",    // Movies, games, events, hobbies
-        "Transportation",   // Gas, public transport, taxis, flights
-        "Utilities",        // Electricity, water, internet, phone
-        "Rent",             // Housing payments
-        "Healthcare",       // Doctor visits, medicine, insurance
-        "Education",        // Tuition, courses, books
-        "Travel",           // Hotels, flights, tours
-        "Subscriptions",    // Netflix, Spotify, apps
-        "Gifts",            // Presents, donations
-        "Investments",      // Stocks, crypto, funds
-        "Taxes",            // Income tax, property tax
-        "Insurance",        // Life, car, health
-        "Savings",          // Bank deposits, emergency funds
-        "Other"             // Anything else not listed
+        "Food", "Shopping", "Entertainment", "Transportation", "Utilities",
+        "Rent", "Healthcare", "Education", "Travel", "Subscriptions",
+        "Gifts", "Investments", "Taxes", "Insurance", "Savings", "Other"
     ]
-
+    
+    // MARK: - Month Year Options
+    private let monthYearOptions: [String] = {
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let currentYear = calendar.component(.year, from: currentDate)
+        let currentMonth = calendar.component(.month, from: currentDate)
+        
+        let months = ["January", "February", "March", "April", "May", "June",
+                     "July", "August", "September", "October", "November", "December"]
+        
+        var options: [String] = []
+        
+        // Current year + next year
+        for year in [currentYear, currentYear + 1] {
+            let startMonth = year == currentYear ? currentMonth : 1
+            for month in startMonth...12 {
+                options.append("\(months[month - 1]) \(year)")
+            }
+        }
+        
+        return options
+    }()
     
     // MARK: - Body
     var body: some View {
@@ -50,27 +56,31 @@ struct AddBudgetView: View {
             Form {
                 Section(header: Text("Budget Details")) {
                     
-                    // Amount Field
+                    // Amount Field with live IDR formatting
                     TextField("Enter amount", text: $amount)
-                        .keyboardType(.decimalPad)
+                        .keyboardType(.numberPad)
+                        .onChange(of: amount) { newValue in
+                            let formatted = CurrencyFormatter.format(input: newValue)
+                            if formatted != amount {
+                                amount = formatted
+                            }
+                        }
                     
-                    Picker("Period", selection: $selectedPeriod) {
-                        ForEach(periods, id: \.self) { period in
-                            Text(period.capitalized).tag(period)
+                    // Month + Year Picker
+                    Picker("Month", selection: $selectedMonth) {
+                        Text("Select Month").tag("")
+                        ForEach(monthYearOptions, id: \.self) { monthYear in
+                            Text(monthYear).tag(monthYear)
                         }
                     }
                     
+                    // Category Picker
                     Picker("Category", selection: $selectedCategory) {
                         Text("Select Category").tag("")
                         ForEach(categories, id: \.self) { category in
                             Text(category).tag(category)
                         }
                     }
-                }
-                
-                Section(header: Text("Date Range")) {
-                    DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
-                    DatePicker("End Date", selection: $endDate, in: startDate..., displayedComponents: .date)
                 }
                 
                 if let errorMessage {
@@ -85,15 +95,18 @@ struct AddBudgetView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+                    Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        saveBudget()
-                    }
-                    .disabled(!isFormValid)
+                    Button("Save") { saveBudget() }
+                        .disabled(!isFormValid)
+                }
+            }
+            .onAppear {
+                // Set default selection to current month if not already set
+                if selectedMonth.isEmpty {
+                    let currentMonthYear = Self.monthYearFormatter.string(from: Date())
+                    selectedMonth = currentMonthYear
                 }
             }
         }
@@ -101,26 +114,28 @@ struct AddBudgetView: View {
     
     // MARK: - Helpers
     private var isFormValid: Bool {
-        guard let amountValue = Double(amount), amountValue > 0 else { return false }
-        return !selectedCategory.isEmpty && endDate >= startDate
+        let rawAmount = CurrencyFormatter.extractRawValue(from: amount)
+        return rawAmount > 0 && !selectedCategory.isEmpty && !selectedMonth.isEmpty
     }
     
     private func saveBudget() {
-        guard let amountValue = Double(amount), amountValue > 0 else {
+        let rawAmount = CurrencyFormatter.extractRawValue(from: amount)
+        guard rawAmount > 0 else {
             errorMessage = "Please enter a valid amount greater than 0"
             return
         }
-        
-        guard endDate >= startDate else {
-            errorMessage = "End date must be after start date"
+        guard !selectedCategory.isEmpty else {
+            errorMessage = "Please select a category"
+            return
+        }
+        guard !selectedMonth.isEmpty else {
+            errorMessage = "Please select a month"
             return
         }
         
         let newBudget = NewBudgetRequest(
-            amount: amountValue,
-            period: selectedPeriod,
-            startDate: Self.dateFormatter.string(from: startDate),
-            endDate: Self.dateFormatter.string(from: endDate),
+            amount: rawAmount,
+            month: selectedMonth,
             category: selectedCategory
         )
         
@@ -128,10 +143,9 @@ struct AddBudgetView: View {
         dismiss()
     }
     
-    private static let dateFormatter: DateFormatter = {
+    private static let monthYearFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = "MMMM yyyy"
         return formatter
     }()
 }
-

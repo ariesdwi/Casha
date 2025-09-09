@@ -7,14 +7,15 @@
 
 import Foundation
 
-public final class GetTotalSummaryBudget {
+public final class GetBudgetSummaryUseCase {
     private let repository: RemoteBudgetRepositoryProtocol
 
     public init(repository: RemoteBudgetRepositoryProtocol) {
         self.repository = repository
     }
     
-    public func execute() async throws -> BudgetSummary {
-        return try await repository.fetchsummaryBudgets()
+    /// Execute fetching summary with optional monthYear filter (e.g. "2025-09")
+    public func execute(monthYear: String? = nil) async throws -> BudgetSummary {
+        return try await repository.fetchSummaryBudgets(monthYear: monthYear)
     }
 }

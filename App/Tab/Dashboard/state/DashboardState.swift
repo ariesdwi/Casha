@@ -1,5 +1,4 @@
 
-
 import Foundation
 import Domain
 import Data
@@ -22,16 +21,21 @@ final class DashboardState: ObservableObject {
     @Published var messageInput: String = ""
     @Published var selectedImageURL: URL? = nil
     
-    // Metadata (instead of isLoading/spinners)
+    // Metadata
     @Published var unsyncedCount: Int = 0
     @Published var isOnline: Bool = false
     @Published var lastSyncTime: Date? = nil
+    
+    // UI State
+    @Published var isSyncing: Bool = false
     
     private var networkMonitor: NetworkMonitorProtocol
     private let getRecentTransactions: GetRecentTransactionsUseCase
     private let getTotalSpending: GetTotalSpendingUseCase
     private let getSpendingReport: GetSpendingReportUseCase
     private let transactionSyncManager: TransactionSyncManager
+    private let getUnsyncTransactionCount: GetUnsyncTransactionCountUseCase
+    private let addLocalTransaction: AddTransactionLocalUseCase
     
     private var lastSyncAttempt: Date = .distantPast
     
@@ -39,24 +43,27 @@ final class DashboardState: ObservableObject {
         getRecentTransactions: GetRecentTransactionsUseCase,
         getTotalSpending: GetTotalSpendingUseCase,
         getSpendingReport: GetSpendingReportUseCase,
-        transactionSyncManager: TransactionSyncManager,
-        networkMonitor: NetworkMonitorProtocol
+        getUnsyncTransactionCount: GetUnsyncTransactionCountUseCase,
+        addLocalTransaction: AddTransactionLocalUseCase,
+        networkMonitor: NetworkMonitorProtocol,
+        transactionSyncManager: TransactionSyncManager
     ) {
         self.getRecentTransactions = getRecentTransactions
         self.getTotalSpending = getTotalSpending
         self.getSpendingReport = getSpendingReport
+        self.getUnsyncTransactionCount = getUnsyncTransactionCount
+        self.addLocalTransaction = addLocalTransaction
         self.transactionSyncManager = transactionSyncManager
         self.networkMonitor = networkMonitor
-        
         setupNetworkMonitoring()
     }
     
-    // MARK: - Load Data (no blocking spinner)
+    // MARK: - Load Data
     func refreshDashboard() async {
         async let tx = getRecentTransactions.execute(limit: 5)
         async let spending = getTotalSpending.execute()
         async let reports = getSpendingReport.execute()
-        async let unsynced = transactionSyncManager.getUnsyncTransactionCount()
+        async let unsynced = getUnsyncTransactionCount.execute()
         
         do {
             let (transactions, spendingVal, reportsVal, unsyncedVal) = try await (tx, spending, reports, unsynced)
@@ -95,8 +102,6 @@ final class DashboardState: ObservableObject {
         } catch {
             print("❌ Sync failed: \(error.localizedDescription)")
         }
-        
-        
     }
     
     // MARK: - Send Transaction
@@ -108,6 +113,9 @@ final class DashboardState: ObservableObject {
             imageURL: selectedImageURL
         )
         
+        isSyncing = true   // 👈 start spinner
+        defer { isSyncing = false } // 👈 always reset
+        
         do {
             try await transactionSyncManager.syncAddTransaction(request)
             messageInput = ""
@@ -118,10 +126,11 @@ final class DashboardState: ObservableObject {
         }
     }
     
+    // MARK: - Manual Add
     @MainActor
     func addTransactionManually(_ transaction: TransactionCasha) async {
         do {
-            try await transactionSyncManager.localAddTransaction(transaction)
+            try await addLocalTransaction.execute(transaction: transaction)
             await refreshDashboard()
             
             // Trigger auto-sync after adding transaction (with delay)
@@ -133,7 +142,4 @@ final class DashboardState: ObservableObject {
             print("❌ Failed to add transaction manually: \(error.localizedDescription)")
         }
     }
-    
-    
-    
 }

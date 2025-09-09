@@ -10,8 +10,17 @@ import CoreData
 import Domain
 import Core
 
+public protocol TransactionQueryDataSource {
+    func fetchAll() throws -> [TransactionCasha]
+    func fetch(limit: Int) throws -> [TransactionCasha]
+    func fetch(startDate: Date, endDate: Date?) throws -> [TransactionCasha]
+    func search(query: String) throws -> [TransactionCasha]
+    func fetchUnsyncedTransactions() throws -> [TransactionCasha]
+    func fetchUnsyncedTransactionsCount() throws -> Int
+}
+
 public final class TransactionQuery: TransactionQueryDataSource {
-   
+    
     
     private let manager: CoreDataManager
     
@@ -23,14 +32,14 @@ public final class TransactionQuery: TransactionQueryDataSource {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.fetchLimit = limit
         request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
-
+        
         return try performFetch(request)
     }
-
+    
     public func fetchAll() throws -> [TransactionCasha] {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
-
+        
         return try performFetch(request)
     }
     
@@ -67,7 +76,7 @@ public final class TransactionQuery: TransactionQueryDataSource {
     private func performFetch(_ request: NSFetchRequest<TransactionEntity>) throws -> [TransactionCasha] {
         var results: [TransactionCasha] = []
         var fetchError: Error?
-
+        
         manager.context.performAndWait {
             do {
                 let entities = try manager.context.fetch(request)
@@ -76,7 +85,7 @@ public final class TransactionQuery: TransactionQueryDataSource {
                 fetchError = error
             }
         }
-
+        
         if let error = fetchError {
             throw error
         }

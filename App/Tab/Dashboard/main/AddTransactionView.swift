@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Domain
+import Core
 
 struct AddTransactionView: View {
     @Environment(\.dismiss) private var dismiss
@@ -54,7 +55,15 @@ struct AddTransactionView: View {
                     
                     // Amount Field
                     TextField("Enter amount", text: $amount)
-                        .keyboardType(.decimalPad)
+                        .keyboardType(.numberPad)
+                        .onChange(of: amount) { newValue in
+                            // Format with your CurrencyFormatter
+                            let formatted = CurrencyFormatter.format(input: newValue)
+                            if formatted != amount {
+                                amount = formatted
+                            }
+                        }
+
                     
                     Picker("Category", selection: $selectedCategory) {
                         Text("Select Category").tag("")

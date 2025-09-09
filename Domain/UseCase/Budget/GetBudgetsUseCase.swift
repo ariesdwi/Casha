@@ -7,14 +7,16 @@
 
 import Foundation
 
-public final class GetAllBudgetUseCase {
+public final class GetBudgetsUseCase {
     private let repository: RemoteBudgetRepositoryProtocol
 
     public init(repository: RemoteBudgetRepositoryProtocol) {
         self.repository = repository
     }
     
-    public func execute() async throws -> [BudgetCasha] {
-        return try await repository.fetchBudgets()
+    /// Fetch budgets, optionally filtered by month/year (e.g. "2025-09")
+    public func execute(monthYear: String? = nil) async throws -> [BudgetCasha] {
+        return try await repository.fetchBudgets(monthYear: monthYear)
     }
 }
+

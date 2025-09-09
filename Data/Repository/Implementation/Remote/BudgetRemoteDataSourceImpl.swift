@@ -16,16 +16,17 @@ public final class BudgetRemoteDataSourceImpl: RemoteBudgetRepositoryProtocol {
         self.client = client
     }
     
-    public func fetchBudgets() async throws -> [BudgetCasha] {
+    public func fetchBudgets(monthYear: String? = nil) async throws -> [BudgetCasha] {
         let endpoint = Endpoint.budgetList
         
-        let headers: [String: String] = [
-            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? ""),
-        ]
+        var parameters: [String: Any] = [:]
+        if let monthYear = monthYear {
+            let apiMonth = DateHelper.convertToApiMonth(monthYear)
+            parameters["month"] = apiMonth
+        }
         
-        let parameters: [String: Any] = [ :
-//            "period_start": periodStart,
-//            "period_end": periodEnd
+        let headers: [String: String] = [
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? "")
         ]
         
         let response: BudgetListResponse = try await client.request(
@@ -39,7 +40,7 @@ public final class BudgetRemoteDataSourceImpl: RemoteBudgetRepositoryProtocol {
     }
     
     public func createBudget(request: NewBudgetRequest) async throws -> BudgetCasha {
-        let endpoint = Endpoint.budgetCreate // You'll need to define this endpoint
+        let endpoint = Endpoint.budgetCreate
         
         let headers: [String: String] = [
             "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? ""),
@@ -48,9 +49,7 @@ public final class BudgetRemoteDataSourceImpl: RemoteBudgetRepositoryProtocol {
         
         let parameters: [String: Any] = [
             "amount": request.amount,
-            "period": request.period,
-            "startDate": request.startDate,
-            "endDate": request.endDate,
+            "month": request.month,
             "category": request.category
         ]
         
@@ -63,17 +62,18 @@ public final class BudgetRemoteDataSourceImpl: RemoteBudgetRepositoryProtocol {
         
         return response.data.toDomain()
     }
-    
-    public func fetchsummaryBudgets() async throws -> BudgetSummary {
+
+    public func fetchSummaryBudgets(monthYear: String? = nil) async throws -> BudgetSummary {
         let endpoint = Endpoint.budgetSummary
+        
+        var parameters: [String: Any] = [:]
+        if let monthYear = monthYear {
+            let apiMonth = DateHelper.convertToApiMonth(monthYear)
+            parameters["month"] = apiMonth
+        }
         
         let headers: [String: String] = [
             "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? "")
-        ]
-        
-        let parameters: [String: Any] = [ :
-//            "period_start": periodStart,
-//            "period_end": periodEnd
         ]
         
         let response: BudgetSummaryResponse = try await client.request(
@@ -85,5 +85,5 @@ public final class BudgetRemoteDataSourceImpl: RemoteBudgetRepositoryProtocol {
         
         return response.data.toDomain()
     }
-    
 }
+

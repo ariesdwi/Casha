@@ -11,6 +11,15 @@ import CoreData
 import Domain
 import Core
 
+public protocol TransactionPersistenceDataSource {
+    func save(_ transaction: TransactionCasha) throws
+    func update(_ transaction: TransactionCasha) throws
+    func delete(byId id: String) throws
+    func deleteAll() throws
+    func markAsSynced(transactionId: String, remoteData: TransactionCasha) throws
+}
+
+
 public final class TransactionPersistence: TransactionPersistenceDataSource {
     private let manager: CoreDataManager
 

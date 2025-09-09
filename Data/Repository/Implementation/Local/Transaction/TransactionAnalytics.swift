@@ -11,6 +11,10 @@ import CoreData
 import Domain
 import Core
 
+public protocol TransactionAnalyticsDataSource {
+    func fetchSpendingReport() throws -> SpendingReport
+}
+
 public final class TransactionAnalytics: TransactionAnalyticsDataSource {
     private let manager: CoreDataManager
 

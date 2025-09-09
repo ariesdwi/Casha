@@ -10,8 +10,6 @@ import Foundation
 import Domain
 
 public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol {
-    
-    
     private let query: TransactionQueryDataSource
     private let analytics: TransactionAnalyticsDataSource
     private let persistence: TransactionPersistenceDataSource

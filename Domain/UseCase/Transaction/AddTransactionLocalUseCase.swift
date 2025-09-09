@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class AddTransactionLocal {
+public final class AddTransactionLocalUseCase {
     private let repository: LocalTransactionRepositoryProtocol
 
     public init(repository: LocalTransactionRepositoryProtocol) {

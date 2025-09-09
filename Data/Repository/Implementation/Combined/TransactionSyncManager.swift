@@ -51,12 +51,6 @@ public final class TransactionSyncManager {
         try await localRepository.mergeTransactions(remoteTransactions)
     }
     
-    
-    // Add Function Local
-    public func localAddTransaction(_ request: TransactionCasha) async throws {
-        try await localRepository.addTransaction(request)
-    }
-    
     public func syncLocalTransactionsToRemote() async throws {
         let unsyncedTransactions = try await localRepository.getUnsyncedTransactions()
         
@@ -77,23 +71,12 @@ public final class TransactionSyncManager {
                     transactionId: transaction.id,
                     remoteData: remoteTransaction
                 )
-                
                 print("✅ Successfully synced transaction: \(transaction.name)")
-                
             } catch {
                 print("❌ Failed to sync transaction \(transaction.id): \(error)")
             }
         }
-        
         print("🎉 All transactions synced successfully!")
-    }
-    
-    public func getUnsyncTransactionCount() async throws -> Int{
-        try await localRepository.getUnsyncedTransactionsCount()
-    }
-    
-    public func deleteAlllocalData() async throws {
-        try await localRepository.deleteAllLocal()
     }
     
 }

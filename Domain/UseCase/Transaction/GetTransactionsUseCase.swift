@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class GetAllTransactionsUseCase {
+public final class GetTransactionsUseCase{
     private let repository: LocalTransactionRepositoryProtocol
 
     public init(repository: LocalTransactionRepositoryProtocol) {

@@ -20,14 +20,18 @@ final class LoginState: ObservableObject {
     @Published private(set) var isLoggedIn: Bool = false
     
     private let loginUseCase: LoginUseCase
+    private let deleteAllLocalDataUsecase: DeleteAllLocalDataUseCase
     private let transactionSyncManager: TransactionSyncManager
+    
     
     init(
         loginUsecase: LoginUseCase,
+        deleteAllLocalDataUsecase: DeleteAllLocalDataUseCase,
         transactionSyncManager: TransactionSyncManager
     ) {
         self.loginUseCase = loginUsecase
         self.transactionSyncManager = transactionSyncManager
+        self.deleteAllLocalDataUsecase = deleteAllLocalDataUsecase
         
         // 🔑 Auto-load stored token on init
         if let token = AuthManager.shared.getToken(), !token.isEmpty {
@@ -77,7 +81,7 @@ final class LoginState: ObservableObject {
     
     func deleteLocalData() async {
         do {
-            try await transactionSyncManager.deleteAlllocalData()
+            try await deleteAllLocalDataUsecase.execute()
         } catch {
             
         }

@@ -29,33 +29,74 @@ struct DashboardView: View {
     }
     
     // MARK: - Body
+//    var body: some View {
+//        if #available(iOS 16.0, *) {
+//            NavigationStack {
+//                ScrollView {
+//                    VStack(alignment: .leading, spacing: 16) {
+//                        cardBalanceSection
+////                        syncStatusBanner
+//                        reportSection
+//                        recentTransactionsSection
+//                        Spacer(minLength: 40)
+//                    }
+//                    .padding()
+//                }
+//                .navigationTitle("Home")
+//                .navigationBarTitleDisplayMode(.large)
+//                .toolbar { navigationToolbar }
+//                .task { await dashboardState.refreshDashboard() }
+//                .onChange(of: scenePhase, perform: handleScenePhaseChange)
+//                .background(confirmationDialogs)
+//                .background(fullScreenCovers)
+//                .sheet(isPresented: $showAddManual) { addTransactionView }
+//            }
+//        } else {
+//            // Fallback on earlier versions
+//        }
+//    }
+    
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         cardBalanceSection
-//                        syncStatusBanner
+    //                    syncStatusBanner
                         reportSection
                         recentTransactionsSection
                         Spacer(minLength: 40)
                     }
                     .padding()
                 }
-                .navigationTitle("Home")
-                .navigationBarTitleDisplayMode(.large)
-                .toolbarBackground(.hidden, for: .navigationBar)
+                // 👇 Title is normal only when online
+                .navigationTitle(dashboardState.isOnline ? "Home" : "")
+                .navigationBarTitleDisplayMode(dashboardState.isOnline ? .large : .inline)
                 .toolbar { navigationToolbar }
                 .task { await dashboardState.refreshDashboard() }
                 .onChange(of: scenePhase, perform: handleScenePhaseChange)
                 .background(confirmationDialogs)
                 .background(fullScreenCovers)
                 .sheet(isPresented: $showAddManual) { addTransactionView }
+                // 👇 Center toolbar content when offline
+                .toolbar {
+                    if !dashboardState.isOnline {
+                        ToolbarItem(placement: .principal) {
+                            HStack(spacing: 8) {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                Text("Waiting for network")
+                                    .font(.subheadline)
+                            }
+                        }
+                    }
+                }
             }
         } else {
             // Fallback on earlier versions
         }
     }
+
 }
 
 // MARK: - Sections
@@ -115,14 +156,20 @@ private extension DashboardView {
 private extension DashboardView {
     var navigationToolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button { showSourceDialog = true } label: {
-                Image(systemName: "camera")
-            }
-            Button { withAnimation { showAddTransaction = true } } label: {
-                Image(systemName: "plus")
+            if dashboardState.isSyncing {
+                ProgressView()
+                    .progressViewStyle(.circular)
+            } else {
+                Button { showSourceDialog = true } label: {
+                    Image(systemName: "camera")
+                }
+                Button { withAnimation { showAddTransaction = true } } label: {
+                    Image(systemName: "plus")
+                }
             }
         }
     }
+
 }
 
 // MARK: - Confirmation Dialogs

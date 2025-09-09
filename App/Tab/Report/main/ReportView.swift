@@ -29,8 +29,7 @@ struct ReportView: View {
             .navigationTitle("Report")
             .navigationBarTitleDisplayMode(.large)
             .toolbar { filterMenu }
-            
-            .toolbarBackground(.hidden, for: .navigationBar)
+//            .toolbarBackground(.hidden, for: .navigationBar)
             .onAppear { reportState.loadCategorySpending() }
             .background(Color.clear)
             

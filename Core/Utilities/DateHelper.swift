@@ -76,11 +76,11 @@ public struct DateHelper {
     public static func startOfDay(for date: Date) -> Date {
         Calendar.current.startOfDay(for: date)
     }
-
+    
     public static func addDays(_ days: Int, to date: Date) -> Date {
         Calendar.current.date(byAdding: .day, value: days, to: date) ?? date
     }
-
+    
     public static func generateMonthOptions(currentDate: Date = Date()) -> [String] {
         let calendar = Calendar.current
         let dateFormatter = DateFormatter()
@@ -106,21 +106,21 @@ public struct DateHelper {
         
         return options
     }
-
+    
     // MARK: - Month Boundaries
     public static func startOfMonth(for date: Date) -> Date {
         Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: date)) ?? date
     }
-
+    
     public static func endOfMonth(for date: Date) -> Date {
         Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth(for: date)) ?? date
     }
-
+    
     // MARK: - Period Resolution
     public static func resolveDateRange(for period: String, referenceDate: Date = Date()) -> (Date, Date?) {
         let calendar = Calendar.current
         let now = referenceDate
-
+        
         switch period {
         case "This month":
             return (startOfMonth(for: now), endOfMonth(for: now))
@@ -142,4 +142,56 @@ public struct DateHelper {
             }
         }
     }
+    
+    public static func generateMonthYearOptions(yearsBack: Int = 1, yearsForward: Int = 1) -> [String] {
+        var options: [String] = []
+        let calendar = Calendar.current
+        let now = Date()
+        let currentYear = calendar.component(.year, from: now)
+        let currentMonth = calendar.component(.month, from: now)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+
+        // Generate months for the range of years
+        for year in (currentYear - yearsBack)...(currentYear + yearsForward) {
+            for month in 1...12 {
+                var components = DateComponents()
+                components.year = year
+                components.month = month
+                if let date = calendar.date(from: components) {
+                    options.append(formatter.string(from: date))
+                }
+            }
+        }
+
+        // Sort by date
+        options.sort { dateFromString($0)! < dateFromString($1)! }
+
+        // Move current month to the front
+        let currentMonthString = formatter.string(from: now)
+        if let index = options.firstIndex(of: currentMonthString) {
+            options.remove(at: index)
+            options.insert(currentMonthString, at: 0)
+        }
+
+        return options
+    }
+    
+    private static func dateFromString(_ string: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        return formatter.date(from: string)
+    }
+    
+    public static func convertToApiMonth(_ monthYear: String) -> String {
+           let inputFormatter = DateFormatter()
+           inputFormatter.dateFormat = "MMMM yyyy"
+           guard let date = inputFormatter.date(from: monthYear) else { return monthYear }
+           
+           let outputFormatter = DateFormatter()
+           outputFormatter.dateFormat = "yyyy-MM"
+           return outputFormatter.string(from: date)
+       }
+    
+    
 }

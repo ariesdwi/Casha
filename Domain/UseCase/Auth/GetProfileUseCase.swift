@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class GetProfileUsecase {
+public final class GetProfileUseCase {
     private let repository: RemoteAuthRepositoryProtocol
 
     public init(repository: RemoteAuthRepositoryProtocol) {

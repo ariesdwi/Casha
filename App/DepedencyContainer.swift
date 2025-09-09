@@ -110,6 +110,14 @@ final class DependencyContainer {
         GetSpendingReportUseCase(repository: transactionRepository)
     }()
     
+    private lazy var getCountUnsyncTransaction: GetUnsyncTransactionCountUseCase = {
+        GetUnsyncTransactionCountUseCase(repository: transactionRepository)
+    }()
+    
+    private lazy var addLocalTransaction: AddTransactionLocalUseCase = {
+        AddTransactionLocalUseCase(repository: transactionRepository)
+    }()
+    
     private lazy var getTransactionsByPeriod: GetTransactionsByPeriodUseCase = {
         GetTransactionsByPeriodUseCase(repository: transactionRepository)
     }()
@@ -122,26 +130,30 @@ final class DependencyContainer {
         GetCategorySpendingUseCase(repository: categoryRepository)
     }()
     
-    private lazy var getAllBudget: GetAllBudgetUseCase = {
-        GetAllBudgetUseCase(repository: budgetRemoteDataSource)
+    private lazy var getAllBudget: GetBudgetsUseCase = {
+        GetBudgetsUseCase(repository: budgetRemoteDataSource)
     }()
     
     private lazy var addBudget: AddBudgetUseCase = {
         AddBudgetUseCase(repository: budgetRemoteDataSource)
     }()
     
-    private lazy var getTotalSummaryBudget: GetTotalSummaryBudget = {
-        GetTotalSummaryBudget(repository: budgetRemoteDataSource)
+    private lazy var getTotalSummaryBudget: GetBudgetSummaryUseCase = {
+        GetBudgetSummaryUseCase(repository: budgetRemoteDataSource)
     }()
     
-    private lazy var getProfile: GetProfileUsecase = {
+    private lazy var getProfile: GetProfileUseCase = {
         
-        GetProfileUsecase(repository: profileRemoteDataSource)
+        GetProfileUseCase(repository: profileRemoteDataSource)
         
     }()
     
     private lazy var loginUseCase: LoginUseCase = {
         LoginUseCase(repository: loginRemoteDataSource)
+    }()
+    
+    private lazy var deleteUseCase: DeleteAllLocalDataUseCase = {
+        DeleteAllLocalDataUseCase(repository: transactionRepository)
     }()
     
     private lazy var registerUseCase: RegisterUseCase = {
@@ -161,8 +173,10 @@ final class DependencyContainer {
                 getRecentTransactions: getRecentTransactions,
                 getTotalSpending: getTotalSpending,
                 getSpendingReport: getSpendingReport,
-                transactionSyncManager: syncManager,
-                networkMonitor: networkMonitor
+                getUnsyncTransactionCount: getCountUnsyncTransaction,
+                addLocalTransaction: addLocalTransaction,
+                networkMonitor: networkMonitor,
+                transactionSyncManager: syncManager
             )
         }
     }
@@ -202,6 +216,7 @@ final class DependencyContainer {
         MainActor.assumeIsolated {
             LoginState(
                 loginUsecase: loginUseCase,
+                deleteAllLocalDataUsecase: deleteUseCase,
                 transactionSyncManager: syncManager
             )
         }
@@ -211,7 +226,7 @@ final class DependencyContainer {
         MainActor.assumeIsolated {
             RegisterState(
                 registerUseCase: registerUseCase,
-                transactionSyncManager: syncManager
+//                transactionSyncManager: syncManager
             )
         }
     }
