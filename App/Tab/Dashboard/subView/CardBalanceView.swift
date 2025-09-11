@@ -16,7 +16,9 @@ struct CardBalanceView: View {
             Text("Card Balance")
                 .font(.headline)
             HStack {
-                Text(isBalanceVisible ? "- " + balance : "••••••")
+                Text(
+                    isBalanceVisible ? formattedBalance : "••••••"
+                )
                     .font(.largeTitle.bold())
                 Spacer()
                 Button(action: toggleBalanceVisibility) {
@@ -28,6 +30,17 @@ struct CardBalanceView: View {
         .padding()
         .background(Color(.systemGray6))
         .cornerRadius(12)
+    }
+    
+    private var formattedBalance: String {
+        // Check if balance is zero or empty
+        let numericBalance = balance.replacingOccurrences(of: "[^0-9.]", with: "", options: .regularExpression)
+        
+        if let amount = Double(numericBalance), amount == 0 {
+            return balance // Return the original balance without "- "
+        } else {
+            return "- " + balance // Add "- " for non-zero balances
+        }
     }
     
     private func toggleBalanceVisibility() {

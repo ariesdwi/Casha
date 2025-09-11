@@ -11,7 +11,13 @@ struct BudgetView: View {
         VStack(spacing: 0) {
             // Inline error banner
             if let error = state.errorMessage {
-                ErrorBanner(message: error)
+                ToastView(message: error)
+                    .padding(.bottom, 50)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            withAnimation { state.errorMessage = nil }
+                        }
+                    }
             }
             
             // 👇 Month/year filter bar
@@ -169,19 +175,6 @@ private struct BudgetListView: View {
             }
             .padding(.horizontal)
         }
-    }
-}
-
-private struct ErrorBanner: View {
-    let message: String
-    
-    var body: some View {
-        Text(message)
-            .font(.subheadline)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-            .background(Color.red)
     }
 }
 
