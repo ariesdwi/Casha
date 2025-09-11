@@ -10,6 +10,8 @@ import Foundation
 import Domain
 
 public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol {
+    
+    
     private let query: TransactionQueryDataSource
     private let analytics: TransactionAnalyticsDataSource
     private let persistence: TransactionPersistenceDataSource
@@ -26,6 +28,27 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
     
     public func addTransaction(_ transaction: TransactionCasha) async throws {
         try persistence.save(transaction)
+    }
+    
+    
+    // MARK: - Update
+    public func updateTransaction(_ transaction: TransactionCasha) async throws {
+        do {
+            try persistence.update(transaction)
+        } catch {
+            print("❌ Failed to update transaction \(transaction.id): \(error)")
+            throw error
+        }
+    }
+    
+    // MARK: - Delete
+    public func deleteTransaction(id: String) async throws {
+        do {
+            try persistence.delete(byId: id)
+        } catch {
+            print("❌ Failed to delete transaction \(id): \(error)")
+            throw error
+        }
     }
     
     public func fetchRecentTransactions(limit: Int) -> [TransactionCasha] {

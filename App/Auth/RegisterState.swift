@@ -2,9 +2,6 @@
 //  RegisterState.swift
 //  Casha
 //
-//  Created by PT Siaga Abdi Utama on 08/09/25.
-//
-
 
 import Foundation
 import SwiftUI
@@ -20,12 +17,15 @@ final class RegisterState: ObservableObject {
     @Published var password = ""
     @Published var phone = ""
     @Published private(set) var isLoading: Bool = false
-
+    
+    // MARK: - Toast message
+    @Published var toastMessage: String? = nil
+    
     private let registerUseCase: RegisterUseCase
     
     // MARK: - Init
     init(
-        registerUseCase: RegisterUseCase,
+        registerUseCase: RegisterUseCase
     ) {
         self.registerUseCase = registerUseCase
     }
@@ -42,9 +42,37 @@ final class RegisterState: ObservableObject {
                 name: name,
                 phone: phone
             )
-        } catch {
+            
+            // Show success toast
+            toastMessage = "Registration successful ✅"
+            
+            // Optionally, auto-clear after 3 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation { self.toastMessage = nil }
+            }
+            
+        } catch let error as NetworkError {
+            // Handle custom NetworkError
+            switch error {
+            case .serverError(let message):
+                toastMessage = message
+            default:
+                toastMessage = error.localizedDescription
+            }
             print("❌ Registration failed: \(error)")
             
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation { self.toastMessage = nil }
+            }
+            
+        } catch {
+            // Handle other errors
+            toastMessage = error.localizedDescription
+            print("❌ Registration failed: \(error)")
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation { self.toastMessage = nil }
+            }
         }
     }
 }

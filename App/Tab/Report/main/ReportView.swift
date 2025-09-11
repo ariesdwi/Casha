@@ -29,8 +29,10 @@ struct ReportView: View {
             .navigationTitle("Report")
             .navigationBarTitleDisplayMode(.large)
             .toolbar { filterMenu }
-//            .toolbarBackground(.hidden, for: .navigationBar)
-            .onAppear { reportState.loadCategorySpending() }
+            //            .toolbarBackground(.hidden, for: .navigationBar)
+            .task {
+                await reportState.loadCategorySpending()
+            }
             .background(Color.clear)
             
         }
@@ -60,7 +62,9 @@ private extension ReportView {
             Menu {
                 ForEach(ReportFilterPeriod.allCases) { period in
                     Button {
-                        reportState.setFilter(period)
+                        Task {
+                            await reportState.setFilter(period)
+                        }
                     } label: {
                         Label(period.title, systemImage: reportState.selectedPeriod == period ? "checkmark" : "")
                     }

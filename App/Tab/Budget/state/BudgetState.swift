@@ -103,13 +103,18 @@ public final class BudgetState: ObservableObject {
         self.getTotalSummaryBudget = getTotalSummaryBudget
     }
     
-    // MARK: - Fetch Budgets (with optional monthYear filter)
-    public func fetchBudgets(monthYear: String? = nil) async {
+    
+    public func refreshBudgetData(monthYear: String? = nil ) async {
         isLoading = true
         errorMessage = nil
         do {
-            let result = try await getAllBudgetUseCase.execute(monthYear: monthYear)
-            budgets = result
+            async let budgetTask = getAllBudgetUseCase.execute(monthYear: monthYear)
+            async let summaryTask = getTotalSummaryBudget.execute(monthYear: monthYear)
+            
+            let (budgetsResult, summaryResult) = await (try budgetTask, try summaryTask)
+                    // Update state
+                   self.budgets = budgetsResult
+                   self.budgetSummary = summaryResult
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -123,19 +128,6 @@ public final class BudgetState: ObservableObject {
         do {
             let newBudget = try await addBudgetUseCase.execute(request: request)
             budgets.append(newBudget)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        isLoading = false
-    }
-    
-    // MARK: - Fetch Summary (with optional monthYear filter)
-    public func fetchSummaryBudgets(monthYear: String? = nil) async {
-        isLoading = true
-        errorMessage = nil
-        do {
-            let result = try await getTotalSummaryBudget.execute(monthYear: monthYear)
-            budgetSummary = result
         } catch {
             errorMessage = error.localizedDescription
         }

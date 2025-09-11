@@ -21,7 +21,6 @@ public final class TransactionRemoteDataSourceImpl: RemoteTransactionRepositoryP
         let endpoint = Endpoint.spending
         let headers: [String: String] = [
             "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? ""),
-//            "session_user_id": sessionUserID
         ]
 
         // ✅ Validate input
@@ -97,9 +96,47 @@ public final class TransactionRemoteDataSourceImpl: RemoteTransactionRepositoryP
         return response.data.map { $0.toDomain() }
     }
 
+    public func updateTransaction(id: String, request: UpdateTransactionRequest) async throws -> TransactionCasha {
+        let endpoint = Endpoint.spendingUpdate(id: id)
 
+        let headers: [String: String] = [
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? "")
+        ]
+        
+        // body JSON
+        let parameters: [String: Any] = [
+            "name": request.name,
+            "amount": request.amount,
+            "category": request.category
+        ]
+        
+        let response: TransactionResponse = try await client.request(
+            endpoint,
+            parameters: parameters,
+            headers: headers,
+            responseType: TransactionResponse.self
+        )
+        
+        return response.data.toDomain()
+    }
 
+    public func deleteTransaction(id: String) async throws -> Bool  {
+        let endpoint = Endpoint.spendingDelete(id: id)
 
+        let headers: [String: String] = [
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? "")
+        ]
+        
+        // biasanya API delete return kosong atau { "success": true }
+        let response: DeleteResponse = try await client.request(
+            endpoint,
+            parameters: nil,
+            headers: headers,
+            responseType: DeleteResponse.self // kamu bisa bikin struct kosong: struct EmptyResponse: Codable {}
+        )
+        
+        return response.data.success ?? false
+    }
 }
 
 

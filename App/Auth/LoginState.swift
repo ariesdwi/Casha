@@ -1,11 +1,4 @@
 
-//
-//  LoginState.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 06/09/25.
-//
-
 import Foundation
 import SwiftUI
 import Domain
@@ -16,18 +9,21 @@ import Data
 final class LoginState: ObservableObject {
     @Published var email = ""
     @Published var password = ""
+    
+    // Unified toast message (success or error)
+    @Published var toastMessage: String? = nil
+    
     @Published private(set) var accessToken: String? = nil
     @Published private(set) var isLoggedIn: Bool = false
     
     private let loginUseCase: LoginUseCase
     private let deleteAllLocalDataUsecase: DeleteAllLocalDataUseCase
-    private let transactionSyncManager: TransactionSyncManager
-    
+    private let transactionSyncManager: TransactionSyncUseCase
     
     init(
         loginUsecase: LoginUseCase,
         deleteAllLocalDataUsecase: DeleteAllLocalDataUseCase,
-        transactionSyncManager: TransactionSyncManager
+        transactionSyncManager: TransactionSyncUseCase
     ) {
         self.loginUseCase = loginUsecase
         self.transactionSyncManager = transactionSyncManager
@@ -40,14 +36,15 @@ final class LoginState: ObservableObject {
         }
     }
     
+    @MainActor
     func login() async {
         do {
             let token = try await loginUseCase.execute(email: email, password: password)
             
             // 🔑 Save token persistently
             AuthManager.shared.saveToken(token)
-            
             accessToken = token
+            
             // 📡 Sync transactions right after login
             try await transactionSyncManager.syncAllTransactions(
                 periodStart: "2025-07-01",
@@ -57,9 +54,20 @@ final class LoginState: ObservableObject {
             )
             
             isLoggedIn = true
-            
+            toastMessage = "Login successful ✅" // show success
+        } catch let error as NetworkError {
+            // Handle your custom NetworkError
+            switch error {
+            case .serverError(let message):
+                toastMessage = message
+            default:
+                toastMessage = error.localizedDescription
+            }
+            accessToken = nil
+            isLoggedIn = false
         } catch {
-            print("❌ Login failed: \(error)")
+            // Handle any other error
+            toastMessage = error.localizedDescription
             accessToken = nil
             isLoggedIn = false
         }
@@ -69,6 +77,7 @@ final class LoginState: ObservableObject {
         AuthManager.shared.clearToken()
         accessToken = nil
         isLoggedIn = false
+        toastMessage = nil
     }
     
     func checkStoredToken() {
@@ -78,14 +87,12 @@ final class LoginState: ObservableObject {
         }
     }
     
-    
     func deleteLocalData() async {
         do {
             try await deleteAllLocalDataUsecase.execute()
         } catch {
-            
+            toastMessage = "Failed to delete local data: \(error.localizedDescription)"
         }
-        
     }
 }
 

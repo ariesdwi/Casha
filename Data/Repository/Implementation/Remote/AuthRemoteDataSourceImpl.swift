@@ -11,8 +11,10 @@ import Core
 import Domain
 
 public final class AuthRemoteDataSourceImpl: RemoteAuthRepositoryProtocol {
+    
+    
     private let client: NetworkClient
-   
+    
     public init(client: NetworkClient) {
         self.client = client
     }
@@ -60,7 +62,7 @@ public final class AuthRemoteDataSourceImpl: RemoteAuthRepositoryProtocol {
             responseType: LoginResponse.self
         )
         
-       
+        
         
         return response.data.accessToken ?? ""
     }
@@ -88,8 +90,31 @@ public final class AuthRemoteDataSourceImpl: RemoteAuthRepositoryProtocol {
         )
         
         return response.data.accessToken ?? ""
-
+        
     }
     
+    public func updateProfile(request: UpdateProfileRequest) async throws -> UserCasha {
+        let endpoint = Endpoint.updateProfile
+        
+        let headers: [String: String] = [
+            "Authorization": "Bearer " + (AuthManager.shared.getToken() ?? ""),
+            "Content-Type": "application/json"
+        ]
+        
+        let body: [String: Any] = [
+            "name": request.name,
+            "email": request.email,
+            "phone": request.phone ?? ""
+        ]
+        
+        let response: ProfileResponse = try await client.request(
+            endpoint,
+            parameters: body,
+            headers: headers,
+            responseType: ProfileResponse.self
+        )
+        
+        return response.data.toDomain()
+    }
     
 }

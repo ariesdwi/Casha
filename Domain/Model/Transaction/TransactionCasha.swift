@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public struct TransactionCasha: Identifiable, Equatable {
+public struct TransactionCasha: Identifiable, Equatable ,Hashable{
     public let id: String
     public let name: String
     public let category: String

@@ -15,3 +15,5 @@ public struct AddTransactionRequest {
         self.imageURL = imageURL
     }
 }
+
+

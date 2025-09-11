@@ -134,6 +134,10 @@ public struct DateHelper {
                 return (now, nil)
             }
             return (startOfMonth(for: nextMonth), nil)
+        case "This year":
+            let startOfYear = calendar.date(from: calendar.dateComponents([.year], from: now))!
+            let endOfYear = calendar.date(byAdding: DateComponents(year: 1, day: -1), to: startOfYear)!
+            return (startOfYear, endOfYear)
         default:
             if let date = DateHelper.date(from: period, style: .monthYearShort) {
                 return (startOfMonth(for: date), endOfMonth(for: date))

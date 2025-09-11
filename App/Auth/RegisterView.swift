@@ -1,10 +1,3 @@
-//
-//  RegisterView.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 08/09/25.
-//
-//
 
 import SwiftUI
 import AuthenticationServices
@@ -16,24 +9,24 @@ struct RegisterView: View {
     @FocusState private var focusedField: Field?
     @State private var showCountryPicker = false
     @State private var selectedCountry: Country = .indonesia
-    
+
     enum Field: Hashable {
         case name, email, password, phone
     }
-    
+
     struct Country: Identifiable, Hashable {
         let id = UUID()
         let name: String
         let code: String
         let flag: String
         let dialCode: String
-        
+
         static let indonesia = Country(name: "Indonesia", code: "ID", flag: "🇮🇩", dialCode: "+62")
         static let singapore = Country(name: "Singapore", code: "SG", flag: "🇸🇬", dialCode: "+65")
         static let malaysia = Country(name: "Malaysia", code: "MY", flag: "🇲🇾", dialCode: "+60")
         static let vietnam = Country(name: "Vietnam", code: "VN", flag: "🇻🇳", dialCode: "+84")
         static let thailand = Country(name: "Thailand", code: "TH", flag: "🇹🇭", dialCode: "+66")
-        
+
         static let popularCountries: [Country] = [
             .indonesia, .singapore, .malaysia, .vietnam, .thailand,
             Country(name: "United States", code: "US", flag: "🇺🇸", dialCode: "+1"),
@@ -45,62 +38,77 @@ struct RegisterView: View {
             Country(name: "India", code: "IN", flag: "🇮🇳", dialCode: "+91")
         ]
     }
-    
+
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
-                ScrollView {
-                    VStack(spacing: 24) {
-                        headerView
-                        formView
-                        termsView
-                        registerButton
-                        dividerView
-                        socialLoginView
-                        signInLink
+                ZStack {
+                    ScrollView {
+                        VStack(spacing: 24) {
+                            headerView
+                            formView
+                            termsView
+                            registerButton
+                            dividerView
+                            socialLoginView
+                            signInLink
+                        }
+                        .padding(.vertical, 24)
                     }
-                    .padding(.vertical, 24)
-                }
-                .scrollDismissesKeyboard(.interactively)
-                .background(Color.cashaBackground.ignoresSafeArea())
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") { dismiss() }
-                            .foregroundColor(.cashaPrimary)
-                            .disabled(state.isLoading)
-                    }
-                    ToolbarItem(placement: .principal) {
-                        if state.isLoading {
-                            ProgressView()
-                                .progressViewStyle(.circular)
+                    .scrollDismissesKeyboard(.interactively)
+                    .background(Color.cashaBackground.ignoresSafeArea())
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button("Cancel") { dismiss() }
+                                .foregroundColor(.cashaPrimary)
+                                .disabled(state.isLoading)
+                        }
+                        ToolbarItem(placement: .principal) {
+                            if state.isLoading {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                            }
                         }
                     }
-                }
-                .onTapGesture { hideKeyboard() }
-                .sheet(isPresented: $showCountryPicker) {
-                    CountryPickerView(selectedCountry: $selectedCountry, isPresented: $showCountryPicker)
+                    .onTapGesture { hideKeyboard() }
+                    .sheet(isPresented: $showCountryPicker) {
+                        CountryPickerView(selectedCountry: $selectedCountry, isPresented: $showCountryPicker)
+                    }
+
+                    // MARK: - Toast
+                    if let message = state.toastMessage {
+                        VStack {
+                            Spacer()
+                            ToastView(message: message)
+                                .padding(.bottom, 50)
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                        withAnimation { state.toastMessage = nil }
+                                    }
+                                }
+                        }
+                        .animation(.spring(), value: state.toastMessage)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
                 }
             }
-        } else {
-            // Fallback on earlier versions
         }
     }
-    
+
     // MARK: - Subviews
-    
     private var headerView: some View {
         VStack(spacing: 16) {
             Image(systemName: "person.crop.circle.badge.plus")
                 .font(.system(size: 60))
                 .foregroundColor(.cashaPrimary)
                 .symbolRenderingMode(.hierarchical)
-            
+
             VStack(spacing: 28) {
                 Text("Create Account")
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(.cashaTextPrimary)
-                
+
                 Text("Join Casha to take control of your finances and achieve your financial goals")
                     .font(.subheadline)
                     .foregroundColor(.cashaTextSecondary)
@@ -111,56 +119,33 @@ struct RegisterView: View {
         }
         .padding(.top, 20)
     }
-    
+
     private var formView: some View {
         VStack(spacing: 20) {
-            // Full Name
-            formField(
-                title: "Full Name",
-                text: $state.name,
-                field: .name,
-                placeholder: "Enter your full name",
-                contentType: .name,
-                submitField: .email,
-                submitLabel: .next
-            )
-            
-            // Email
-            formField(
-                title: "Email",
-                text: $state.email,
-                field: .email,
-                placeholder: "Enter your email",
-                contentType: .emailAddress,
-                keyboard: .emailAddress,
-                submitField: .password,
-                submitLabel: .next
-            )
-            
-            // Password
-            secureFormField(
-                title: "Password",
-                text: $state.password,
-                field: .password,
-                placeholder: "Create a password",
-                submit: .phone
-            )
-            
-            // Phone with country code selection
+            formField(title: "Full Name", text: $state.name, field: .name,
+                      placeholder: "Enter your full name", contentType: .name,
+                      submitField: .email)
+
+            formField(title: "Email", text: $state.email, field: .email,
+                      placeholder: "Enter your email", contentType: .emailAddress,
+                      keyboard: .emailAddress, submitField: .password)
+
+            secureFormField(title: "Password", text: $state.password, field: .password,
+                            placeholder: "Create a password", submit: .phone)
+
             phoneField
         }
         .padding(.horizontal)
     }
-    
+
     private var phoneField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Phone")
                 .font(.caption)
                 .foregroundColor(.cashaTextSecondary)
                 .padding(.horizontal, 4)
-            
+
             HStack(spacing: 0) {
-                // Country Code Button
                 Button(action: { showCountryPicker = true }) {
                     HStack(spacing: 4) {
                         Text(selectedCountry.flag)
@@ -174,18 +159,15 @@ struct RegisterView: View {
                     .padding(.vertical, 12)
                     .background(Color.cashaCard)
                 }
-                
-                // Phone Number TextField
+
                 TextField("Phone Number", text: Binding(
                     get: {
-                        // Remove country code prefix for display
                         if state.phone.hasPrefix(selectedCountry.dialCode) {
                             return String(state.phone.dropFirst(selectedCountry.dialCode.count))
                         }
                         return state.phone
                     },
                     set: { newValue in
-                        // Automatically add country code prefix and filter non-numeric characters
                         let numericString = newValue.filter { $0.isNumber }
                         state.phone = selectedCountry.dialCode + numericString
                     }
@@ -195,22 +177,18 @@ struct RegisterView: View {
                 .autocapitalization(.none)
                 .autocorrectionDisabled()
                 .submitLabel(.done)
-                .onSubmit {
-                    Task { await performRegistration() }
-                }
+                .onSubmit { Task { await performRegistration() } }
                 .focused($focusedField, equals: .phone)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 12)
             }
             .background(Color.cashaCard)
             .cornerRadius(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(focusedField == .phone ? Color.cashaPrimary : Color.clear, lineWidth: 1)
-            )
+            .overlay(RoundedRectangle(cornerRadius: 12)
+                .stroke(focusedField == .phone ? Color.cashaPrimary : Color.clear, lineWidth: 1))
         }
     }
-    
+
     private var termsView: some View {
         Text("By signing up, you agree to our Terms of Service and Privacy Policy")
             .font(.caption)
@@ -218,7 +196,7 @@ struct RegisterView: View {
             .multilineTextAlignment(.center)
             .padding(.horizontal)
     }
-    
+
     private var registerButton: some View {
         Button(action: { Task { await performRegistration() } }) {
             if state.isLoading {
@@ -238,27 +216,19 @@ struct RegisterView: View {
         .disabled(state.isLoading || !isFormValid)
         .opacity((state.isLoading || !isFormValid) ? 0.6 : 1)
     }
-    
+
     private var dividerView: some View {
         HStack {
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(.cashaTextSecondary)
-            Text("or")
-                .font(.caption)
-                .foregroundColor(.cashaPrimary)
-                .padding(.horizontal, 8)
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(.cashaTextSecondary)
+            Rectangle().frame(height: 1).foregroundColor(.cashaTextSecondary)
+            Text("or").font(.caption).foregroundColor(.cashaPrimary).padding(.horizontal, 8)
+            Rectangle().frame(height: 1).foregroundColor(.cashaTextSecondary)
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
     }
-    
+
     private var socialLoginView: some View {
         HStack(spacing: 16) {
-            // Apple Sign Up
             SignInWithAppleButton(.signUp) { request in
                 request.requestedScopes = [.fullName, .email]
             } onCompletion: { result in
@@ -267,9 +237,8 @@ struct RegisterView: View {
             .signInWithAppleButtonStyle(.black)
             .frame(height: 50)
             .cornerRadius(12)
-            
-            // Google Sign Up (placeholder)
-            Button(action: { /* TODO: Handle Google registration */ }) {
+
+            Button(action: { /* Google registration */ }) {
                 Image(systemName: "g.circle.fill")
                     .font(.title2)
                     .foregroundColor(.white)
@@ -281,15 +250,12 @@ struct RegisterView: View {
         }
         .padding(.horizontal)
     }
-    
+
     private var signInLink: some View {
         HStack {
-            Text("Already have an account?")
-                .foregroundColor(.cashaTextSecondary)
+            Text("Already have an account?").foregroundColor(.cashaTextSecondary)
             if #available(iOS 16.0, *) {
-                Button("Sign In") { dismiss() }
-                    .foregroundColor(.cashaPrimary)
-                    .fontWeight(.semibold)
+                Button("Sign In") { dismiss() }.foregroundColor(.cashaPrimary).fontWeight(.semibold)
             } else {
                 // Fallback on earlier versions
             }
@@ -297,60 +263,45 @@ struct RegisterView: View {
         .font(.subheadline)
         .padding(.top, 8)
     }
-    
-    // MARK: - Computed Properties
+
+    // MARK: - Computed
     private var isFormValid: Bool {
         !state.name.trimmingCharacters(in: .whitespaces).isEmpty &&
         !state.email.trimmingCharacters(in: .whitespaces).isEmpty &&
         state.password.count >= 6 &&
-        state.phone.count > selectedCountry.dialCode.count // Country code plus at least 1 digit
+        state.phone.count > selectedCountry.dialCode.count
     }
-    
+
     // MARK: - Private Methods
     private func performRegistration() async {
         hideKeyboard()
+        await state.register()
         
-        Task {
-            await state.register()
+        if state.toastMessage == "Registration successful ✅" {
             loginState.checkStoredToken()
-        }
-        // Dismiss after registration
-        if !state.isLoading {
             dismiss()
         }
     }
-    
+
     private func handleAppleSignUp(result: Result<ASAuthorization, Error>) {
         switch result {
         case .success(let authResults):
             print("Apple sign-up success: \(authResults)")
         case .failure(let error):
-            print("Apple sign-up failed: \(error.localizedDescription)")
+            state.toastMessage = error.localizedDescription
         }
     }
-    
+
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
-    
+
     // MARK: - Helper Views
-    private func formField(
-        title: String,
-        text: Binding<String>,
-        field: Field,
-        placeholder: String,
-        contentType: UITextContentType,
-        keyboard: UIKeyboardType = .default,
-        submitField: Field? = nil,
-        submitLabel: SubmitLabel = .next,
-        onSubmit: (() -> Void)? = nil
-    ) -> some View {
+    private func formField(title: String, text: Binding<String>, field: Field,
+                           placeholder: String, contentType: UITextContentType,
+                           keyboard: UIKeyboardType = .default, submitField: Field? = nil) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.cashaTextSecondary)
-                .padding(.horizontal, 4)
-            
+            Text(title).font(.caption).foregroundColor(.cashaTextSecondary).padding(.horizontal, 4)
             TextField(placeholder, text: text)
                 .textContentType(contentType)
                 .keyboardType(keyboard)
@@ -360,24 +311,15 @@ struct RegisterView: View {
                 .background(Color.cashaCard)
                 .cornerRadius(12)
                 .focused($focusedField, equals: field)
-                .submitLabel(submitLabel)
-                .onSubmit {
-                    if let action = onSubmit {
-                        action()
-                    } else if let next = submitField {
-                        focusedField = next
-                    }
-                }
+                .submitLabel(.next)
+                .onSubmit { if let next = submitField { focusedField = next } }
         }
     }
-    
-    private func secureFormField(title: String, text: Binding<String>, field: Field, placeholder: String, submit: Field) -> some View {
+
+    private func secureFormField(title: String, text: Binding<String>, field: Field,
+                                 placeholder: String, submit: Field) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.cashaTextSecondary)
-                .padding(.horizontal, 4)
-            
+            Text(title).font(.caption).foregroundColor(.cashaTextSecondary).padding(.horizontal, 4)
             SecureField(placeholder, text: text)
                 .textContentType(.newPassword)
                 .padding()
@@ -390,24 +332,21 @@ struct RegisterView: View {
     }
 }
 
-// MARK: - Country Picker View
+// MARK: - Country Picker
 struct CountryPickerView: View {
     @Binding var selectedCountry: RegisterView.Country
     @Binding var isPresented: Bool
     @State private var searchText = ""
-    
+
     var filteredCountries: [RegisterView.Country] {
-        if searchText.isEmpty {
-            return RegisterView.Country.popularCountries
-        } else {
-            return RegisterView.Country.popularCountries.filter {
-                $0.name.localizedCaseInsensitiveContains(searchText) ||
-                $0.dialCode.localizedCaseInsensitiveContains(searchText) ||
-                $0.code.localizedCaseInsensitiveContains(searchText)
-            }
+        if searchText.isEmpty { return RegisterView.Country.popularCountries }
+        return RegisterView.Country.popularCountries.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText) ||
+            $0.dialCode.localizedCaseInsensitiveContains(searchText) ||
+            $0.code.localizedCaseInsensitiveContains(searchText)
         }
     }
-    
+
     var body: some View {
         NavigationView {
             List(filteredCountries) { country in
@@ -416,19 +355,14 @@ struct CountryPickerView: View {
                     isPresented = false
                 }) {
                     HStack {
-                        Text(country.flag)
-                            .font(.title2)
+                        Text(country.flag).font(.title2)
                         VStack(alignment: .leading) {
-                            Text(country.name)
-                                .foregroundColor(.primary)
-                            Text(country.dialCode)
-                                .foregroundColor(.secondary)
-                                .font(.caption)
+                            Text(country.name).foregroundColor(.primary)
+                            Text(country.dialCode).foregroundColor(.secondary).font(.caption)
                         }
                         Spacer()
                         if country.id == selectedCountry.id {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
+                            Image(systemName: "checkmark").foregroundColor(.blue)
                         }
                     }
                 }
@@ -438,9 +372,7 @@ struct CountryPickerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
-                        isPresented = false
-                    }
+                    Button("Cancel") { isPresented = false }
                 }
             }
         }

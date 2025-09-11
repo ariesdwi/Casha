@@ -16,16 +16,18 @@ final class TransactionListState: ObservableObject {
 
     private let getTransactionsByPeriod: GetTransactionsByPeriodUseCase
     private let searchTransactions: SearchTransactionsUseCase
-
+    private let transactionSyncUsecase: TransactionSyncUseCase
     private var selectedPeriod: String = "This month"
     private var searchQuery: String = ""
 
     init(
         getTransactionsByPeriod: GetTransactionsByPeriodUseCase,
-        searchTransactions: SearchTransactionsUseCase
+        searchTransactions: SearchTransactionsUseCase,
+        transactionSyncUsecase: TransactionSyncUseCase
     ) {
         self.getTransactionsByPeriod = getTransactionsByPeriod
         self.searchTransactions = searchTransactions
+        self.transactionSyncUsecase = transactionSyncUsecase
     }
 
     @MainActor
@@ -87,6 +89,44 @@ final class TransactionListState: ObservableObject {
             return d1 > d2
         }
     }
+    
+    
+    @MainActor
+    func updateTransaction(_ transaction: TransactionCasha) {
+        Task {
+            do {
+                let request = UpdateTransactionRequest(
+                    name: transaction.name,
+                    amount: transaction.amount,
+                    category: transaction.category
+                )
+                try await transactionSyncUsecase.syncUpdateTransaction(
+                    id: transaction.id,
+                    request: request
+                )
+                
+                // Reload UI after update
+                filterTransactions(by: selectedPeriod)
+            } catch {
+                print("❌ Failed to update transaction: \(error)")
+            }
+        }
+    }
+
+    @MainActor
+    func deleteTransaction(id: String) {
+        Task {
+            do {
+                try await transactionSyncUsecase.syncDeleteTransaction(id: id)
+                
+                // Reload UI after delete
+                filterTransactions(by: selectedPeriod)
+            } catch {
+                print("❌ Failed to delete transaction: \(error)")
+            }
+        }
+    }
+
 }
 
 

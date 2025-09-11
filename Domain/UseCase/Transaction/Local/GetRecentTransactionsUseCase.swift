@@ -14,8 +14,8 @@ public struct GetRecentTransactionsUseCase {
         self.repository = repository
     }
 
-    public func execute(limit: Int = 5) -> [TransactionCasha] {
-        return repository.fetchRecentTransactions(limit: limit)
+    public func execute(limit: Int = 5) async -> [TransactionCasha] {
+        return await repository.fetchRecentTransactions(limit: limit)
     }
 }
 

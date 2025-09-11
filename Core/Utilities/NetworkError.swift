@@ -8,6 +8,12 @@
 import Foundation
 import Alamofire
 
+public struct APIErrorResponse: Codable {
+    let message: String
+    let error: String?       // optional
+    let statusCode: Int?     // optional
+}
+
 public enum NetworkError: Error, Equatable {
     case invalidURL
     case invalidRequest

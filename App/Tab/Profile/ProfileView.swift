@@ -12,14 +12,17 @@ struct ProfileView: View {
     // MARK: - Environment & State
     @EnvironmentObject var state: ProfileState
     @EnvironmentObject var loginState: LoginState
-
+    
+    // MARK: - State for sheet
+    @State private var showingEditProfile = false
+    
     // MARK: - Body
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
                 ZStack(alignment: .top) {
                     Color.clear.ignoresSafeArea()
-
+                    
                     VStack(spacing: 0) {
                         // Error banner
                         if let error = state.lastError {
@@ -29,7 +32,7 @@ struct ProfileView: View {
                                 .frame(maxWidth: .infinity)
                                 .background(Color.red)
                         }
-
+                        
                         // Content
                         if let profile = state.profile {
                             profileContent(profile)
@@ -43,6 +46,12 @@ struct ProfileView: View {
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbar {
                     loadingIndicator
+                }
+                .sheet(isPresented: $showingEditProfile) {
+                    if let profile = state.profile {
+                        ProfileEditView(profile: profile)
+                            .environmentObject(state)
+                    }
                 }
                 .task { await state.refreshProfile() }
             }
@@ -74,7 +83,7 @@ private extension ProfileView {
         }
         .padding(.horizontal)
     }
-
+    
     func profileHeader(_ profile: UserCasha) -> some View {
         VStack(spacing: 12) {
             Image(systemName: "person.crop.circle.fill")
@@ -82,16 +91,16 @@ private extension ProfileView {
                 .frame(width: 100, height: 100)
                 .foregroundColor(.cashaPrimary)
                 .padding(.top, 32)
-
+            
             VStack(spacing: 4) {
                 Text(profile.name)
                     .font(.title2.bold())
-
+                
                 Text(profile.email)
                     .font(.subheadline)
                     .foregroundColor(.cashaTextSecondary)
             }
-
+            
             if let updated = state.lastUpdated {
                 Text("Last updated: \(updated.formatted(.dateTime.hour().minute()))")
                     .font(.footnote)
@@ -99,16 +108,21 @@ private extension ProfileView {
             }
         }
     }
-
+    
     var profileMenu: some View {
         List {
             Section {
-                ProfileRow(icon: "pencil", title: "Edit Profile")
-                ProfileRow(icon: "lock", title: "Change PIN")
-                ProfileRow(icon: "gearshape", title: "Settings")
+                Button {
+                    showingEditProfile = true
+                } label: {
+                    ProfileRow(icon: "pencil", title: "Edit Profile")
+                }
+                 
+                ProfileRow(icon: "bell", title: "Set Salary (Cooming soon)")
+//                ProfileRow(icon: "gearshape", title: "Settings Theme (Cooming soon)")
             }
             .listRowBackground(Color(.systemGray6))
-
+            
             Section {
                 Button(role: .destructive) {
                     loginState.logout()
@@ -129,7 +143,7 @@ private extension ProfileView {
         .modifier(ScrollContentBackgroundHiddenIfAvailable())
         .listStyle(.insetGrouped)
     }
-
+    
     var placeholderContent: some View {
         VStack(spacing: 12) {
             Image(systemName: "person.crop.circle.badge.exclam")
@@ -140,7 +154,7 @@ private extension ProfileView {
         }
         .padding(.top, 40)
     }
-
+    
     struct ScrollContentBackgroundHiddenIfAvailable: ViewModifier {
         func body(content: Content) -> some View {
             if #available(iOS 16.0, *) {

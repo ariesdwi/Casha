@@ -33,7 +33,7 @@ final class DashboardState: ObservableObject {
     private let getRecentTransactions: GetRecentTransactionsUseCase
     private let getTotalSpending: GetTotalSpendingUseCase
     private let getSpendingReport: GetSpendingReportUseCase
-    private let transactionSyncManager: TransactionSyncManager
+    private let transactionSyncManager: TransactionSyncUseCase
     private let getUnsyncTransactionCount: GetUnsyncTransactionCountUseCase
     private let addLocalTransaction: AddTransactionLocalUseCase
     
@@ -46,7 +46,7 @@ final class DashboardState: ObservableObject {
         getUnsyncTransactionCount: GetUnsyncTransactionCountUseCase,
         addLocalTransaction: AddTransactionLocalUseCase,
         networkMonitor: NetworkMonitorProtocol,
-        transactionSyncManager: TransactionSyncManager
+        transactionSyncManager: TransactionSyncUseCase
     ) {
         self.getRecentTransactions = getRecentTransactions
         self.getTotalSpending = getTotalSpending

@@ -7,9 +7,8 @@
 
 
 import Foundation
-import Domain
 
-public final class TransactionSyncManager {
+public final class TransactionSyncUseCase {
     private let remoteRepository: RemoteTransactionRepositoryProtocol
     private let localRepository: LocalTransactionRepositoryProtocol
     
@@ -55,10 +54,8 @@ public final class TransactionSyncManager {
         let unsyncedTransactions = try await localRepository.getUnsyncedTransactions()
         
         guard !unsyncedTransactions.isEmpty else {
-            print("✅ No unsynced transactions found")
             return
         }
-        print("🔄 Syncing \(unsyncedTransactions.count) transactions to remote...")
         for transaction in unsyncedTransactions {
             do {
                 let request = AddTransactionRequest(
@@ -71,12 +68,32 @@ public final class TransactionSyncManager {
                     transactionId: transaction.id,
                     remoteData: remoteTransaction
                 )
-                print("✅ Successfully synced transaction: \(transaction.name)")
             } catch {
                 print("❌ Failed to sync transaction \(transaction.id): \(error)")
             }
         }
-        print("🎉 All transactions synced successfully!")
+    }
+    
+    
+    // MARK: - Update Transaction
+    public func syncUpdateTransaction(
+        id: String,
+        request: UpdateTransactionRequest
+    ) async throws {
+        let updatedTransaction = try await remoteRepository.updateTransaction(id: id, request: request)
+        try await localRepository.updateTransaction(updatedTransaction)
+    }
+    
+    // MARK: - Delete Transaction
+    public func syncDeleteTransaction(id: String) async throws {
+        do {
+            let success = try await remoteRepository.deleteTransaction(id: id)
+            if success {
+                try await localRepository.deleteTransaction(id: id)
+            }
+        } catch {
+            throw error
+        }
     }
     
 }

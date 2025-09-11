@@ -28,59 +28,26 @@ struct DashboardView: View {
         case week, month
     }
     
-    // MARK: - Body
-//    var body: some View {
-//        if #available(iOS 16.0, *) {
-//            NavigationStack {
-//                ScrollView {
-//                    VStack(alignment: .leading, spacing: 16) {
-//                        cardBalanceSection
-////                        syncStatusBanner
-//                        reportSection
-//                        recentTransactionsSection
-//                        Spacer(minLength: 40)
-//                    }
-//                    .padding()
-//                }
-//                .navigationTitle("Home")
-//                .navigationBarTitleDisplayMode(.large)
-//                .toolbar { navigationToolbar }
-//                .task { await dashboardState.refreshDashboard() }
-//                .onChange(of: scenePhase, perform: handleScenePhaseChange)
-//                .background(confirmationDialogs)
-//                .background(fullScreenCovers)
-//                .sheet(isPresented: $showAddManual) { addTransactionView }
-//            }
-//        } else {
-//            // Fallback on earlier versions
-//        }
-//    }
-    
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         cardBalanceSection
-    //                    syncStatusBanner
+                        // syncStatusBanner
                         reportSection
                         recentTransactionsSection
                         Spacer(minLength: 40)
                     }
                     .padding()
                 }
-                // 👇 Title is normal only when online
                 .navigationTitle(dashboardState.isOnline ? "Home" : "")
                 .navigationBarTitleDisplayMode(dashboardState.isOnline ? .large : .inline)
-                .toolbar { navigationToolbar }
-                .task { await dashboardState.refreshDashboard() }
-                .onChange(of: scenePhase, perform: handleScenePhaseChange)
-                .background(confirmationDialogs)
-                .background(fullScreenCovers)
-                .sheet(isPresented: $showAddManual) { addTransactionView }
-                // 👇 Center toolbar content when offline
                 .toolbar {
-                    if !dashboardState.isOnline {
+                    // Combine both toolbar configurations
+                    if dashboardState.isOnline {
+                        navigationToolbar
+                    } else {
                         ToolbarItem(placement: .principal) {
                             HStack(spacing: 8) {
                                 ProgressView()
@@ -91,6 +58,11 @@ struct DashboardView: View {
                         }
                     }
                 }
+                .task { await dashboardState.refreshDashboard() }
+                .onChange(of: scenePhase, perform: handleScenePhaseChange)
+                .background(confirmationDialogs)
+                .background(fullScreenCovers)
+                .sheet(isPresented: $showAddManual) { addTransactionView }
             }
         } else {
             // Fallback on earlier versions

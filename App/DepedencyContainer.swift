@@ -90,8 +90,8 @@ final class DependencyContainer {
     }()
     
     // MARK: - Sync Manager
-    private lazy var syncManager: TransactionSyncManager = {
-        TransactionSyncManager(
+    private lazy var syncManager: TransactionSyncUseCase = {
+        TransactionSyncUseCase(
             remoteDataSource: remoteDataSource,
             repository: transactionRepository
         )
@@ -148,6 +148,12 @@ final class DependencyContainer {
         
     }()
     
+    private lazy var updatwProfile: UpdateProfileUseCase = {
+        
+        UpdateProfileUseCase(repository: profileRemoteDataSource)
+        
+    }()
+    
     private lazy var loginUseCase: LoginUseCase = {
         LoginUseCase(repository: loginRemoteDataSource)
     }()
@@ -185,7 +191,7 @@ final class DependencyContainer {
         MainActor.assumeIsolated {
             TransactionListState(
                 getTransactionsByPeriod: getTransactionsByPeriod,
-                searchTransactions: searchTransactions
+                searchTransactions: searchTransactions, transactionSyncUsecase: syncManager
             )
         }
     }
@@ -208,7 +214,10 @@ final class DependencyContainer {
     
     nonisolated func makeProfileState() -> ProfileState {
         MainActor.assumeIsolated {
-            ProfileState(getProfileUsecase: getProfile)
+            ProfileState(
+                getProfileUsecase: getProfile, updateProfileUsecase: updatwProfile
+                
+            )
         }
     }
     

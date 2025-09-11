@@ -82,6 +82,15 @@
 		549B65642E6FB95E00DEF8F6 /* GetUnsyncTransactionCountUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65632E6FB94F00DEF8F6 /* GetUnsyncTransactionCountUseCase.swift */; };
 		549B65662E6FD7EE00DEF8F6 /* DeleteAllLocalDataUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65652E6FD7DA00DEF8F6 /* DeleteAllLocalDataUseCase.swift */; };
 		549B65682E701D2000DEF8F6 /* BudgetFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65672E701D1900DEF8F6 /* BudgetFilterBar.swift */; };
+		549B656A2E7108C900DEF8F6 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65692E7108C400DEF8F6 /* ToastView.swift */; };
+		549B656C2E7155A900DEF8F6 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B656B2E71559F00DEF8F6 /* ProfileEditView.swift */; };
+		549B656E2E71583500DEF8F6 /* UpdateProfileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B656D2E71582200DEF8F6 /* UpdateProfileRequest.swift */; };
+		549B65702E71587E00DEF8F6 /* UpdateProfileUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B656F2E71587500DEF8F6 /* UpdateProfileUseCase.swift */; };
+		549B65722E72641A00DEF8F6 /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65712E72640700DEF8F6 /* TransactionDetailView.swift */; };
+		549B65742E72655A00DEF8F6 /* TransactionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65732E72655500DEF8F6 /* TransactionEditView.swift */; };
+		549B65762E72883100DEF8F6 /* UpdateTransactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65752E72883000DEF8F6 /* UpdateTransactionRequest.swift */; };
+		549B65782E72896900DEF8F6 /* DeleteDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65772E72896500DEF8F6 /* DeleteDTO.swift */; };
+		549B65792E728E1000DEF8F6 /* TransactionSyncUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0D8B0F7C8216A23B38B60 /* TransactionSyncUseCase.swift */; };
 		5C8B7B50E1E818514B3C28C4 /* GetCategorySpendingUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F924F3D1C46578CC32C7FC8B /* GetCategorySpendingUseCase.swift */; };
 		62DE36A24ECD0F9F2D88687C /* TransactionEntity+Mapper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA684ADA57BE48C163D3B156 /* TransactionEntity+Mapper.swift.swift */; };
 		630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650F06C995A36AF03739D2DE /* SplashScreen.swift */; };
@@ -118,7 +127,6 @@
 		BF704CEDB9E833A0EC96AAA6 /* ReportChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C6BB93EAA4CA049C23734 /* ReportChartView.swift */; };
 		BFB69DE9348B9372D2987D17 /* CategoryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF354627DC73E1E25D1F4370 /* CategoryEntity.swift */; };
 		C154080530B51A0D73D98748 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F2A9E4C6744DF43F85AAA /* Colors.swift */; };
-		C44A94E91D8E5DBC0066AF21 /* TransactionSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0D8B0F7C8216A23B38B60 /* TransactionSyncManager.swift */; };
 		C763997D2D9629DAD864088B /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2905F78354DF39757CEBAA7B /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C7B6A7AAFA692AB846781819 /* AddTransactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D2B1177F147475F73D9E21 /* AddTransactionRequest.swift */; };
 		CC1668BDED0A931E3FD8C642 /* ImagePickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9D7C842BBBAD9813C73C36 /* ImagePickerService.swift */; };
@@ -263,6 +271,14 @@
 		549B65632E6FB94F00DEF8F6 /* GetUnsyncTransactionCountUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUnsyncTransactionCountUseCase.swift; sourceTree = "<group>"; };
 		549B65652E6FD7DA00DEF8F6 /* DeleteAllLocalDataUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAllLocalDataUseCase.swift; sourceTree = "<group>"; };
 		549B65672E701D1900DEF8F6 /* BudgetFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetFilterBar.swift; sourceTree = "<group>"; };
+		549B65692E7108C400DEF8F6 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		549B656B2E71559F00DEF8F6 /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
+		549B656D2E71582200DEF8F6 /* UpdateProfileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileRequest.swift; sourceTree = "<group>"; };
+		549B656F2E71587500DEF8F6 /* UpdateProfileUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileUseCase.swift; sourceTree = "<group>"; };
+		549B65712E72640700DEF8F6 /* TransactionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
+		549B65732E72655500DEF8F6 /* TransactionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEditView.swift; sourceTree = "<group>"; };
+		549B65752E72883000DEF8F6 /* UpdateTransactionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTransactionRequest.swift; sourceTree = "<group>"; };
+		549B65772E72896500DEF8F6 /* DeleteDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDTO.swift; sourceTree = "<group>"; };
 		571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRecentTransactionsUseCase.swift; sourceTree = "<group>"; };
 		5BC10A9EBF4A765B06804F7D /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassageFormInput.swift; sourceTree = "<group>"; };
@@ -296,7 +312,7 @@
 		AD6814091040E7BC0D98C5C9 /* DashboardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardState.swift; sourceTree = "<group>"; };
 		B91E69FAA48341700FD4AF6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BFDB0F3E4C8E3D6F56CADC03 /* CashaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CashaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C1B0D8B0F7C8216A23B38B60 /* TransactionSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSyncManager.swift; sourceTree = "<group>"; };
+		C1B0D8B0F7C8216A23B38B60 /* TransactionSyncUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSyncUseCase.swift; sourceTree = "<group>"; };
 		C325C8BF9D16506E10A51FC3 /* RemoteTransactionRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTransactionRepositoryProtocol.swift; sourceTree = "<group>"; };
 		C91C5E0DAB964010436375A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CA684ADA57BE48C163D3B156 /* TransactionEntity+Mapper.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransactionEntity+Mapper.swift.swift"; sourceTree = "<group>"; };
@@ -417,6 +433,8 @@
 		27CBEEC8DB652FD5E5C0CAA9 /* main */ = {
 			isa = PBXGroup;
 			children = (
+				549B65732E72655500DEF8F6 /* TransactionEditView.swift */,
+				549B65712E72640700DEF8F6 /* TransactionDetailView.swift */,
 				37C58A93418A8544BC3DCDEE /* TransactionListView.swift */,
 			);
 			path = main;
@@ -492,6 +510,7 @@
 		549B64FE2E6815CB00DEF8F6 /* Transaction */ = {
 			isa = PBXGroup;
 			children = (
+				549B65772E72896500DEF8F6 /* DeleteDTO.swift */,
 				3F81A20E95B59CA5090F9601 /* TransactionDTO.swift */,
 			);
 			path = Transaction;
@@ -510,13 +529,9 @@
 		549B650A2E6820A400DEF8F6 /* Transaction */ = {
 			isa = PBXGroup;
 			children = (
-				549B65632E6FB94F00DEF8F6 /* GetUnsyncTransactionCountUseCase.swift */,
-				549B65422E6AA0CF00DEF8F6 /* AddTransactionLocalUseCase.swift */,
-				460B0D1441D3B0D965783C26 /* GetTransactionsByPeriodUseCase.swift */,
-				72DF5E101038B0811386468C /* SearchTransactionsUseCase.swift */,
-				1D763A49BF1781B1720CD8F6 /* GetTotalSpendingUseCase.swift */,
-				571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */,
-				878E1DCFD8BD17371400B811 /* GetTransactionsUseCase.swift */,
+				549B657B2E728EA400DEF8F6 /* Remote */,
+				549B657A2E728E9A00DEF8F6 /* Local */,
+				549B65622E6FB6F400DEF8F6 /* Combined */,
 			);
 			path = Transaction;
 			sourceTree = "<group>";
@@ -572,6 +587,7 @@
 		549B651A2E6937D400DEF8F6 /* Transaction */ = {
 			isa = PBXGroup;
 			children = (
+				549B65752E72883000DEF8F6 /* UpdateTransactionRequest.swift */,
 				64E08EC12DBEDADF9340BCD6 /* TransactionCasha.swift */,
 				17D2B1177F147475F73D9E21 /* AddTransactionRequest.swift */,
 			);
@@ -600,6 +616,7 @@
 		549B65272E6974C200DEF8F6 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				549B656F2E71587500DEF8F6 /* UpdateProfileUseCase.swift */,
 				549B65652E6FD7DA00DEF8F6 /* DeleteAllLocalDataUseCase.swift */,
 				549B655E2E6E82A000DEF8F6 /* RegisterUseCase.swift */,
 				549B65552E6C09B200DEF8F6 /* LoginUseCase.swift */,
@@ -611,6 +628,7 @@
 		549B652C2E69754500DEF8F6 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				549B656D2E71582200DEF8F6 /* UpdateProfileRequest.swift */,
 				549B652D2E69754C00DEF8F6 /* UserCasha.swift */,
 			);
 			path = Auth;
@@ -655,7 +673,6 @@
 		549B65612E6FB67200DEF8F6 /* Implementation */ = {
 			isa = PBXGroup;
 			children = (
-				549B65622E6FB6F400DEF8F6 /* Combined */,
 				E881627E570859F57C1F2A45 /* Local */,
 				7DB13684F2C22655CBC47FE9 /* Remote */,
 			);
@@ -665,9 +682,30 @@
 		549B65622E6FB6F400DEF8F6 /* Combined */ = {
 			isa = PBXGroup;
 			children = (
-				C1B0D8B0F7C8216A23B38B60 /* TransactionSyncManager.swift */,
+				C1B0D8B0F7C8216A23B38B60 /* TransactionSyncUseCase.swift */,
 			);
 			path = Combined;
+			sourceTree = "<group>";
+		};
+		549B657A2E728E9A00DEF8F6 /* Local */ = {
+			isa = PBXGroup;
+			children = (
+				549B65632E6FB94F00DEF8F6 /* GetUnsyncTransactionCountUseCase.swift */,
+				549B65422E6AA0CF00DEF8F6 /* AddTransactionLocalUseCase.swift */,
+				460B0D1441D3B0D965783C26 /* GetTransactionsByPeriodUseCase.swift */,
+				72DF5E101038B0811386468C /* SearchTransactionsUseCase.swift */,
+				1D763A49BF1781B1720CD8F6 /* GetTotalSpendingUseCase.swift */,
+				571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */,
+				878E1DCFD8BD17371400B811 /* GetTransactionsUseCase.swift */,
+			);
+			path = Local;
+			sourceTree = "<group>";
+		};
+		549B657B2E728EA400DEF8F6 /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Remote;
 			sourceTree = "<group>";
 		};
 		61BCE8922609673F4AC8D8FD /* Domain */ = {
@@ -742,6 +780,7 @@
 		8AD8CCADD27CD478796E1401 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				549B656B2E71559F00DEF8F6 /* ProfileEditView.swift */,
 				549B65362E69780200DEF8F6 /* ProfileState.swift */,
 				A5E1D704E367B0916D91A95B /* ProfileView.swift */,
 			);
@@ -798,6 +837,7 @@
 		B400C39F1B591A82F19E3B5C /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				549B65692E7108C400DEF8F6 /* ToastView.swift */,
 				549B654A2E6B181C00DEF8F6 /* SyncBanner.swift */,
 				549B65462E6AC50500DEF8F6 /* SyncFloatingButton.swift */,
 				549B65442E6AC4F600DEF8F6 /* SyncBadgeView.swift */,
@@ -1160,10 +1200,14 @@
 				549B64F52E619D2F00DEF8F6 /* BudgetCardView.swift in Sources */,
 				D7775C1C9849E7E7A3358A09 /* RecentTransactionList.swift in Sources */,
 				549B65412E6A9F0700DEF8F6 /* AddTransactionView.swift in Sources */,
+				549B65742E72655A00DEF8F6 /* TransactionEditView.swift in Sources */,
 				66447906718611F0B83631CC /* ReportCategoryList.swift in Sources */,
 				549B65472E6AC50E00DEF8F6 /* SyncFloatingButton.swift in Sources */,
 				7003DB9D43E18C16D11978A6 /* ReportCategoryPieChart.swift in Sources */,
+				549B65722E72641A00DEF8F6 /* TransactionDetailView.swift in Sources */,
 				BF704CEDB9E833A0EC96AAA6 /* ReportChartView.swift in Sources */,
+				549B656C2E7155A900DEF8F6 /* ProfileEditView.swift in Sources */,
+				549B656A2E7108C900DEF8F6 /* ToastView.swift in Sources */,
 				A012C3E0BF7E778C31CE9B7C /* ReportHeaderView.swift in Sources */,
 				AB4B6D7C6D86B9955DFA6DFA /* ReportState.swift in Sources */,
 				34F695D6415D9B0579BE8449 /* ReportView.swift in Sources */,
@@ -1198,10 +1242,12 @@
 				549B65092E68204C00DEF8F6 /* RemoteBudgetRepositoryProtocol.swift in Sources */,
 				D0A324667FBCB463A0C908B0 /* GetTransactionsUseCase.swift in Sources */,
 				5C8B7B50E1E818514B3C28C4 /* GetCategorySpendingUseCase.swift in Sources */,
+				549B656E2E71583500DEF8F6 /* UpdateProfileRequest.swift in Sources */,
 				A0DE24385E7D0573C6209153 /* GetRecentTransactionsUseCase.swift in Sources */,
 				8924FAE6B81E47E82FD170D1 /* GetSpendingReportUseCase.swift in Sources */,
 				549B65202E69389100DEF8F6 /* BudgetSummary.swift in Sources */,
 				7150F9DE9869B8E1DB4646B1 /* GetTotalSpendingUseCase.swift in Sources */,
+				549B65762E72883100DEF8F6 /* UpdateTransactionRequest.swift in Sources */,
 				549B65162E68358600DEF8F6 /* AddBudgetUseCase.swift in Sources */,
 				4336F13B6FEE638E4A13D572 /* GetTransactionsByPeriodUseCase.swift in Sources */,
 				549B650E2E68229700DEF8F6 /* GetBudgetsUseCase.swift in Sources */,
@@ -1212,6 +1258,7 @@
 				549B64F92E619E3A00DEF8F6 /* BudgetCasha.swift in Sources */,
 				1E2F46380F4737998F6D02F9 /* SearchTransactionsUseCase.swift in Sources */,
 				549B65562E6C09B900DEF8F6 /* LoginUseCase.swift in Sources */,
+				549B65702E71587E00DEF8F6 /* UpdateProfileUseCase.swift in Sources */,
 				EADE7707339F66B67B8F7F95 /* SpendingReport.swift in Sources */,
 				3F57337828F84F228D281EF6 /* TransactionCasha.swift in Sources */,
 				30874FBA47A28284C7D95865 /* TransactionDateSection.swift in Sources */,
@@ -1219,6 +1266,7 @@
 				549B652F2E6975F400DEF8F6 /* RemoteTransactionRepositoryProtocol.swift in Sources */,
 				0102372D339AE51D7FCDD9DC /* LocalTransactionRepositoryProtocol.swift in Sources */,
 				549B65642E6FB95E00DEF8F6 /* GetUnsyncTransactionCountUseCase.swift in Sources */,
+				549B65792E728E1000DEF8F6 /* TransactionSyncUseCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1238,11 +1286,11 @@
 				BCDAD453FC0545075E6C4DE5 /* TransactionPersistence.swift in Sources */,
 				549B64FD2E68150E00DEF8F6 /* BudgetRemoteDataSourceImpl.swift in Sources */,
 				A95EDD5249D07A447A0D044B /* TransactionQuery.swift in Sources */,
+				549B65782E72896900DEF8F6 /* DeleteDTO.swift in Sources */,
 				A20CD717D8EC97EFB79BF8A5 /* TransactionRemoteDataSourceImpl.swift in Sources */,
 				549B65242E693B0C00DEF8F6 /* BudgetSumarryDTO.swift in Sources */,
 				980324928B8EC9A945036BE6 /* TransactionRepositoryImpl.swift in Sources */,
 				549B65542E6C04C800DEF8F6 /* LoginDTO.swift in Sources */,
-				C44A94E91D8E5DBC0066AF21 /* TransactionSyncManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

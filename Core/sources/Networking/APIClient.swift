@@ -49,10 +49,14 @@ public final class APIClient: NetworkClient {
                     }
                     continuation.resume(returning: value)
                 case .failure(let error):
-                    if let data = response.data,
-                       let jsonString = String(data: data, encoding: .utf8) {
-                        print("❌ Response JSON Body:\n\(jsonString)")
-                        continuation.resume(throwing: NetworkError.serverError(message: jsonString))
+                    if let data = response.data {
+                        do {
+                            let apiError = try JSONDecoder().decode(APIErrorResponse.self, from: data)
+                            continuation.resume(throwing: NetworkError.serverError(message: apiError.message))
+                        } catch {
+                            let jsonString = String(data: data, encoding: .utf8) ?? "Unknown error"
+                            continuation.resume(throwing: NetworkError.serverError(message: jsonString))
+                        }
                     } else {
                         continuation.resume(throwing: NetworkError.fromAFError(error))
                     }
@@ -112,6 +116,7 @@ public final class APIClient: NetworkClient {
         case .post: return .post
         case .put: return .put
         case .delete: return .delete
+        case .patch: return .patch
         }
     }
 }

@@ -14,8 +14,8 @@ public struct GetCategorySpendingUseCase {
         self.repository = repository
     }
 
-    public func execute(startDate: Date, endDate: Date) -> [ChartCategorySpending] {
-         return repository.fetchCategorySpending(startDate: startDate, endDate: endDate)
+    public func execute(startDate: Date, endDate: Date) async -> [ChartCategorySpending] {
+        return await repository.fetchCategorySpending(startDate: startDate, endDate: endDate)
      }
 }
 

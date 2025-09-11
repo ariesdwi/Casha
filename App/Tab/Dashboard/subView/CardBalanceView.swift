@@ -16,7 +16,7 @@ struct CardBalanceView: View {
             Text("Card Balance")
                 .font(.headline)
             HStack {
-                Text(isBalanceVisible ? balance : "••••••")
+                Text(isBalanceVisible ? "- " + balance : "••••••")
                     .font(.largeTitle.bold())
                 Spacer()
                 Button(action: toggleBalanceVisibility) {

@@ -39,8 +39,8 @@ struct BudgetView: View {
         .task {
             let current = DateHelper.generateMonthYearOptions().first ?? ""
             selectedMonthYear = current
-            await state.fetchBudgets(monthYear: current)
-            await state.fetchSummaryBudgets(monthYear: current)
+            
+            await state.refreshBudgetData(monthYear: current)
         }
     }
 }
@@ -119,8 +119,7 @@ private extension BudgetView {
                     Button {
                         selectedMonthYear = option
                         Task {
-                            await state.fetchBudgets(monthYear: option)
-                            await state.fetchSummaryBudgets(monthYear: option)
+                            await state.refreshBudgetData(monthYear: option)
                         }
                     } label: {
                         HStack {

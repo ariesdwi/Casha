@@ -1,10 +1,3 @@
-//
-//  ProfileState.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 04/09/25.
-//
-
 import Foundation
 import Domain
 import Core
@@ -17,18 +10,19 @@ final class ProfileState: ObservableObject {
     // Metadata
     @Published var lastUpdated: Date? = nil
     @Published var lastError: String? = nil
-    @Published var isLoading: Bool = false   // ✅ add loading flag
+    @Published var isLoading: Bool = false
     
     private let getProfileUsecase: GetProfileUseCase
-    // later: private let updateProfileUsecase: UpdateProfileUsecase
+    private let updateProfileUsecase: UpdateProfileUseCase
     
-    init(getProfileUsecase: GetProfileUseCase) {
+    init(getProfileUsecase: GetProfileUseCase, updateProfileUsecase: UpdateProfileUseCase) {
         self.getProfileUsecase = getProfileUsecase
+        self.updateProfileUsecase = updateProfileUsecase
     }
     
     func refreshProfile() async {
         isLoading = true
-        defer { isLoading = false }   // ✅ always reset when done
+        defer { isLoading = false }
         
         do {
             let result = try await getProfileUsecase.execute()
@@ -41,5 +35,21 @@ final class ProfileState: ObservableObject {
             print("❌ Failed to refresh profile: \(error.localizedDescription)")
         }
     }
+    
+    func updateProfile(_ request: UpdateProfileRequest) async throws {
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            let updatedProfile = try await updateProfileUsecase.execute(user: request)
+            self.profile = updatedProfile
+            self.lastUpdated = Date()
+            self.lastError = nil
+            print("✅ Profile updated successfully at \(self.lastUpdated!)")
+        } catch {
+            self.lastError = error.localizedDescription
+            print("❌ Failed to update profile: \(error.localizedDescription)")
+            throw error
+        }
+    }
 }
-

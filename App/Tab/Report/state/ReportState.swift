@@ -17,8 +17,9 @@ public final class ReportState: ObservableObject {
     public init(getCategorySpendingUseCase: GetCategorySpendingUseCase) {
         self.getCategorySpendingUseCase = getCategorySpendingUseCase
     }
+    
 
-    public func loadCategorySpending() {
+    public func loadCategorySpending() async {
         let now = Date()
         let calendar = Calendar.current
 
@@ -33,11 +34,16 @@ public final class ReportState: ObservableObject {
         }
 
         let endDate = now
-        categorySpendings = getCategorySpendingUseCase.execute(startDate: startDate, endDate: endDate)
+        
+        async let categorySpendings = await getCategorySpendingUseCase.execute(startDate: startDate, endDate: endDate)
+        
+        do {
+            self.categorySpendings = await categorySpendings
+        }
     }
 
-    public func setFilter(_ period: ReportFilterPeriod) {
+    public func setFilter(_ period: ReportFilterPeriod) async {
         selectedPeriod = period
-        loadCategorySpending()
+        await loadCategorySpending()
     }
 }

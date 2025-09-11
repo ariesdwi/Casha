@@ -15,6 +15,14 @@ public protocol RemoteTransactionRepositoryProtocol {
         page: Int,
         limit: Int
     ) async throws -> [TransactionCasha]
-
+    
+    // MARK: - Update
+    func updateTransaction(
+        id: String,
+        request: UpdateTransactionRequest
+    ) async throws -> TransactionCasha
+    
+    // MARK: - Delete
+    func deleteTransaction(id: String) async throws -> Bool
 }
 

@@ -29,6 +29,7 @@ struct TransactionListView: View {
                 // Month filter horizontal scroll
                 TransactionFilterBar(selected: $selectedMonth)
                     .onChange(of: selectedMonth) { newValue in
+                        
                         state.filterTransactions(by: newValue)
                     }
                 
