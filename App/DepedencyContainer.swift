@@ -130,6 +130,10 @@ final class DependencyContainer {
         GetCategorySpendingUseCase(repository: categoryRepository)
     }()
     
+    private lazy var getTransactionbyCategory: GetTransactionbyCategoryUseCase = {
+        GetTransactionbyCategoryUseCase(repository: categoryRepository)
+    }()
+    
     private lazy var getAllBudget: GetBudgetsUseCase = {
         GetBudgetsUseCase(repository: budgetRemoteDataSource)
     }()
@@ -198,7 +202,7 @@ final class DependencyContainer {
     
     nonisolated func makeReportState() -> ReportState {
         MainActor.assumeIsolated {
-            ReportState(getCategorySpendingUseCase: getCategorySpending)
+            ReportState(getCategorySpendingUseCase: getCategorySpending, getTransactionbyCategoryUseCase: getTransactionbyCategory)
         }
     }
     

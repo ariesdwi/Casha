@@ -26,4 +26,13 @@ public final class CategoryRepositoryImpl: LocalCategoryRepositoryProtocol {
             return []
         }
     }
+    
+    public func fetchTransactionsForCategory(category: String, startDate: Date, endDate: Date) -> [TransactionCasha] {
+        do {
+            return try analytics.fetchTransactionsForCategory(category, startDate: startDate, endDate: endDate)
+        } catch {
+            print("❌ Failed to fetch category spending: \(error)")
+            return []
+        }
+    }
 }

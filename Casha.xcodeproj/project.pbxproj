@@ -91,6 +91,8 @@
 		549B65762E72883100DEF8F6 /* UpdateTransactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65752E72883000DEF8F6 /* UpdateTransactionRequest.swift */; };
 		549B65782E72896900DEF8F6 /* DeleteDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65772E72896500DEF8F6 /* DeleteDTO.swift */; };
 		549B65792E728E1000DEF8F6 /* TransactionSyncUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0D8B0F7C8216A23B38B60 /* TransactionSyncUseCase.swift */; };
+		549B657D2E72BDC000DEF8F6 /* GetTransactionbyCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B657C2E72BDA800DEF8F6 /* GetTransactionbyCategory.swift */; };
+		549B657F2E72C13700DEF8F6 /* TransactionListByCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B657E2E72C13300DEF8F6 /* TransactionListByCategoryView.swift */; };
 		5C8B7B50E1E818514B3C28C4 /* GetCategorySpendingUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F924F3D1C46578CC32C7FC8B /* GetCategorySpendingUseCase.swift */; };
 		62DE36A24ECD0F9F2D88687C /* TransactionEntity+Mapper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA684ADA57BE48C163D3B156 /* TransactionEntity+Mapper.swift.swift */; };
 		630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650F06C995A36AF03739D2DE /* SplashScreen.swift */; };
@@ -279,6 +281,8 @@
 		549B65732E72655500DEF8F6 /* TransactionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEditView.swift; sourceTree = "<group>"; };
 		549B65752E72883000DEF8F6 /* UpdateTransactionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTransactionRequest.swift; sourceTree = "<group>"; };
 		549B65772E72896500DEF8F6 /* DeleteDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDTO.swift; sourceTree = "<group>"; };
+		549B657C2E72BDA800DEF8F6 /* GetTransactionbyCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTransactionbyCategory.swift; sourceTree = "<group>"; };
+		549B657E2E72C13300DEF8F6 /* TransactionListByCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListByCategoryView.swift; sourceTree = "<group>"; };
 		571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRecentTransactionsUseCase.swift; sourceTree = "<group>"; };
 		5BC10A9EBF4A765B06804F7D /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassageFormInput.swift; sourceTree = "<group>"; };
@@ -539,6 +543,7 @@
 		549B650B2E6820AB00DEF8F6 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				549B657C2E72BDA800DEF8F6 /* GetTransactionbyCategory.swift */,
 				F924F3D1C46578CC32C7FC8B /* GetCategorySpendingUseCase.swift */,
 				CD591FF7DB61B921BFF21CE2 /* GetSpendingReportUseCase.swift */,
 			);
@@ -858,7 +863,7 @@
 			children = (
 				549B64EE2E61821500DEF8F6 /* Budget */,
 				FD37B1468DFB9EFA006C7D7B /* Dashboard */,
-				C3BD038E777E0ECA20C3A812 /* HistoryTransaction */,
+				C3BD038E777E0ECA20C3A812 /* Transactions */,
 				8AD8CCADD27CD478796E1401 /* Profile */,
 				BFEDB9E630FB816318C8A948 /* Report */,
 			);
@@ -906,14 +911,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C3BD038E777E0ECA20C3A812 /* HistoryTransaction */ = {
+		C3BD038E777E0ECA20C3A812 /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
 				27CBEEC8DB652FD5E5C0CAA9 /* main */,
 				39C0FFE9ADD584DF87DB6F7C /* state */,
 				70306184F7F7A465DA5FA82B /* subView */,
 			);
-			path = HistoryTransaction;
+			path = Transactions;
 			sourceTree = "<group>";
 		};
 		CB71BD028C84BD4F65AF5C60 /* Data */ = {
@@ -939,6 +944,7 @@
 		DAE50BE8DBC22644AE22BFDC /* main */ = {
 			isa = PBXGroup;
 			children = (
+				549B657E2E72C13300DEF8F6 /* TransactionListByCategoryView.swift */,
 				9B93EDF7D718B918DEECA62E /* ReportView.swift */,
 			);
 			path = main;
@@ -1221,6 +1227,7 @@
 				549B653D2E69835C00DEF8F6 /* AppConfig.swift in Sources */,
 				549B654D2E6B4B9100DEF8F6 /* BudgetSummaryView.swift in Sources */,
 				549B655B2E6E7DB100DEF8F6 /* RegisterView.swift in Sources */,
+				549B657F2E72C13700DEF8F6 /* TransactionListByCategoryView.swift in Sources */,
 				549B655D2E6E7DBD00DEF8F6 /* RegisterState.swift in Sources */,
 				BC8699FDA4702CA09ADCE047 /* TransactionListView.swift in Sources */,
 				A4EBF45FD0C32BF588AC9E36 /* VisualEfffect.swift in Sources */,
@@ -1245,6 +1252,7 @@
 				549B656E2E71583500DEF8F6 /* UpdateProfileRequest.swift in Sources */,
 				A0DE24385E7D0573C6209153 /* GetRecentTransactionsUseCase.swift in Sources */,
 				8924FAE6B81E47E82FD170D1 /* GetSpendingReportUseCase.swift in Sources */,
+				549B657D2E72BDC000DEF8F6 /* GetTransactionbyCategory.swift in Sources */,
 				549B65202E69389100DEF8F6 /* BudgetSummary.swift in Sources */,
 				7150F9DE9869B8E1DB4646B1 /* GetTotalSpendingUseCase.swift in Sources */,
 				549B65762E72883100DEF8F6 /* UpdateTransactionRequest.swift in Sources */,
