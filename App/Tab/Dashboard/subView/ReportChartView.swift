@@ -61,6 +61,7 @@ struct ReportChartView: View {
         .padding()
         .background(Color(.systemGray6))
         .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 1)
     }
 
     @ViewBuilder

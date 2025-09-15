@@ -36,6 +36,7 @@
 		4DF19D3BC6841EFF365E8EDE /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5056D19EC0C7F7B76FAB19DB /* MainTabView.swift */; };
 		539F8C347A64DB46B9482A8D /* TransactionDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81A20E95B59CA5090F9601 /* TransactionDTO.swift */; };
 		5454CAA2457E2C296EC0586E /* CategoryEntity+Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470BF1926F838A42575EC3B6 /* CategoryEntity+Mapper.swift */; };
+		5494DA632E77A50F00782E86 /* BudgetListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494DA622E77A50A00782E86 /* BudgetListView.swift */; };
 		549B64F32E61824500DEF8F6 /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B64F22E61823E00DEF8F6 /* BudgetView.swift */; };
 		549B64F52E619D2F00DEF8F6 /* BudgetCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B64F42E619D2700DEF8F6 /* BudgetCardView.swift */; };
 		549B64F72E619D4400DEF8F6 /* AddBudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B64F62E619D3A00DEF8F6 /* AddBudgetView.swift */; };
@@ -93,6 +94,8 @@
 		549B65792E728E1000DEF8F6 /* TransactionSyncUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0D8B0F7C8216A23B38B60 /* TransactionSyncUseCase.swift */; };
 		549B657D2E72BDC000DEF8F6 /* GetTransactionbyCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B657C2E72BDA800DEF8F6 /* GetTransactionbyCategory.swift */; };
 		549B657F2E72C13700DEF8F6 /* TransactionListByCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B657E2E72C13300DEF8F6 /* TransactionListByCategoryView.swift */; };
+		549B65812E73B28000DEF8F6 /* LoadingShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65802E73B27B00DEF8F6 /* LoadingShimmerView.swift */; };
+		549B65832E73B73A00DEF8F6 /* TransactionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B65822E73B73100DEF8F6 /* TransactionRow.swift */; };
 		5C8B7B50E1E818514B3C28C4 /* GetCategorySpendingUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F924F3D1C46578CC32C7FC8B /* GetCategorySpendingUseCase.swift */; };
 		62DE36A24ECD0F9F2D88687C /* TransactionEntity+Mapper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA684ADA57BE48C163D3B156 /* TransactionEntity+Mapper.swift.swift */; };
 		630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650F06C995A36AF03739D2DE /* SplashScreen.swift */; };
@@ -116,7 +119,6 @@
 		958A1B862CDF5D990F549B52 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BD8BA610EB29B44E4F6539 /* CoreDataStack.swift */; };
 		9769B426D5C52E54A69883BF /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7FA40FE5842F7D3A082E41 /* NetworkError.swift */; };
 		980324928B8EC9A945036BE6 /* TransactionRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E8510F0892F7F1CDDD90BC /* TransactionRepositoryImpl.swift */; };
-		A012C3E0BF7E778C31CE9B7C /* ReportHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD2A3F8D1D1B8DD911DA51 /* ReportHeaderView.swift */; };
 		A0DE24385E7D0573C6209153 /* GetRecentTransactionsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */; };
 		A20CD717D8EC97EFB79BF8A5 /* TransactionRemoteDataSourceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA195ABA222D4B98C6AA1F7C /* TransactionRemoteDataSourceImpl.swift */; };
 		A4EBF45FD0C32BF588AC9E36 /* VisualEfffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8522456D1E97F746BCED9EC0 /* VisualEfffect.swift */; };
@@ -203,7 +205,6 @@
 
 /* Begin PBXFileReference section */
 		0F801EEC6B0C7A90030720B3 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
-		0FFD2A3F8D1D1B8DD911DA51 /* ReportHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportHeaderView.swift; sourceTree = "<group>"; };
 		11BC0FC062734E9E636643AF /* TransactionDateSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDateSection.swift; sourceTree = "<group>"; };
 		129406C2CBE09D689635F154 /* LocalTransactionRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTransactionRepositoryProtocol.swift; sourceTree = "<group>"; };
 		12E8510F0892F7F1CDDD90BC /* TransactionRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRepositoryImpl.swift; sourceTree = "<group>"; };
@@ -228,6 +229,7 @@
 		5056D19EC0C7F7B76FAB19DB /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		51BC2962D413A363669186DC /* TransactionCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCardView.swift; sourceTree = "<group>"; };
 		51BD8BA610EB29B44E4F6539 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		5494DA622E77A50A00782E86 /* BudgetListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListView.swift; sourceTree = "<group>"; };
 		549B64F22E61823E00DEF8F6 /* BudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
 		549B64F42E619D2700DEF8F6 /* BudgetCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCardView.swift; sourceTree = "<group>"; };
 		549B64F62E619D3A00DEF8F6 /* AddBudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBudgetView.swift; sourceTree = "<group>"; };
@@ -283,6 +285,8 @@
 		549B65772E72896500DEF8F6 /* DeleteDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDTO.swift; sourceTree = "<group>"; };
 		549B657C2E72BDA800DEF8F6 /* GetTransactionbyCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTransactionbyCategory.swift; sourceTree = "<group>"; };
 		549B657E2E72C13300DEF8F6 /* TransactionListByCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListByCategoryView.swift; sourceTree = "<group>"; };
+		549B65802E73B27B00DEF8F6 /* LoadingShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingShimmerView.swift; sourceTree = "<group>"; };
+		549B65822E73B73100DEF8F6 /* TransactionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRow.swift; sourceTree = "<group>"; };
 		571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRecentTransactionsUseCase.swift; sourceTree = "<group>"; };
 		5BC10A9EBF4A765B06804F7D /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassageFormInput.swift; sourceTree = "<group>"; };
@@ -504,6 +508,7 @@
 		549B64F12E61823600DEF8F6 /* subView */ = {
 			isa = PBXGroup;
 			children = (
+				5494DA622E77A50A00782E86 /* BudgetListView.swift */,
 				549B65672E701D1900DEF8F6 /* BudgetFilterBar.swift */,
 				549B654C2E6B4B8B00DEF8F6 /* BudgetSummaryView.swift */,
 				549B64F42E619D2700DEF8F6 /* BudgetCardView.swift */,
@@ -842,6 +847,8 @@
 		B400C39F1B591A82F19E3B5C /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				549B65822E73B73100DEF8F6 /* TransactionRow.swift */,
+				549B65802E73B27B00DEF8F6 /* LoadingShimmerView.swift */,
 				549B65692E7108C400DEF8F6 /* ToastView.swift */,
 				549B654A2E6B181C00DEF8F6 /* SyncBanner.swift */,
 				549B65462E6AC50500DEF8F6 /* SyncFloatingButton.swift */,
@@ -956,7 +963,6 @@
 				E2C5C2934169EB3E1CD3A815 /* CardBalanceView.swift */,
 				30781D34E40FEDF1B0019E79 /* RecentTransactionList.swift */,
 				7B5C6BB93EAA4CA049C23734 /* ReportChartView.swift */,
-				0FFD2A3F8D1D1B8DD911DA51 /* ReportHeaderView.swift */,
 			);
 			path = subView;
 			sourceTree = "<group>";
@@ -1203,6 +1209,7 @@
 				6CC78093CF69137B940EFC5A /* MassageFormInput.swift in Sources */,
 				549B65452E6AC4FE00DEF8F6 /* SyncBadgeView.swift in Sources */,
 				3B1100E3D85FCEC474B5D845 /* ProfileView.swift in Sources */,
+				549B65832E73B73A00DEF8F6 /* TransactionRow.swift in Sources */,
 				549B64F52E619D2F00DEF8F6 /* BudgetCardView.swift in Sources */,
 				D7775C1C9849E7E7A3358A09 /* RecentTransactionList.swift in Sources */,
 				549B65412E6A9F0700DEF8F6 /* AddTransactionView.swift in Sources */,
@@ -1214,7 +1221,6 @@
 				BF704CEDB9E833A0EC96AAA6 /* ReportChartView.swift in Sources */,
 				549B656C2E7155A900DEF8F6 /* ProfileEditView.swift in Sources */,
 				549B656A2E7108C900DEF8F6 /* ToastView.swift in Sources */,
-				A012C3E0BF7E778C31CE9B7C /* ReportHeaderView.swift in Sources */,
 				AB4B6D7C6D86B9955DFA6DFA /* ReportState.swift in Sources */,
 				34F695D6415D9B0579BE8449 /* ReportView.swift in Sources */,
 				70AECA4CDFFF01BBEC339C89 /* SearchView.swift in Sources */,
@@ -1223,8 +1229,10 @@
 				549B654B2E6B182300DEF8F6 /* SyncBanner.swift in Sources */,
 				549B65522E6C033F00DEF8F6 /* LoginState.swift in Sources */,
 				3DB356E802B74B04009507C2 /* TransactionFilterBar.swift in Sources */,
+				5494DA632E77A50F00782E86 /* BudgetListView.swift in Sources */,
 				06102EE794A16FD13312F985 /* TransactionListState.swift in Sources */,
 				549B653D2E69835C00DEF8F6 /* AppConfig.swift in Sources */,
+				549B65812E73B28000DEF8F6 /* LoadingShimmerView.swift in Sources */,
 				549B654D2E6B4B9100DEF8F6 /* BudgetSummaryView.swift in Sources */,
 				549B655B2E6E7DB100DEF8F6 /* RegisterView.swift in Sources */,
 				549B657F2E72C13700DEF8F6 /* TransactionListByCategoryView.swift in Sources */,
@@ -1578,7 +1586,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.casha.CashaApp.pp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.casha.CashaApp.p;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1595,7 +1603,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.casha.CashaApp.pp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.casha.CashaApp.p;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

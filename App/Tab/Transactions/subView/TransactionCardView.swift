@@ -1,91 +1,84 @@
-
-//
-//  TransactionCardView.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 15/07/25.
-//
+////
+//////
+//////  TransactionCardView.swift
+//////  Casha
+//////
+//////  Created by PT Siaga Abdi Utama on 15/07/25.
+//////
+////
 
 import SwiftUI
 import Domain
 import Core
 
+
 struct TransactionCardView: View {
     let section: TransactionDateSection
-    @State private var selectedTransaction: TransactionCasha?
+    @State private var isExpanded = true
+    @Binding var selectedTransaction: TransactionCasha?
     
     var body: some View {
-        if #available(iOS 17.0, *) {
-            VStack(alignment: .leading, spacing: 8) {
-                // Section Header
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(section.date)
-                            .font(.title.bold())
-                        Text(section.day)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
-                    
-                    Spacer()
-                    
-                    Text("- \(CurrencyFormatter.format(section.totalAmount))")
-                        .font(.headline)
-                        .foregroundColor(.red)
-                }
-                .padding(.bottom, 8)
-                
-                // Transaction Items
-                ForEach(section.items) { item in
-                    transactionRow(item)
-                        .contentShape(Rectangle()) // Make entire row tappable
-                }
-            }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
-            .navigationDestination(item: $selectedTransaction) { transaction in
-                TransactionDetailView(transaction: transaction)
-            }
-        } else {
-            // Fallback on earlier versions
-        }
-    }
-    
-    // MARK: - Transaction Row
-    private func transactionRow(_ item: TransactionCasha) -> some View {
-        Button {
-            selectedTransaction = item
-        } label: {
+        VStack(spacing: 0) {
+            // Header with smooth expand/collapse
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(item.category)
-                        .font(.subheadline)
+                    Text(section.day)
+                        .font(.headline)
                         .foregroundColor(.primary)
                     
-                    Text(item.name)
+                    Text(section.date)
                         .font(.caption)
-                        .foregroundColor(.gray)
-                        .lineLimit(1)
+                        .foregroundColor(.secondary)
                     
-//                    // Show time if available
-//                    Text(item.datetime, style: .time)
-//                        .font(.caption2)
-//                        .foregroundColor(.secondary)
+                    let totalAmount = section.items.reduce(0) { $0 + $1.amount }
+                    Text("\(section.items.count) transactions • \(totalAmount, format: .currency(code: "IDR"))")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
                 }
                 
                 Spacer()
                 
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("- \(CurrencyFormatter.format(Double(item.amount)))")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundColor(.red)
-                    
+                Button(action: {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        isExpanded.toggle()
+                    }
+                }) {
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .foregroundColor(.secondary)
+                        .padding(8)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(Circle())
                 }
             }
-            .padding(.vertical, 8)
+            .padding()
+            .background(Color(.systemBackground))
+            .cornerRadius(12)
+            
+            // Transactions list with smooth appearance
+            if isExpanded {
+                LazyVStack(spacing: 0) {
+                    ForEach(Array(section.items.enumerated()), id: \.element.id) { index, transaction in
+                        TransactionRow(transaction: transaction, index: index, selectedTransaction: $selectedTransaction) // Pass binding
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 10)
+                        
+                        if index < section.items.count - 1 {
+                            Divider()
+                                .padding(.leading, 52)
+                        }
+                    }
+                }
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(8)
+                .padding(.top, 8)
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
         }
-        .buttonStyle(PlainButtonStyle()) // Remove default button styling
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
     }
 }
+
+
+

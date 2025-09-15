@@ -30,6 +30,7 @@ struct CardBalanceView: View {
         .padding()
         .background(Color(.systemGray6))
         .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 1)
     }
     
     private var formattedBalance: String {
@@ -50,12 +51,4 @@ struct CardBalanceView: View {
     }
 }
 
-// Preview for testing
-//struct CardBalanceView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CardBalanceView(balance: "$1,234.56")
-//            .padding()
-//            .previewLayout(.sizeThatFits)
-//    }
-//}
 

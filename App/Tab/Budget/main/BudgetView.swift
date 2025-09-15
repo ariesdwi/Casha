@@ -4,7 +4,6 @@ import Core
 
 struct BudgetView: View {
     @EnvironmentObject var state: BudgetState
-    @State private var selectedMonthYear: String = ""
     @State private var showingAddBudget = false
     
     var body: some View {
@@ -20,11 +19,12 @@ struct BudgetView: View {
                     }
             }
             
-            // 👇 Month/year filter bar
+            // Main content
             ScrollView {
                 VStack(spacing: 20) {
-                    SummaryView(summary: state.budgetSummary, month: selectedMonthYear)
-                    BudgetsHeaderView(count: state.budgets.count)
+                    SummaryView(summary: state.budgetSummary,
+                                month: state.currentMonthYear ?? "")
+                    
                     BudgetListView(budgets: state.budgets)
                 }
                 .padding(.vertical)
@@ -43,10 +43,7 @@ struct BudgetView: View {
             }
         }
         .task {
-            let current = DateHelper.generateMonthYearOptions().first ?? ""
-            selectedMonthYear = current
-            
-            await state.refreshBudgetData(monthYear: current)
+            await state.refreshBudgetData()
         }
     }
 }
@@ -73,64 +70,21 @@ private extension BudgetView {
             }
         }
     }
-}
-
-// MARK: - Subviews
-private struct SummaryView: View {
-    let summary: BudgetSummary?
-    let month: String
     
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("\(month) Budget")
-                .font(.headline)
-            
-            if let summary {
-                Text("\(CurrencyFormatter.format(summary.totalSpent)) of \(CurrencyFormatter.format(summary.totalBudget)) spent")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                if summary.totalRemaining >= 0 {
-                    Text("Great job! You have \(CurrencyFormatter.format(summary.totalRemaining)) left.")
-                        .font(.subheadline)
-                        .foregroundColor(.green)
-                } else {
-                    Text("You've exceeded your budget by \(CurrencyFormatter.format(abs(summary.totalRemaining))).")
-                        .font(.subheadline)
-                        .foregroundColor(.red)
-                }
-            } else {
-                Text("Loading...")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .redacted(reason: .placeholder)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-        .padding(.horizontal)
-    }
-}
-
-private extension BudgetView {
     var monthFilterButton: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
-            // Generate month options once
             let monthOptions = DateHelper.generateMonthYearOptions()
-
+            
             Menu {
                 ForEach(monthOptions, id: \.self) { option in
                     Button {
-                        selectedMonthYear = option
                         Task {
-                            await state.refreshBudgetData(monthYear: option)
+                            await state.setMonth(option)
                         }
                     } label: {
                         HStack {
                             Text(option)
-                            if option == selectedMonthYear {
+                            if option == state.currentMonthYear {
                                 Image(systemName: "checkmark")
                             }
                         }
@@ -145,35 +99,23 @@ private extension BudgetView {
     }
 }
 
+
+
+// MARK: - Header
 private struct BudgetsHeaderView: View {
     let count: Int
     
     var body: some View {
         HStack {
-            Text("Monthly Budgets")
+            Text("Budget Categories")
                 .font(.headline)
+                .foregroundColor(.primary)
+            
             Spacer()
-            Text("\(count)")
+            
+            Text("\(count) \(count == 1 ? "category" : "categories")")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-        }
-        .padding(.horizontal)
-    }
-}
-
-private struct BudgetListView: View {
-    let budgets: [BudgetCasha]
-    
-    var body: some View {
-        if budgets.isEmpty {
-            EmptyStateView(message: "Budgets")
-        } else {
-            LazyVStack(spacing: 12) {
-                ForEach(budgets) { budget in
-                    BudgetCardView(budget: budget)
-                }
-            }
-            .padding(.horizontal)
         }
     }
 }

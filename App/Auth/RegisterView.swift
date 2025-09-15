@@ -236,17 +236,19 @@ struct RegisterView: View {
             }
             .signInWithAppleButtonStyle(.black)
             .frame(height: 50)
+            .frame(maxWidth: .infinity)
             .cornerRadius(12)
 
-            Button(action: { /* Google registration */ }) {
-                Image(systemName: "g.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
+            Button(action: {
+                // TODO: Google login
+            }) {
+                Image("ios_signup")
+                    .resizable()
+                    .scaledToFit()
                     .frame(height: 50)
-                    .background(Color.red)
-                    .cornerRadius(12)
+                    .frame(maxWidth: .infinity)
             }
+            .frame(height: 50)
         }
         .padding(.horizontal)
     }

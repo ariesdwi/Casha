@@ -1,10 +1,3 @@
-//
-//  BudgetState.swift
-//  Casha
-//
-//  Created by PT Siaga Abdi Utama on 03/09/25.
-//
-
 import Foundation
 import Domain
 import Core
@@ -13,10 +6,10 @@ import Core
 public final class BudgetState: ObservableObject {
     @Published public var budgets: [BudgetCasha] = []
     @Published public var budgetSummary: BudgetSummary?
-
     @Published public var isLoading: Bool = false
     @Published public var errorMessage: String?
-    
+    @Published public private(set) var currentMonthYear: String?
+
     private let getAllBudgetUseCase: GetBudgetsUseCase
     private let addBudgetUseCase: AddBudgetUseCase
     private let getTotalSummaryBudget: GetBudgetSummaryUseCase
@@ -31,33 +24,49 @@ public final class BudgetState: ObservableObject {
         self.getTotalSummaryBudget = getTotalSummaryBudget
     }
     
-    
-    public func refreshBudgetData(monthYear: String? = nil ) async {
+    // MARK: - Refresh Data
+    public func refreshBudgetData() async {
         isLoading = true
         errorMessage = nil
+        
+        // 👇 Use last selected month, or default to current
+        if currentMonthYear == nil {
+            let current = DateHelper.generateMonthYearOptions().first ?? ""
+            currentMonthYear = current
+        }
+        
+        guard let monthYear = currentMonthYear else { return }
+        
         do {
             async let budgetTask = getAllBudgetUseCase.execute(monthYear: monthYear)
             async let summaryTask = getTotalSummaryBudget.execute(monthYear: monthYear)
             
-            let (budgetsResult, summaryResult) = await (try budgetTask, try summaryTask)
-                    // Update state
-                   self.budgets = budgetsResult
-                   self.budgetSummary = summaryResult
+            let (budgetsResult, summaryResult) = try await (budgetTask, summaryTask)
+            self.budgets = budgetsResult
+            self.budgetSummary = summaryResult
         } catch {
             errorMessage = error.localizedDescription
         }
+        
         isLoading = false
+    }
+    
+    // MARK: - Change Month
+    public func setMonth(_ monthYear: String) async {
+        self.currentMonthYear = monthYear
+        await refreshBudgetData()
     }
     
     // MARK: - Add Budget
     public func addBudget(request: NewBudgetRequest) async {
         isLoading = true
         errorMessage = nil
+        
         do {
-            let newBudget = try await addBudgetUseCase.execute(request: request)
-            budgets.append(newBudget)
+            _ = try await addBudgetUseCase.execute(request: request)
+            // 👇 After saving, refresh the list and summary
+            await refreshBudgetData()
         } catch let error as NetworkError {
-            // Handle your custom NetworkError
             switch error {
             case .serverError(let message):
                 errorMessage = message
@@ -65,15 +74,9 @@ public final class BudgetState: ObservableObject {
                 errorMessage = error.localizedDescription
             }
         } catch {
-            // Handle any other error
             errorMessage = error.localizedDescription
-            
         }
         
         isLoading = false
     }
 }
-
-
-
-

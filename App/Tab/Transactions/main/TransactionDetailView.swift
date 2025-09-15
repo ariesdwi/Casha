@@ -10,12 +10,12 @@ import SwiftUI
 import Domain
 
 struct TransactionDetailView: View {
-    let initialTransaction: TransactionCasha // Change to initialTransaction
+    let initialTransaction: TransactionCasha
     @Environment(\.dismiss) private var dismiss
     @State private var showingEditSheet = false
     @State private var showingDeleteAlert = false
     @EnvironmentObject var state: TransactionListState
-    @State private var currentTransaction: TransactionCasha // Add state to hold current data
+    @State private var currentTransaction: TransactionCasha 
     
     init(transaction: TransactionCasha) {
         self.initialTransaction = transaction

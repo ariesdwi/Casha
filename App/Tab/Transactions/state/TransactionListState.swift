@@ -5,7 +5,6 @@
 //  Created by PT Siaga Abdi Utama on 21/07/25.
 //
 
-
 import Foundation
 import Domain
 import Core
@@ -13,6 +12,8 @@ import Core
 final class TransactionListState: ObservableObject {
     @Published var filteredTransactions: [TransactionDateSection] = []
     @Published var isSearching = false
+    @Published var isLoading = false
+    @Published var errorMessage: String?
 
     private let getTransactionsByPeriod: GetTransactionsByPeriodUseCase
     private let searchTransactions: SearchTransactionsUseCase
@@ -31,41 +32,54 @@ final class TransactionListState: ObservableObject {
     }
 
     @MainActor
-    func load() {
-        if searchQuery.isEmpty {
-            filterTransactions(by: selectedPeriod)
-        } else {
-            searchTransactions(with: searchQuery)
+    func load() async {
+        isLoading = true
+        errorMessage = nil
+        
+        defer { isLoading = false }
+        
+        do {
+            if searchQuery.isEmpty {
+                try await filterTransactions(by: selectedPeriod)
+            } else {
+                try await searchTransactions(with: searchQuery)
+            }
+        } catch {
+            errorMessage = "Failed to load transactions: \(error.localizedDescription)"
+            print("❌ Load error: \(error)")
         }
     }
 
     @MainActor
-    func filterTransactions(by period: String) {
+    func filterTransactions(by period: String) async throws {
         isSearching = false
         selectedPeriod = period
-
-        Task {
-            let (start, end) = DateHelper.resolveDateRange(for: period)
-            let transactions = await getTransactionsByPeriod.execute(startDate: start, endDate: end)
-            self.filteredTransactions = groupAndSort(transactions: transactions)
-        }
+        errorMessage = nil
+        
+        let (start, end) = DateHelper.resolveDateRange(for: period)
+        let transactions = try await getTransactionsByPeriod.execute(startDate: start, endDate: end)
+        self.filteredTransactions = groupAndSort(transactions: transactions)
     }
 
     @MainActor
-    func searchTransactions(with query: String) {
+    func searchTransactions(with query: String) async throws {
         searchQuery = query
         isSearching = !query.isEmpty
+        errorMessage = nil
 
         guard !query.isEmpty else {
-            filterTransactions(by: selectedPeriod)
+            try await filterTransactions(by: selectedPeriod)
             return
         }
 
-        Task {
-            try? await Task.sleep(nanoseconds: 300_000_000) // 300ms debounce
-            let transactions = await searchTransactions.execute(query: query)
-            self.filteredTransactions = groupAndSort(transactions: transactions)
-        }
+        // Add debouncing with proper async/await
+        try await Task.sleep(nanoseconds: 300_000_000) // 300ms debounce
+        
+        // Check if search query hasn't changed during debounce
+        guard searchQuery == query else { return }
+        
+        let transactions = try await searchTransactions.execute(query: query)
+        self.filteredTransactions = groupAndSort(transactions: transactions)
     }
 
     private func groupAndSort(transactions: [TransactionCasha]) -> [TransactionDateSection] {
@@ -90,44 +104,70 @@ final class TransactionListState: ObservableObject {
         }
     }
     
+    @MainActor
+    func updateTransaction(_ transaction: TransactionCasha) async {
+        errorMessage = nil
+        
+        do {
+            let request = UpdateTransactionRequest(
+                name: transaction.name,
+                amount: transaction.amount,
+                category: transaction.category
+            )
+            
+            try await transactionSyncUsecase.syncUpdateTransaction(
+                id: transaction.id,
+                request: request
+            )
+            
+            // Reload UI after update
+            try await reloadCurrentData()
+            
+        } catch {
+            errorMessage = "Failed to update transaction: \(error.localizedDescription)"
+            print("❌ Update error: \(error)")
+        }
+    }
+
+    @MainActor
+    func deleteTransaction(id: String) async {
+        errorMessage = nil
+        
+        do {
+            try await transactionSyncUsecase.syncDeleteTransaction(id: id)
+            
+            // Reload UI after delete
+            try await reloadCurrentData()
+            
+        } catch {
+            errorMessage = "Failed to delete transaction: \(error.localizedDescription)"
+            print("❌ Delete error: \(error)")
+        }
+    }
     
     @MainActor
-    func updateTransaction(_ transaction: TransactionCasha) {
-        Task {
-            do {
-                let request = UpdateTransactionRequest(
-                    name: transaction.name,
-                    amount: transaction.amount,
-                    category: transaction.category
-                )
-                try await transactionSyncUsecase.syncUpdateTransaction(
-                    id: transaction.id,
-                    request: request
-                )
-                
-                // Reload UI after update
-                filterTransactions(by: selectedPeriod)
-            } catch {
-                print("❌ Failed to update transaction: \(error)")
-            }
+    private func reloadCurrentData() async throws {
+        if isSearching {
+            try await searchTransactions(with: searchQuery)
+        } else {
+            try await filterTransactions(by: selectedPeriod)
         }
     }
-
+    
+    // Optional: Clear error message
     @MainActor
-    func deleteTransaction(id: String) {
-        Task {
-            do {
-                try await transactionSyncUsecase.syncDeleteTransaction(id: id)
-                
-                // Reload UI after delete
-                filterTransactions(by: selectedPeriod)
-            } catch {
-                print("❌ Failed to delete transaction: \(error)")
-            }
+    func clearError() {
+        errorMessage = nil
+    }
+    
+    // Optional: Refresh data without loading indicator
+    @MainActor
+    func refresh() async {
+        errorMessage = nil
+        do {
+            try await reloadCurrentData()
+        } catch {
+            errorMessage = "Failed to refresh: \(error.localizedDescription)"
         }
     }
-
 }
-
-
-
