@@ -1,8 +1,3 @@
-//import SwiftUI
-//import Core
-//import Domain
-//
-
 import SwiftUI
 import Core
 import Domain
@@ -11,14 +6,7 @@ struct DashboardView: View {
     // MARK: - State
     @State private var selectedTab: Tab = .week
     @State private var showAddTransaction = false
-    @State private var showAddManual = false
-    @State private var showAddChat = false
-    @State private var showImagePicker = false
-    @State private var selectedImage: UIImage? = nil
-    @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
-    @State private var showSourceDialog = false
-    @State private var showSyncConfirmation = false
-
+    
     // MARK: - Environment
     @EnvironmentObject private var dashboardState: DashboardState
     @Environment(\.scenePhase) private var scenePhase
@@ -34,7 +22,7 @@ struct DashboardView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         cardBalanceSection
-                        // syncStatusBanner
+                        syncStatusBanner
                         reportSection
                         recentTransactionsSection
                         Spacer(minLength: 40)
@@ -43,32 +31,19 @@ struct DashboardView: View {
                 }
                 .navigationTitle(dashboardState.isOnline ? "Home" : "")
                 .navigationBarTitleDisplayMode(dashboardState.isOnline ? .large : .inline)
-                .toolbar {
-                    // Combine both toolbar configurations
-                    if dashboardState.isOnline {
-                        navigationToolbar
-                    } else {
-                        ToolbarItem(placement: .principal) {
-                            HStack(spacing: 8) {
-                                ProgressView()
-                                    .progressViewStyle(.circular)
-                                Text("Waiting for network")
-                                    .font(.subheadline)
-                            }
-                        }
-                    }
-                }
+                .toolbar { navigationToolbar }
                 .task { await dashboardState.refreshDashboard() }
                 .onChange(of: scenePhase, perform: handleScenePhaseChange)
-                .background(confirmationDialogs)
-                .background(fullScreenCovers)
-                .sheet(isPresented: $showAddManual) { addTransactionView }
+                // ✅ Use Coordinator instead of inline dialogs/sheets
+                .overlay {
+                    AddTransactionCoordinator(isPresented: $showAddTransaction)
+                        .environmentObject(dashboardState)
+                }
             }
         } else {
-            // Fallback on earlier versions
+            Text("Please upgrade to iOS 16 or later")
         }
     }
-
 }
 
 // MARK: - Sections
@@ -82,7 +57,9 @@ private extension DashboardView {
             if dashboardState.unsyncedCount > 0 {
                 SyncStatusBanner(
                     unsyncedCount: dashboardState.unsyncedCount,
-                    onSyncNow: { showSyncConfirmation = true }
+                    onSyncNow: {
+                        Task { await dashboardState.sendTransaction() }
+                    }
                 )
             }
         }
@@ -132,89 +109,11 @@ private extension DashboardView {
                 ProgressView()
                     .progressViewStyle(.circular)
             } else {
-                Button { showSourceDialog = true } label: {
-                    Image(systemName: "camera")
+                NavigationLink(destination: ProfileView()) {
+                    Image(systemName: "person.circle")
+                        .font(.system(size: 18))
+                        .foregroundColor(.cashaPrimary)
                 }
-                Button { withAnimation { showAddTransaction = true } } label: {
-                    Image(systemName: "plus")
-                }
-            }
-        }
-    }
-
-}
-
-// MARK: - Confirmation Dialogs
-private extension DashboardView {
-    var confirmationDialogs: some View {
-        Group {
-            EmptyView()
-        }
-        .confirmationDialog("Choose Image Source", isPresented: $showSourceDialog) {
-            Button("Camera") {
-                imageSource = .camera
-                showImagePicker = true
-            }
-            Button("Photo Library") {
-                imageSource = .photoLibrary
-                showImagePicker = true
-            }
-            Button("Cancel", role: .cancel) {}
-        }
-        .confirmationDialog("Add Transaction", isPresented: $showAddTransaction) {
-            Button("Manual Entry") { showAddManual = true }
-            Button("Chat AI") { showAddChat = true }
-            Button("Cancel", role: .cancel) {}
-        }
-        .confirmationDialog("Sync Transactions", isPresented: $showSyncConfirmation) {
-            Button("Sync Now") {
-                Task { await dashboardState.sendTransaction() } // reuse sendTransaction()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("You have \(dashboardState.unsyncedCount) unsynced transaction(s). Sync them to the cloud now?")
-        }
-    }
-}
-
-// MARK: - Full Screen Covers
-private extension DashboardView {
-    var fullScreenCovers: some View {
-        Group {
-            EmptyView()
-        }
-        .fullScreenCover(isPresented: $showImagePicker) {
-            ImagePicker(sourceType: imageSource) { image in
-                Task {
-                    if let url = image.saveToTemporaryDirectory() {
-                        dashboardState.selectedImageURL = url
-                        await dashboardState.sendTransaction()
-                    }
-                }
-            }
-        }
-        .fullScreenCover(isPresented: $showAddChat) {
-            ZStack {
-                VisualEffectBlur(blurStyle: .systemThinMaterialDark).ignoresSafeArea()
-                VStack {
-                    Spacer()
-                    MessageFormCard {
-                        showAddManual = false
-                        showAddChat = false
-                    }
-                    Spacer()
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Sheets
-private extension DashboardView {
-    var addTransactionView: some View {
-        AddTransactionView { newTransaction in
-            Task {
-                await dashboardState.addTransactionManually(newTransaction)
             }
         }
     }
@@ -227,3 +126,5 @@ private extension DashboardView {
         Task { await dashboardState.refreshDashboard() }
     }
 }
+
+

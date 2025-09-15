@@ -1,9 +1,8 @@
-import SwiftUI
 
+import SwiftUI
 
 struct MessageFormCard: View {
     @EnvironmentObject var dashboardState: DashboardState
-    @ObservedObject private var keyboard = KeyboardResponder()
     var onClose: () -> Void
     
     @State private var isSending: Bool = false
@@ -11,7 +10,9 @@ struct MessageFormCard: View {
     var body: some View {
         VStack {
             Spacer()
-            
+        }
+        // 👇 Always pinned to bottom, respecting safe areas & keyboard
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(alignment: .leading, spacing: 16) {
                 // MARK: Title & Close
                 HStack {
@@ -32,7 +33,7 @@ struct MessageFormCard: View {
                             .font(.title2)
                             .foregroundColor(.gray)
                     }
-                    .disabled(isSending) // disable close while sending
+                    .disabled(isSending)
                 }
                 
                 // MARK: Message Input with overlay
@@ -54,13 +55,11 @@ struct MessageFormCard: View {
                     )
                     .disabled(isSending)
                     
-                    // Overlay loader if sending
                     if isSending {
                         ZStack {
                             Color.black.opacity(0.05)
                                 .cornerRadius(12)
                             ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle())
                         }
                         .frame(height: 140)
                     }
@@ -92,16 +91,14 @@ struct MessageFormCard: View {
                     .cornerRadius(12)
                 }
                 .padding(.top)
-                .disabled(isSending || dashboardState.messageInput.isEmpty) // prevent double tap / empty
+                .disabled(isSending || dashboardState.messageInput.isEmpty)
             }
             .padding()
             .background(Color(.systemGray6))
             .cornerRadius(16)
             .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 4)
             .padding(.horizontal)
+            .padding(.bottom, 80) // small gap from keyboard
         }
-        .padding(.bottom, keyboard.currentHeight + 20)
-        .animation(.easeOut(duration: 0.3), value: keyboard.currentHeight)
-        .edgesIgnoringSafeArea(.bottom)
     }
 }

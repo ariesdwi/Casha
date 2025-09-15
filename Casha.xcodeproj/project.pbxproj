@@ -37,6 +37,8 @@
 		539F8C347A64DB46B9482A8D /* TransactionDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81A20E95B59CA5090F9601 /* TransactionDTO.swift */; };
 		5454CAA2457E2C296EC0586E /* CategoryEntity+Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470BF1926F838A42575EC3B6 /* CategoryEntity+Mapper.swift */; };
 		5494DA632E77A50F00782E86 /* BudgetListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494DA622E77A50A00782E86 /* BudgetListView.swift */; };
+		5494DA652E77B39700782E86 /* CutomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494DA642E77B38C00782E86 /* CutomTabBar.swift */; };
+		5494DA672E77BC7500782E86 /* AddTransactionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494DA662E77BC7100782E86 /* AddTransactionCoordinator.swift */; };
 		549B64F32E61824500DEF8F6 /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B64F22E61823E00DEF8F6 /* BudgetView.swift */; };
 		549B64F52E619D2F00DEF8F6 /* BudgetCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B64F42E619D2700DEF8F6 /* BudgetCardView.swift */; };
 		549B64F72E619D4400DEF8F6 /* AddBudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549B64F62E619D3A00DEF8F6 /* AddBudgetView.swift */; };
@@ -230,6 +232,8 @@
 		51BC2962D413A363669186DC /* TransactionCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCardView.swift; sourceTree = "<group>"; };
 		51BD8BA610EB29B44E4F6539 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		5494DA622E77A50A00782E86 /* BudgetListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListView.swift; sourceTree = "<group>"; };
+		5494DA642E77B38C00782E86 /* CutomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutomTabBar.swift; sourceTree = "<group>"; };
+		5494DA662E77BC7100782E86 /* AddTransactionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionCoordinator.swift; sourceTree = "<group>"; };
 		549B64F22E61823E00DEF8F6 /* BudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
 		549B64F42E619D2700DEF8F6 /* BudgetCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCardView.swift; sourceTree = "<group>"; };
 		549B64F62E619D3A00DEF8F6 /* AddBudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBudgetView.swift; sourceTree = "<group>"; };
@@ -759,6 +763,8 @@
 		7212616A616E951CAC6F705E /* App */ = {
 			isa = PBXGroup;
 			children = (
+				5494DA662E77BC7100782E86 /* AddTransactionCoordinator.swift */,
+				5494DA642E77B38C00782E86 /* CutomTabBar.swift */,
 				549B654E2E6C032A00DEF8F6 /* Auth */,
 				549B653E2E69838F00DEF8F6 /* DebugTools.swift */,
 				549B653C2E69835800DEF8F6 /* AppConfig.swift */,
@@ -1201,6 +1207,7 @@
 				549B65102E68277B00DEF8F6 /* BudgetState.swift in Sources */,
 				549B65182E69193900DEF8F6 /* SnackbarView.swift in Sources */,
 				4D891B6FCAAF9CD8910906CD /* ImagePickerCoordinator.swift in Sources */,
+				5494DA672E77BC7500782E86 /* AddTransactionCoordinator.swift in Sources */,
 				CC1668BDED0A931E3FD8C642 /* ImagePickerService.swift in Sources */,
 				7CF63D2893BDFE07F35ABF1F /* ImagePickerServiceProtocol.swift in Sources */,
 				549B653F2E69839400DEF8F6 /* DebugTools.swift in Sources */,
@@ -1236,6 +1243,7 @@
 				549B654D2E6B4B9100DEF8F6 /* BudgetSummaryView.swift in Sources */,
 				549B655B2E6E7DB100DEF8F6 /* RegisterView.swift in Sources */,
 				549B657F2E72C13700DEF8F6 /* TransactionListByCategoryView.swift in Sources */,
+				5494DA652E77B39700782E86 /* CutomTabBar.swift in Sources */,
 				549B655D2E6E7DBD00DEF8F6 /* RegisterState.swift in Sources */,
 				BC8699FDA4702CA09ADCE047 /* TransactionListView.swift in Sources */,
 				A4EBF45FD0C32BF588AC9E36 /* VisualEfffect.swift in Sources */,
