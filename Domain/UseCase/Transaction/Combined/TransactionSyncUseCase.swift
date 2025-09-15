@@ -56,18 +56,22 @@ public final class TransactionSyncUseCase {
         guard !unsyncedTransactions.isEmpty else {
             return
         }
+        print("🔄 Syncing \(unsyncedTransactions.count) transactions to remote...")
         for transaction in unsyncedTransactions {
             do {
                 let request = AddTransactionRequest(
-                    message: "\(transaction.name) - \(transaction.category) - \(transaction.amount)",
+                    message: "\(transaction.name) - \(transaction.category) - \(transaction.amount) rupiah",
                     imageURL: nil
                 )
                 
+                print("Request: \(request) transactions to remote...")
                 let remoteTransaction = try await remoteRepository.addTransaction(request)
                 try await localRepository.markAsSynced(
                     transactionId: transaction.id,
                     remoteData: remoteTransaction
                 )
+                
+                print("✅ Successfully synced transaction: \(transaction.name)")
             } catch {
                 print("❌ Failed to sync transaction \(transaction.id): \(error)")
             }

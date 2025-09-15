@@ -1,5 +1,47 @@
+////
+////  Untitled.swift
+////  Casha
+////
+////  Created by PT Siaga Abdi Utama on 23/07/25.
+////
 //
-//  Untitled.swift
+//import Foundation
+//import Domain
+//
+//public struct TransactionDTO: Decodable {
+//    public let id: String?
+//    public let name: String?
+//    public let amount: Double?
+//    public let datetime: String?
+//    public let category: String?
+//    
+//    enum CodingKeys: String, CodingKey {
+//        case id
+//         case name
+//         case amount
+//         case datetime
+//         case category
+//     }
+//
+//    public func toDomain() -> TransactionCasha {
+//        let formatter = ISO8601DateFormatter()
+//            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+//        
+//        return TransactionCasha(
+//            id: id ?? "",
+//            name: name ?? "",
+//            category: category ?? "",
+//            amount: amount ?? 0.0,
+//            datetime: formatter.date(from: datetime ?? "") ?? Date(),
+//            isConfirm: true,
+//            createdAt: formatter.date(from: datetime ?? "") ?? Date(),   // Or parse if provided
+//            updatedAt: formatter.date(from: datetime ?? "") ?? Date(),   // Or parse if provided
+//        )
+//    }
+//}
+
+//
+//  TransactionDTO.swift
 //  Casha
 //
 //  Created by PT Siaga Abdi Utama on 23/07/25.
@@ -16,26 +58,24 @@ public struct TransactionDTO: Decodable {
     public let category: String?
     
     enum CodingKeys: String, CodingKey {
-        case id
-         case name
-         case amount
-         case datetime
-         case category
-     }
-
+        case id, name, amount, datetime, category
+    }
+    
     public func toDomain() -> TransactionCasha {
         let formatter = ISO8601DateFormatter()
-            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        let parsedDate = formatter.date(from: datetime ?? "")
+
         return TransactionCasha(
-            id: id ?? "",
+            id: id ?? UUID().uuidString,
             name: name ?? "",
             category: category ?? "",
             amount: amount ?? 0.0,
-            datetime: formatter.date(from: datetime ?? "") ?? Date(),
+            datetime: parsedDate ?? Date(),
             isConfirm: true,
-            createdAt: formatter.date(from: datetime ?? "") ?? Date(),   // Or parse if provided
-            updatedAt: formatter.date(from: datetime ?? "") ?? Date(),   // Or parse if provided
+            createdAt: parsedDate ?? Date(),   // use "now" as createdAt (when synced)
+            updatedAt: parsedDate ?? Date()    // use "now" as updatedAt (when synced)
         )
     }
 }

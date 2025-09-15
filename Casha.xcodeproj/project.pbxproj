@@ -482,6 +482,52 @@
 			path = UseCase;
 			sourceTree = "<group>";
 		};
+		547E10AB2E77E92B0029880F /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
+		5494DA682E77C85800782E86 /* AddTransaction */ = {
+			isa = PBXGroup;
+			children = (
+				5494DA662E77BC7100782E86 /* AddTransactionCoordinator.swift */,
+				549B65402E6A9EFF00DEF8F6 /* AddTransactionView.swift */,
+				5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */,
+			);
+			path = AddTransaction;
+			sourceTree = "<group>";
+		};
+		5494DA692E77C87700782E86 /* Tabbar */ = {
+			isa = PBXGroup;
+			children = (
+				5056D19EC0C7F7B76FAB19DB /* MainTabView.swift */,
+				5494DA642E77B38C00782E86 /* CutomTabBar.swift */,
+			);
+			path = Tabbar;
+			sourceTree = "<group>";
+		};
+		5494DA6A2E77C89C00782E86 /* SplashScreen */ = {
+			isa = PBXGroup;
+			children = (
+				3857BADB13D82851AE4EA0E6 /* LaunchScreen.storyboard */,
+				650F06C995A36AF03739D2DE /* SplashScreen.swift */,
+			);
+			path = SplashScreen;
+			sourceTree = "<group>";
+		};
+		5494DA6B2E77C8C100782E86 /* Environtment */ = {
+			isa = PBXGroup;
+			children = (
+				549B653E2E69838F00DEF8F6 /* DebugTools.swift */,
+				549B653C2E69835800DEF8F6 /* AppConfig.swift */,
+				549B653A2E69831500DEF8F6 /* EnvironmentKeys.swift */,
+				549B65382E6982C800DEF8F6 /* DepedencyContainer.swift */,
+			);
+			path = Environtment;
+			sourceTree = "<group>";
+		};
 		549B64EE2E61821500DEF8F6 /* Budget */ = {
 			isa = PBXGroup;
 			children = (
@@ -745,7 +791,6 @@
 		68C8F44500C5356673D32279 /* main */ = {
 			isa = PBXGroup;
 			children = (
-				549B65402E6A9EFF00DEF8F6 /* AddTransactionView.swift */,
 				6BAD414E0EE7CA9B3B45E9F7 /* DashboardView.swift */,
 			);
 			path = main;
@@ -763,20 +808,15 @@
 		7212616A616E951CAC6F705E /* App */ = {
 			isa = PBXGroup;
 			children = (
-				5494DA662E77BC7100782E86 /* AddTransactionCoordinator.swift */,
-				5494DA642E77B38C00782E86 /* CutomTabBar.swift */,
+				5494DA6B2E77C8C100782E86 /* Environtment */,
+				5494DA6A2E77C89C00782E86 /* SplashScreen */,
+				5494DA692E77C87700782E86 /* Tabbar */,
+				5494DA682E77C85800782E86 /* AddTransaction */,
 				549B654E2E6C032A00DEF8F6 /* Auth */,
-				549B653E2E69838F00DEF8F6 /* DebugTools.swift */,
-				549B653C2E69835800DEF8F6 /* AppConfig.swift */,
-				549B653A2E69831500DEF8F6 /* EnvironmentKeys.swift */,
-				549B65382E6982C800DEF8F6 /* DepedencyContainer.swift */,
 				E4AE8EA15BAC1D8BBDF4F731 /* Assets.xcassets */,
 				EEC0996241464FF8BD6ED1FE /* CashApp.swift */,
 				1AB692BA94258FB20B79FB74 /* Info.plist */,
-				3857BADB13D82851AE4EA0E6 /* LaunchScreen.storyboard */,
-				5056D19EC0C7F7B76FAB19DB /* MainTabView.swift */,
-				650F06C995A36AF03739D2DE /* SplashScreen.swift */,
-				B57458D2C1D26DBE55856EC9 /* Tab */,
+				B57458D2C1D26DBE55856EC9 /* Module */,
 				8B531C290BD8977EBEF920A9 /* UI */,
 			);
 			path = App;
@@ -815,6 +855,7 @@
 		9F51EF39E2BCDFC12079C5FB /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				547E10AB2E77E92B0029880F /* Notification */,
 				393CB48AE280BD9BE9A6213C /* Networking */,
 				14255AECB70FA2E97F4F7800 /* Persistance */,
 			);
@@ -864,14 +905,13 @@
 				17FF4D41D30C84F0B6579060 /* CalculatorView.swift */,
 				2D49EA42B28F059365184000 /* EmptyView.swift */,
 				85EF5696C65F59F44DB07C08 /* ImagePicker.swift */,
-				5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */,
 				FD06A3A543F891F7D822A839 /* SearchView.swift */,
 				1A67374A41D7C4F0EC09693B /* ImagePicker */,
 			);
 			path = Component;
 			sourceTree = "<group>";
 		};
-		B57458D2C1D26DBE55856EC9 /* Tab */ = {
+		B57458D2C1D26DBE55856EC9 /* Module */ = {
 			isa = PBXGroup;
 			children = (
 				549B64EE2E61821500DEF8F6 /* Budget */,
@@ -880,7 +920,7 @@
 				8AD8CCADD27CD478796E1401 /* Profile */,
 				BFEDB9E630FB816318C8A948 /* Report */,
 			);
-			path = Tab;
+			path = Module;
 			sourceTree = "<group>";
 		};
 		B76E58C37D9538D7784E1777 /* Transaction */ = {

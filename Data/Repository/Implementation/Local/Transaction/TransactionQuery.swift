@@ -30,15 +30,16 @@ public final class TransactionQuery: TransactionQueryDataSource {
     
     public func fetch(limit: Int) throws -> [TransactionCasha] {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
         request.fetchLimit = limit
-        request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
         
         return try performFetch(request)
     }
     
+    
     public func fetchAll() throws -> [TransactionCasha] {
         let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "datetime", ascending: false)]
+        request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
         
         return try performFetch(request)
     }
@@ -89,6 +90,7 @@ public final class TransactionQuery: TransactionQueryDataSource {
         if let error = fetchError {
             throw error
         }
+      
         return results
     }
     

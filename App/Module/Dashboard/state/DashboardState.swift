@@ -89,10 +89,11 @@ final class DashboardState: ObservableObject {
     }
     
     private func triggerAutoSync() async {
+       
         let now = Date()
         guard now.timeIntervalSince(lastSyncAttempt) > 30 else { return }
         lastSyncAttempt = now
-        
+        print(unsyncedCount)
         guard unsyncedCount > 0 else { return }
         
         do {
@@ -126,17 +127,38 @@ final class DashboardState: ObservableObject {
         }
     }
     
+    // MARK: - Send Massage
+    func sendMTransaction() async -> Bool {
+        guard !messageInput.isEmpty || selectedImageURL != nil else { return false }
+        
+        let request = AddTransactionRequest(
+            message: messageInput.isEmpty ? nil : messageInput,
+            imageURL: selectedImageURL
+        )
+        
+        isSyncing = true
+        defer { isSyncing = false }
+        
+        do {
+            try await transactionSyncManager.syncAddTransaction(request)
+            messageInput = ""
+            selectedImageURL = nil
+            await refreshDashboard()
+            return true   // 👈 success
+        } catch {
+            print("❌ Send failed: \(error.localizedDescription)")
+            return false  // 👈 failure
+        }
+    }
+
+    
     // MARK: - Manual Add
     @MainActor
     func addTransactionManually(_ transaction: TransactionCasha) async {
         do {
             try await addLocalTransaction.execute(transaction: transaction)
             await refreshDashboard()
-            
-            // Trigger auto-sync after adding transaction (with delay)
-            try? await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds delay
             await triggerAutoSync()
-            
             print("✅ Transaction added manually")
         } catch {
             print("❌ Failed to add transaction manually: \(error.localizedDescription)")

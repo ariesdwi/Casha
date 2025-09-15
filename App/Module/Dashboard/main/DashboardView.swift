@@ -22,7 +22,7 @@ struct DashboardView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         cardBalanceSection
-                        syncStatusBanner
+//                        syncStatusBanner
                         reportSection
                         recentTransactionsSection
                         Spacer(minLength: 40)
