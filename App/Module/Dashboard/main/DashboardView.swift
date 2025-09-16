@@ -29,8 +29,8 @@ struct DashboardView: View {
                     }
                     .padding()
                 }
-                .navigationTitle(dashboardState.isOnline ? "Home" : "")
-                .navigationBarTitleDisplayMode(dashboardState.isOnline ? .large : .inline)
+                .navigationTitle("Home")
+                .navigationBarTitleDisplayMode(.large)
                 .toolbar { navigationToolbar }
                 .task { await dashboardState.refreshDashboard() }
                 .onChange(of: scenePhase, perform: handleScenePhaseChange)

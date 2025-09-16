@@ -1,3 +1,5 @@
+
+
 import SwiftUI
 
 struct MessageFormCard: View {
@@ -8,35 +10,88 @@ struct MessageFormCard: View {
     @State private var showConfirmation: Bool = false
     @State private var transactionSuccess: Bool = false
     @State private var isAppearing: Bool = false
+    @FocusState private var isInputFocused: Bool
+    @State private var keyboardHeight: CGFloat = 0
+    @State private var bottomPadding: CGFloat = 0
     
     var body: some View {
         ZStack {
             // Background dim
             Color.black.opacity(0.4)
                 .ignoresSafeArea()
-                .onTapGesture { if !isSending { onClose() } }
+                .onTapGesture {
+                    if !isSending {
+                        isInputFocused = false
+                        onClose()
+                    }
+                }
                 .opacity(isAppearing ? 1 : 0)
             
-            // Main card
             VStack(spacing: 0) {
                 headerView
+                
                 chatArea
+                    .frame(maxHeight: .infinity) // flexible space above input
+                
                 inputArea
             }
+            
             .background(
                 RoundedRectangle(cornerRadius: 0)
                     .fill(Color(.systemBackground))
                     .shadow(color: .black.opacity(0.1), radius: 20, x: 0, y: 10)
             )
-            .padding(.horizontal, 0)
+            .padding(.bottom, keyboardHeight > 0 ? keyboardHeight - bottomPadding : 0)
             .offset(y: isAppearing ? 0 : 100)
             .opacity(isAppearing ? 1 : 0)
+            .animation(.spring(response: 0.6, dampingFraction: 0.8), value: keyboardHeight)
+            .animation(.spring(response: 0.6, dampingFraction: 0.8), value: isAppearing)
         }
         .onAppear {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                 isAppearing = true
             }
+            setupKeyboardObservers()
+            // Get safe area bottom inset
+            bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0
         }
+        .onDisappear {
+            removeKeyboardObservers()
+        }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
+    }
+}
+
+// MARK: - Keyboard Handling
+private extension MessageFormCard {
+    func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardWillShowNotification,
+            object: nil,
+            queue: .main
+        ) { notification in
+            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+            let keyboardHeight = keyboardFrame.height
+            
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                self.keyboardHeight = keyboardHeight
+            }
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardWillHideNotification,
+            object: nil,
+            queue: .main
+        ) { _ in
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                self.keyboardHeight = 0
+            }
+        }
+    }
+    
+    func removeKeyboardObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 
@@ -64,7 +119,10 @@ private extension MessageFormCard {
             
             Spacer()
             
-            Button(action: { withAnimation { onClose() } }) {
+            Button(action: {
+                isInputFocused = false
+                withAnimation { onClose() }
+            }) {
                 Image(systemName: "xmark.circle.fill")
                     .font(.title2)
                     .foregroundColor(.secondary)
@@ -96,25 +154,49 @@ private extension MessageFormCard {
                             .id("confirmationMessage")
                     } else {
                         welcomeMessageView
+                            .id("welcomeMessage")
+                    }
+                    
+                    // Spacer to push content to top when keyboard is visible
+                    if keyboardHeight > 0 {
+                        Color.clear
+                            .frame(height: 50)
+                            .id("keyboardSpacer")
                     }
                 }
                 .padding(20)
             }
-            .frame(maxHeight: 300)
+            .frame(maxHeight: 350)
             .onChange(of: dashboardState.messageInput) { _ in
-                withAnimation(.easeOut(duration: 0.3)) {
-                    proxy.scrollTo("userMessage", anchor: .bottom)
-                }
+                scrollToBottom(proxy: proxy)
             }
             .onChange(of: isSending) { _ in
-                withAnimation(.easeOut(duration: 0.3)) {
-                    proxy.scrollTo("processingMessage", anchor: .bottom)
-                }
+                scrollToBottom(proxy: proxy)
             }
             .onChange(of: showConfirmation) { _ in
-                withAnimation(.easeOut(duration: 0.3)) {
-                    proxy.scrollTo("confirmationMessage", anchor: .bottom)
+                scrollToBottom(proxy: proxy)
+            }
+            .onChange(of: isInputFocused) { focused in
+                if focused {
+                    // Scroll to bottom when keyboard appears with a slight delay
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        scrollToBottom(proxy: proxy)
+                    }
                 }
+            }
+        }
+    }
+    
+    private func scrollToBottom(proxy: ScrollViewProxy) {
+        withAnimation(.easeOut(duration: 0.3)) {
+            if !dashboardState.messageInput.isEmpty {
+                proxy.scrollTo("userMessage", anchor: .bottom)
+            } else if isSending {
+                proxy.scrollTo("processingMessage", anchor: .bottom)
+            } else if showConfirmation {
+                proxy.scrollTo("confirmationMessage", anchor: .bottom)
+            } else {
+                proxy.scrollTo("welcomeMessage", anchor: .bottom)
             }
         }
     }
@@ -203,23 +285,32 @@ private extension MessageFormCard {
     
     var confirmationMessageView: some View {
         HStack(alignment: .top) {
-            Image(systemName: transactionSuccess ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-                .foregroundColor(transactionSuccess ? .green : .orange)
+            Image(systemName: dashboardState.lastCreatedTransaction != nil ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                .foregroundColor(dashboardState.lastCreatedTransaction != nil ? .green : .orange)
                 .frame(width: 32, height: 32)
-                .background((transactionSuccess ? Color.green : Color.orange).opacity(0.1))
+                .background((dashboardState.lastCreatedTransaction != nil ? Color.green : Color.orange).opacity(0.1))
                 .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(transactionSuccess ? "Success!" : "Oops!")
-                    .fontWeight(.semibold)
-                    .foregroundColor(.primary)
-                
-                Text(transactionSuccess ?
-                     "Transaction #\(Int.random(in: 1000...9999)) created successfully. Funds will be processed shortly." :
-                     "We couldn't process your request. Please check your details and try again.")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .lineSpacing(4)
+                if let tx = dashboardState.lastCreatedTransaction {
+                    Text("Success!")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
+                    Text("Transaction **\(tx.name)** (\(tx.amount, specifier: "%.2f")) in category **\(tx.category)** created successfully. Funds will be processed shortly.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineSpacing(4)
+                } else {
+                    Text("Oops!")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
+                    Text("We couldn't process your request. Please check your details and try again.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineSpacing(4)
+                }
             }
             .padding(12)
             .background(Color(.systemGray6))
@@ -234,35 +325,51 @@ private extension MessageFormCard {
 // MARK: - Input Area
 private extension MessageFormCard {
     var inputArea: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             Divider()
             
             HStack(alignment: .bottom, spacing: 12) {
-                AutoFocusTextEditor(
-                    text: $dashboardState.messageInput,
-                    onBecomeFirstResponder: true,
-                    placeholder: "Describe your transaction..."
-                )
-                .frame(minHeight: 20, maxHeight: 100)
-                .padding(12)
-                .background(Color(.systemGray6))
-                .cornerRadius(20)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                )
-                .disabled(isSending || showConfirmation)
+                if #available(iOS 16.0, *) {
+                    TextField("Describe your transaction...", text: $dashboardState.messageInput, axis: .vertical)
+                        .lineLimit(1...5)
+                        .padding(12)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(20)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                        )
+                        .disabled(isSending || showConfirmation)
+                        .focused($isInputFocused)
+                        .submitLabel(.send)
+                        .onSubmit {
+                            if !dashboardState.messageInput.isEmpty {
+                                sendMessage()
+                            }
+                        }
+                } else {
+                    TextField("Describe your transaction...", text: $dashboardState.messageInput)
+                        .padding(12)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(20)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                        )
+                        .disabled(isSending || showConfirmation)
+                }
                 
                 sendButton
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .padding(.vertical, 12)
             
             if showConfirmation {
                 Button {
                     withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                         showConfirmation = false
                         dashboardState.messageInput = ""
+                        isInputFocused = false
                     }
                 } label: {
                     HStack {
@@ -283,10 +390,11 @@ private extension MessageFormCard {
                     .cornerRadius(16)
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 20)
+                .padding(.bottom, 10)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
+        .background(.ultraThinMaterial)
     }
     
     var sendButton: some View {
@@ -328,15 +436,13 @@ private extension MessageFormCard {
     func sendMessage() {
         guard !dashboardState.messageInput.isEmpty else { return }
         
+        isInputFocused = false
         isSending = true
-        
-        // Haptic feedback
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
         
         Task {
-            try? await Task.sleep(nanoseconds: 1_500_000_000) // Simulate processing
-            
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
             let success = await dashboardState.sendMTransaction()
             
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
@@ -345,7 +451,6 @@ private extension MessageFormCard {
                 isSending = false
             }
             
-            // Success haptic
             let successGenerator = UINotificationFeedbackGenerator()
             successGenerator.notificationOccurred(success ? .success : .error)
         }
@@ -372,3 +477,4 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
 }
+

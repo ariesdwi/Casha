@@ -185,10 +185,9 @@ struct AddTransactionView: View {
                     TextField("Enter amount", text: $amount)
                         .keyboardType(.numberPad)
                         .onChange(of: amount) { newValue in
-                            let numericOnly = newValue
-                                .replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-                            if numericOnly != newValue {
-                                amount = numericOnly
+                            let formatted = CurrencyFormatter.format(input: newValue)
+                            if formatted != amount {
+                                amount = formatted
                             }
                         }
                     
@@ -228,12 +227,15 @@ struct AddTransactionView: View {
     
     // MARK: - Helpers
     private var isFormValid: Bool {
-        guard let amountValue = Double(amount), amountValue > 0 else { return false }
-        return !name.isEmpty && !selectedCategory.isEmpty
+        let rawAmount = CurrencyFormatter.extractRawValue(from: amount)
+        return rawAmount > 0 && !selectedCategory.isEmpty
     }
     
+   
+    
     private func saveTransaction() {
-        guard let amountValue = Double(amount), amountValue > 0 else {
+        let amountValue = CurrencyFormatter.extractRawValue(from: amount)
+        guard amountValue > 0 else {
             errorMessage = "Please enter a valid amount greater than 0"
             return
         }

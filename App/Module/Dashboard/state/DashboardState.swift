@@ -28,6 +28,9 @@ final class DashboardState: ObservableObject {
     
     // UI State
     @Published var isSyncing: Bool = false
+    @Published var lastCreatedTransaction: TransactionCasha?
+
+
     
     private var networkMonitor: NetworkMonitorProtocol
     private let getRecentTransactions: GetRecentTransactionsUseCase
@@ -36,6 +39,7 @@ final class DashboardState: ObservableObject {
     private let transactionSyncManager: TransactionSyncUseCase
     private let getUnsyncTransactionCount: GetUnsyncTransactionCountUseCase
     private let addLocalTransaction: AddTransactionLocalUseCase
+    
     
     private var lastSyncAttempt: Date = .distantPast
     
@@ -140,16 +144,21 @@ final class DashboardState: ObservableObject {
         defer { isSyncing = false }
         
         do {
-            try await transactionSyncManager.syncAddTransaction(request)
+            let transaction = try await transactionSyncManager.syncAddTransaction(request)
+            
             messageInput = ""
             selectedImageURL = nil
+            lastCreatedTransaction = transaction   // 👈 store it
+            
             await refreshDashboard()
-            return true   // 👈 success
+            return true
         } catch {
             print("❌ Send failed: \(error.localizedDescription)")
-            return false  // 👈 failure
+            lastCreatedTransaction = nil
+            return false
         }
     }
+
 
     
     // MARK: - Manual Add

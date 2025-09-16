@@ -24,10 +24,12 @@ public final class TransactionSyncUseCase {
     /// 1. Send message/image to remote AI.
     /// 2. Receive structured transaction.
     /// 3. Save to CoreData.
-    public func syncAddTransaction(_ request: AddTransactionRequest) async throws {
+    public func syncAddTransaction(_ request: AddTransactionRequest) async throws -> TransactionCasha {
         let transaction = try await remoteRepository.addTransaction(request)
         
         try await localRepository.addTransaction(transaction)
+        
+        return transaction
     }
     
     /// AI-driven transaction input flow:
@@ -60,7 +62,7 @@ public final class TransactionSyncUseCase {
         for transaction in unsyncedTransactions {
             do {
                 let request = AddTransactionRequest(
-                    message: "\(transaction.name) - \(transaction.category) - \(transaction.amount) rupiah",
+                    message: "\(transaction.name) - \(transaction.category) - \(transaction.amount) IDR ",
                     imageURL: nil
                 )
                 
