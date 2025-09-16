@@ -2,7 +2,7 @@
 
 import SwiftUI
 
-struct MessageFormCard: View {
+struct AddMessageView: View {
     @EnvironmentObject var dashboardState: DashboardState
     var onClose: () -> Void
     
@@ -63,7 +63,7 @@ struct MessageFormCard: View {
 }
 
 // MARK: - Keyboard Handling
-private extension MessageFormCard {
+private extension AddMessageView {
     func setupKeyboardObservers() {
         NotificationCenter.default.addObserver(
             forName: UIResponder.keyboardWillShowNotification,
@@ -96,7 +96,7 @@ private extension MessageFormCard {
 }
 
 // MARK: - Header
-private extension MessageFormCard {
+private extension AddMessageView {
     var headerView: some View {
         HStack(spacing: 16) {
             Image(systemName: "text.bubble.fill")
@@ -136,16 +136,12 @@ private extension MessageFormCard {
 }
 
 // MARK: - Chat Area
-private extension MessageFormCard {
+private extension AddMessageView {
     var chatArea: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(spacing: 20) {
-                    if !dashboardState.messageInput.isEmpty {
-                        userMessageView
-                            .id("userMessage")
-                    }
-                    
+                   
                     if isSending {
                         processingMessageView
                             .id("processingMessage")
@@ -155,6 +151,11 @@ private extension MessageFormCard {
                     } else {
                         welcomeMessageView
                             .id("welcomeMessage")
+                    }
+                    
+                    if !dashboardState.messageInput.isEmpty {
+                        userMessageView
+                            .id("userMessage")
                     }
                     
                     // Spacer to push content to top when keyboard is visible
@@ -323,7 +324,7 @@ private extension MessageFormCard {
 }
 
 // MARK: - Input Area
-private extension MessageFormCard {
+private extension AddMessageView {
     var inputArea: some View {
         VStack(spacing: 12) {
             Divider()
@@ -432,7 +433,7 @@ private extension MessageFormCard {
 }
 
 // MARK: - Sending Logic
-private extension MessageFormCard {
+private extension AddMessageView {
     func sendMessage() {
         guard !dashboardState.messageInput.isEmpty else { return }
         
@@ -443,16 +444,16 @@ private extension MessageFormCard {
         
         Task {
             try? await Task.sleep(nanoseconds: 1_500_000_000)
-            let success = await dashboardState.sendMTransaction()
+            let success = await dashboardState.sendTransaction()
             
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                transactionSuccess = success
+                transactionSuccess = (success != nil)
                 showConfirmation = true
                 isSending = false
             }
             
             let successGenerator = UINotificationFeedbackGenerator()
-            successGenerator.notificationOccurred(success ? .success : .error)
+            successGenerator.notificationOccurred((success != nil) ? .success : .error)
         }
     }
 }

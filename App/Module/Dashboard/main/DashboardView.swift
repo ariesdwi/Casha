@@ -22,7 +22,6 @@ struct DashboardView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         cardBalanceSection
-//                        syncStatusBanner
                         reportSection
                         recentTransactionsSection
                         Spacer(minLength: 40)
@@ -32,9 +31,12 @@ struct DashboardView: View {
                 .navigationTitle("Home")
                 .navigationBarTitleDisplayMode(.large)
                 .toolbar { navigationToolbar }
-                .task { await dashboardState.refreshDashboard() }
+                .onAppear {
+                    Task {
+                        await dashboardState.refreshDashboard()
+                    }
+                }
                 .onChange(of: scenePhase, perform: handleScenePhaseChange)
-                // ✅ Use Coordinator instead of inline dialogs/sheets
                 .overlay {
                     AddTransactionCoordinator(isPresented: $showAddTransaction)
                         .environmentObject(dashboardState)
@@ -50,19 +52,6 @@ struct DashboardView: View {
 private extension DashboardView {
     var cardBalanceSection: some View {
         CardBalanceView(balance: CurrencyFormatter.format(dashboardState.totalSpending))
-    }
-    
-    var syncStatusBanner: some View {
-        Group {
-            if dashboardState.unsyncedCount > 0 {
-                SyncStatusBanner(
-                    unsyncedCount: dashboardState.unsyncedCount,
-                    onSyncNow: {
-                        Task { await dashboardState.sendTransaction() }
-                    }
-                )
-            }
-        }
     }
     
     var reportSection: some View {
@@ -92,7 +81,7 @@ private extension DashboardView {
             }
             
             if dashboardState.recentTransactions.isEmpty {
-                EmptyStateView(message: "No recent transactions")
+                EmptyStateView(message: "recent transactions")
             } else {
                 RecentTransactionList(transactions: dashboardState.recentTransactions)
             }
@@ -126,5 +115,7 @@ private extension DashboardView {
         Task { await dashboardState.refreshDashboard() }
     }
 }
+
+
 
 

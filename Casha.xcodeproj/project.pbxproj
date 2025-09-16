@@ -103,7 +103,7 @@
 		630C080456D1358A565C7ED3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650F06C995A36AF03739D2DE /* SplashScreen.swift */; };
 		66447906718611F0B83631CC /* ReportCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CA8FB30F99D0CB926645F5 /* ReportCategoryList.swift */; };
 		679AFEB44F5E2E93EA2DE4AE /* CashaModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 95E233270D99B7CB4D3E719D /* CashaModel.xcdatamodeld */; };
-		6CC78093CF69137B940EFC5A /* MassageFormInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */; };
+		6CC78093CF69137B940EFC5A /* AddMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3E6FFEC0A3FE67E6D02DB1 /* AddMessageView.swift */; };
 		6FD7BDD78563A9BD3BBDF61A /* CategoryAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460203219C2B22865645CF16 /* CategoryAnalytics.swift */; };
 		7003DB9D43E18C16D11978A6 /* ReportCategoryPieChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AD5DE806E00DCE2DE24B09 /* ReportCategoryPieChart.swift */; };
 		70AECA4CDFFF01BBEC339C89 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD06A3A543F891F7D822A839 /* SearchView.swift */; };
@@ -293,7 +293,7 @@
 		549B65822E73B73100DEF8F6 /* TransactionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRow.swift; sourceTree = "<group>"; };
 		571BDFC5B6D8AC0EA35814B2 /* GetRecentTransactionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRecentTransactionsUseCase.swift; sourceTree = "<group>"; };
 		5BC10A9EBF4A765B06804F7D /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
-		5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassageFormInput.swift; sourceTree = "<group>"; };
+		5C3E6FFEC0A3FE67E6D02DB1 /* AddMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMessageView.swift; sourceTree = "<group>"; };
 		5CAF7DB318C648AA19A181F3 /* ImagePickerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerCoordinator.swift; sourceTree = "<group>"; };
 		5CFCCB1B76A2A0E7DCC2B386 /* ReportPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPeriod.swift; sourceTree = "<group>"; };
 		5E602EDB1CABF093317E9D06 /* TransactionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEntity.swift; sourceTree = "<group>"; };
@@ -494,7 +494,7 @@
 			children = (
 				5494DA662E77BC7100782E86 /* AddTransactionCoordinator.swift */,
 				549B65402E6A9EFF00DEF8F6 /* AddTransactionView.swift */,
-				5C3E6FFEC0A3FE67E6D02DB1 /* MassageFormInput.swift */,
+				5C3E6FFEC0A3FE67E6D02DB1 /* AddMessageView.swift */,
 			);
 			path = AddTransaction;
 			sourceTree = "<group>";
@@ -811,8 +811,6 @@
 				5494DA6B2E77C8C100782E86 /* Environtment */,
 				5494DA6A2E77C89C00782E86 /* SplashScreen */,
 				5494DA692E77C87700782E86 /* Tabbar */,
-				5494DA682E77C85800782E86 /* AddTransaction */,
-				549B654E2E6C032A00DEF8F6 /* Auth */,
 				E4AE8EA15BAC1D8BBDF4F731 /* Assets.xcassets */,
 				EEC0996241464FF8BD6ED1FE /* CashApp.swift */,
 				1AB692BA94258FB20B79FB74 /* Info.plist */,
@@ -919,6 +917,8 @@
 				C3BD038E777E0ECA20C3A812 /* Transactions */,
 				8AD8CCADD27CD478796E1401 /* Profile */,
 				BFEDB9E630FB816318C8A948 /* Report */,
+				549B654E2E6C032A00DEF8F6 /* Auth */,
+				5494DA682E77C85800782E86 /* AddTransaction */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -1253,7 +1253,7 @@
 				549B653F2E69839400DEF8F6 /* DebugTools.swift in Sources */,
 				0FEA738E4DCD5EE8EF28C817 /* KeyboardHelper.swift in Sources */,
 				4DF19D3BC6841EFF365E8EDE /* MainTabView.swift in Sources */,
-				6CC78093CF69137B940EFC5A /* MassageFormInput.swift in Sources */,
+				6CC78093CF69137B940EFC5A /* AddMessageView.swift in Sources */,
 				549B65452E6AC4FE00DEF8F6 /* SyncBadgeView.swift in Sources */,
 				3B1100E3D85FCEC474B5D845 /* ProfileView.swift in Sources */,
 				549B65832E73B73A00DEF8F6 /* TransactionRow.swift in Sources */,

@@ -3,7 +3,7 @@ import Foundation
 import Domain
 import Data
 import Core
-import Network
+
 
 @MainActor
 final class DashboardState: ObservableObject {
@@ -32,7 +32,7 @@ final class DashboardState: ObservableObject {
 
 
     
-    private var networkMonitor: NetworkMonitorProtocol
+  
     private let getRecentTransactions: GetRecentTransactionsUseCase
     private let getTotalSpending: GetTotalSpendingUseCase
     private let getSpendingReport: GetSpendingReportUseCase
@@ -49,7 +49,6 @@ final class DashboardState: ObservableObject {
         getSpendingReport: GetSpendingReportUseCase,
         getUnsyncTransactionCount: GetUnsyncTransactionCountUseCase,
         addLocalTransaction: AddTransactionLocalUseCase,
-        networkMonitor: NetworkMonitorProtocol,
         transactionSyncManager: TransactionSyncUseCase
     ) {
         self.getRecentTransactions = getRecentTransactions
@@ -58,12 +57,12 @@ final class DashboardState: ObservableObject {
         self.getUnsyncTransactionCount = getUnsyncTransactionCount
         self.addLocalTransaction = addLocalTransaction
         self.transactionSyncManager = transactionSyncManager
-        self.networkMonitor = networkMonitor
-        setupNetworkMonitoring()
     }
     
     // MARK: - Load Data
     func refreshDashboard() async {
+        print(" Refresh ")
+
         async let tx = getRecentTransactions.execute(limit: 5)
         async let spending = getTotalSpending.execute()
         async let reports = getSpendingReport.execute()
@@ -71,6 +70,8 @@ final class DashboardState: ObservableObject {
         
         do {
             let (transactions, spendingVal, reportsVal, unsyncedVal) = try await (tx, spending, reports, unsynced)
+            print("📊 Refresh result: \(transactions.count) transactions, spending: \(spendingVal)")
+
             self.recentTransactions = transactions
             self.totalSpending = spendingVal
             self.report = reportsVal.first ?? self.report
@@ -79,25 +80,14 @@ final class DashboardState: ObservableObject {
             print("⚠️ Refresh failed: \(error.localizedDescription)")
         }
     }
-    
-    // MARK: - Auto Sync
-    private func setupNetworkMonitoring() {
-        networkMonitor.statusDidChange = { [weak self] online in
-            guard let self else { return }
-            self.isOnline = online
-            if online {
-                Task { await self.triggerAutoSync() }
-            }
-        }
-        networkMonitor.startMonitoring()
-    }
+
     
     private func triggerAutoSync() async {
        
         let now = Date()
         guard now.timeIntervalSince(lastSyncAttempt) > 30 else { return }
         lastSyncAttempt = now
-        print(unsyncedCount)
+       
         guard unsyncedCount > 0 else { return }
         
         do {
@@ -109,31 +99,9 @@ final class DashboardState: ObservableObject {
         }
     }
     
-    // MARK: - Send Transaction
-    func sendTransaction() async {
-        guard !messageInput.isEmpty || selectedImageURL != nil else { return }
-        
-        let request = AddTransactionRequest(
-            message: messageInput.isEmpty ? nil : messageInput,
-            imageURL: selectedImageURL
-        )
-        
-        isSyncing = true   // 👈 start spinner
-        defer { isSyncing = false } // 👈 always reset
-        
-        do {
-            try await transactionSyncManager.syncAddTransaction(request)
-            messageInput = ""
-            selectedImageURL = nil
-            await refreshDashboard()
-        } catch {
-            print("❌ Send failed: \(error.localizedDescription)")
-        }
-    }
-    
-    // MARK: - Send Massage
-    func sendMTransaction() async -> Bool {
-        guard !messageInput.isEmpty || selectedImageURL != nil else { return false }
+    //     MARK: - Send Transaction
+    func sendTransaction() async -> TransactionCasha? {
+        guard !messageInput.isEmpty || selectedImageURL != nil else { return nil }
         
         let request = AddTransactionRequest(
             message: messageInput.isEmpty ? nil : messageInput,
@@ -146,19 +114,21 @@ final class DashboardState: ObservableObject {
         do {
             let transaction = try await transactionSyncManager.syncAddTransaction(request)
             
+            // reset state
             messageInput = ""
             selectedImageURL = nil
-            lastCreatedTransaction = transaction   // 👈 store it
+            lastCreatedTransaction = transaction
+            
+            // 0.1 seconds
             
             await refreshDashboard()
-            return true
+            return transaction   // 👈 return the actual transaction
         } catch {
             print("❌ Send failed: \(error.localizedDescription)")
             lastCreatedTransaction = nil
-            return false
+            return nil           // 👈 failure
         }
     }
-
 
     
     // MARK: - Manual Add
@@ -174,3 +144,6 @@ final class DashboardState: ObservableObject {
         }
     }
 }
+
+
+

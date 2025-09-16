@@ -125,9 +125,8 @@ private extension ProfileView {
             
             Section {
                 Button(role: .destructive) {
-                    loginState.logout()
                     Task {
-                        await loginState.deleteLocalData()
+                        await loginState.logout()
                     }
                     print("Logout tapped")
                 } label: {

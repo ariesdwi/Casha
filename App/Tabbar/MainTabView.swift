@@ -48,6 +48,8 @@ struct MainTabView: View {
             AddTransactionCoordinator(isPresented: $showAddTransaction)
                 .environmentObject(dashboardState)
         }
+        
     }
 }
+
 

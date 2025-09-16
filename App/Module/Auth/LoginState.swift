@@ -45,14 +45,14 @@ final class LoginState: ObservableObject {
             AuthManager.shared.saveToken(token)
             accessToken = token
             
-            // 📡 Sync transactions right after login
+//             📡 Sync transactions right after login
             try await transactionSyncManager.syncAllTransactions(
                 periodStart: "2025-07-01",
                 periodEnd: "2025-09-30",
                 page: 1,
                 limit: 50
             )
-            
+                               
             isLoggedIn = true
             toastMessage = "Login successful ✅" // show success
         } catch let error as NetworkError {
@@ -73,11 +73,12 @@ final class LoginState: ObservableObject {
         }
     }
     
-    func logout() {
+    func logout() async {
         AuthManager.shared.clearToken()
         accessToken = nil
         isLoggedIn = false
         toastMessage = nil
+        await deleteLocalData()
     }
     
     func checkStoredToken() {
