@@ -14,7 +14,7 @@ public struct GetTotalSpendingUseCase {
         self.repository = repository
     }
 
-    public func execute() -> Double {
-        return repository.fetchTotalSpending()
+    public func execute(period: SpendingPeriod) -> Double {
+        return repository.fetchTotalSpending(period: period)
     }
 }

@@ -9,8 +9,9 @@
 import Foundation
 import Domain
 
+
+
 public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol {
-    
     
     private let query: TransactionQueryDataSource
     private let analytics: TransactionAnalyticsDataSource
@@ -60,16 +61,15 @@ public final class TransactionRepositoryImpl: LocalTransactionRepositoryProtocol
         }
     }
     
-    public func fetchTotalSpending() -> Double {
+    public func fetchTotalSpending(period: SpendingPeriod) -> Double {
         do {
-            let all = try query.fetchAll()
-            return all.reduce(0) { $0 + $1.amount }
+            return try query.fetchTotalSpending(for: period)
         } catch {
             print("❌ Failed to calculate total spending: \(error)")
             return 0
         }
     }
-    
+        
     public func fetchSpendingReport() -> [SpendingReport] {
         do {
             let report = try analytics.fetchSpendingReport()

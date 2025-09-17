@@ -28,9 +28,22 @@ struct DashboardView: View {
                     }
                     .padding()
                 }
-                .navigationTitle("Home")
+                .navigationTitle( "Home" )
                 .navigationBarTitleDisplayMode(.large)
-                .toolbar { navigationToolbar }
+                .toolbar {
+                    if dashboardState.isOnline {
+                        navigationToolbar
+                    } else {
+                        ToolbarItem(placement: .principal) {
+                            HStack(spacing: 8) {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                Text("Waiting for network")
+                                    .font(.subheadline)
+                            }
+                        }
+                    }
+                }
                 .onAppear {
                     Task {
                         await dashboardState.refreshDashboard()
@@ -51,7 +64,13 @@ struct DashboardView: View {
 // MARK: - Sections
 private extension DashboardView {
     var cardBalanceSection: some View {
-        CardBalanceView(balance: CurrencyFormatter.format(dashboardState.totalSpending))
+           CardBalanceView(
+               balance: CurrencyFormatter.format(dashboardState.totalSpending),
+               period: dashboardState.selectedPeriod,
+               onPeriodChange: { newPeriod in
+                   dashboardState.changePeriod(to: newPeriod)
+               }
+           )
     }
     
     var reportSection: some View {

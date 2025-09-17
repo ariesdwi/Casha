@@ -17,6 +17,7 @@ public protocol TransactionQueryDataSource {
     func search(query: String) throws -> [TransactionCasha]
     func fetchUnsyncedTransactions() throws -> [TransactionCasha]
     func fetchUnsyncedTransactionsCount() throws -> Int
+    func fetchTotalSpending(for period: SpendingPeriod) throws -> Double
 }
 
 public final class TransactionQuery: TransactionQueryDataSource {
@@ -152,6 +153,85 @@ public final class TransactionQuery: TransactionQueryDataSource {
         
         return count
     }
+    
+    public func fetchTotalSpending(for period: SpendingPeriod = .allTime) throws -> Double {
+        var total: Double = 0
+        var fetchError: Error?
+        
+        manager.context.performAndWait {
+            do {
+                let request: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+                
+                switch period {
+                case .thisMonth:
+                    let startOfMonth = Calendar.current.startOfMonth(for: Date())
+                    let endOfMonth = Calendar.current.endOfMonth(for: Date())
+                    request.predicate = NSPredicate(
+                        format: "datetime >= %@ AND datetime <= %@",
+                        startOfMonth as NSDate,
+                        endOfMonth as NSDate
+                    )
+                    
+                case .lastThreeMonths:
+                    let threeMonthsAgo = Calendar.current.date(byAdding: .month, value: -3, to: Date())!
+                    request.predicate = NSPredicate(
+                        format: "datetime >= %@",
+                        threeMonthsAgo as NSDate
+                    )
+                    
+                case .thisYear:
+                    let startOfYear = Calendar.current.startOfYear(for: Date())
+                    let endOfYear = Calendar.current.endOfYear(for: Date())
+                    request.predicate = NSPredicate(
+                        format: "datetime >= %@ AND datetime <= %@",
+                        startOfYear as NSDate,
+                        endOfYear as NSDate
+                    )
+                    
+                case .custom(let interval):
+                    request.predicate = NSPredicate(
+                        format: "datetime >= %@ AND datetime <= %@",
+                        interval.start as NSDate,
+                        interval.end as NSDate
+                    )
+                    
+                case .allTime:
+                    // No predicate for all time
+                    break
+                }
+                
+                let entities = try manager.context.fetch(request)
+                total = entities.reduce(0) { $0 + $1.amount }
+                
+            } catch {
+                fetchError = error
+            }
+        }
+        
+        if let error = fetchError {
+            throw error
+        }
+        
+        return total
+    }
 }
 
 
+extension Calendar {
+    func startOfMonth(for date: Date) -> Date {
+        return self.date(from: self.dateComponents([.year, .month], from: date))!
+    }
+    
+    func endOfMonth(for date: Date) -> Date {
+        return self.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth(for: date))!
+    }
+    
+    func startOfYear(for date: Date) -> Date {
+        return self.date(from: self.dateComponents([.year], from: date))!
+    }
+    
+    func endOfYear(for date: Date) -> Date {
+        let start = startOfYear(for: date)
+        return self.date(byAdding: DateComponents(year: 1, day: -1), to: start)!
+    }
+}

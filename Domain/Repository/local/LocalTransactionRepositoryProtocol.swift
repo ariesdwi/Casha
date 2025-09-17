@@ -13,7 +13,7 @@ public protocol LocalTransactionRepositoryProtocol {
       
       // MARK: - Read
       func fetchRecentTransactions(limit: Int) async -> [TransactionCasha]
-      func fetchTotalSpending() -> Double
+    func fetchTotalSpending(period: SpendingPeriod) -> Double
       func fetchSpendingReport() -> [SpendingReport]
       func fetchAllTransactions() async -> [TransactionCasha]
       func searchTransactions(text: String) async -> [TransactionCasha]

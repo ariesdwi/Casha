@@ -185,7 +185,8 @@ final class DependencyContainer {
                 getSpendingReport: getSpendingReport,
                 getUnsyncTransactionCount: getCountUnsyncTransaction,
                 addLocalTransaction: addLocalTransaction,
-                transactionSyncManager: syncManager
+                transactionSyncManager: syncManager,
+                networkMonitor: networkMonitor,
             )
         }
     }

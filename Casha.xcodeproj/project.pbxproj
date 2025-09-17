@@ -36,6 +36,7 @@
 		4DF19D3BC6841EFF365E8EDE /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5056D19EC0C7F7B76FAB19DB /* MainTabView.swift */; };
 		539F8C347A64DB46B9482A8D /* TransactionDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81A20E95B59CA5090F9601 /* TransactionDTO.swift */; };
 		5454CAA2457E2C296EC0586E /* CategoryEntity+Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470BF1926F838A42575EC3B6 /* CategoryEntity+Mapper.swift */; };
+		547E10AF2E7A4D4B0029880F /* SpendingPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547E10AE2E7A4D400029880F /* SpendingPeriod.swift */; };
 		5494DA632E77A50F00782E86 /* BudgetListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494DA622E77A50A00782E86 /* BudgetListView.swift */; };
 		5494DA652E77B39700782E86 /* CutomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494DA642E77B38C00782E86 /* CutomTabBar.swift */; };
 		5494DA672E77BC7500782E86 /* AddTransactionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494DA662E77BC7100782E86 /* AddTransactionCoordinator.swift */; };
@@ -231,6 +232,7 @@
 		5056D19EC0C7F7B76FAB19DB /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		51BC2962D413A363669186DC /* TransactionCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCardView.swift; sourceTree = "<group>"; };
 		51BD8BA610EB29B44E4F6539 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		547E10AE2E7A4D400029880F /* SpendingPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendingPeriod.swift; sourceTree = "<group>"; };
 		5494DA622E77A50A00782E86 /* BudgetListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListView.swift; sourceTree = "<group>"; };
 		5494DA642E77B38C00782E86 /* CutomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutomTabBar.swift; sourceTree = "<group>"; };
 		5494DA662E77BC7100782E86 /* AddTransactionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionCoordinator.swift; sourceTree = "<group>"; };
@@ -647,6 +649,7 @@
 		549B651A2E6937D400DEF8F6 /* Transaction */ = {
 			isa = PBXGroup;
 			children = (
+				547E10AE2E7A4D400029880F /* SpendingPeriod.swift */,
 				549B65752E72883000DEF8F6 /* UpdateTransactionRequest.swift */,
 				64E08EC12DBEDADF9340BCD6 /* TransactionCasha.swift */,
 				17D2B1177F147475F73D9E21 /* AddTransactionRequest.swift */,
@@ -1300,6 +1303,7 @@
 				549B65262E693DAF00DEF8F6 /* GetTotalSummaryBudgetUseCase.swift in Sources */,
 				F7F46DA801F9A1EE860F1050 /* LocalCategoryRepositoryProtocol.swift in Sources */,
 				549B65292E6974DD00DEF8F6 /* GetProfileUseCase.swift in Sources */,
+				547E10AF2E7A4D4B0029880F /* SpendingPeriod.swift in Sources */,
 				549B65302E69760400DEF8F6 /* RemoteAuthRepositoryProtocol.swift in Sources */,
 				D65DF4A0D62CE543ABDDA3DF /* ChartCategorySpending.swift in Sources */,
 				549B65092E68204C00DEF8F6 /* RemoteBudgetRepositoryProtocol.swift in Sources */,
