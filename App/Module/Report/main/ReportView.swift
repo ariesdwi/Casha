@@ -42,9 +42,17 @@ struct ReportView: View {
 // MARK: - Sections
 private extension ReportView {
     var header: some View {
-        Text("Spending by Category (\(reportState.selectedPeriod.title))")
-            .font(.title2.bold())
-            .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Spending by Category")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+            
+            Text(reportState.selectedPeriod.title)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     @ViewBuilder
@@ -75,6 +83,10 @@ private extension ReportView {
         }
     }
 }
+
+
+
+
 
 
 
